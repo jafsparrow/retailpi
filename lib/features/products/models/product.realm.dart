@@ -10,34 +10,53 @@ part of 'product.dart';
 class Product extends _Product with RealmEntity, RealmObjectBase, RealmObject {
   Product(
     String name,
-    String code,
-    num cost,
-    num price,
-    DateTime updatedAt, {
+    String defaultCode,
+    num standaredPrice,
+    num listPrice,
+    String companyId,
+    String image,
+    DateTime updatedAt,
+    bool active, {
+    String? barcode,
+    String? uomId,
+    String? type,
+    bool? saleOk,
+    String? saleDescription,
+    Iterable<String?> taxIds = const [],
     String? note,
     String? printName,
     bool? printerOverride,
     String? printer,
-    String? categoryTag,
+    String? categoryId,
     bool? isActive,
     Iterable<String> tags = const [],
     Map<String, num> pricelist = const {},
   }) {
     RealmObjectBase.set(this, 'name', name);
-    RealmObjectBase.set(this, 'code', code);
-    RealmObjectBase.set(this, 'cost', cost);
-    RealmObjectBase.set(this, 'price', price);
+    RealmObjectBase.set(this, 'defaultCode', defaultCode);
+    RealmObjectBase.set(this, 'barcode', barcode);
+    RealmObjectBase.set(this, 'standaredPrice', standaredPrice);
+    RealmObjectBase.set(this, 'listPrice', listPrice);
+    RealmObjectBase.set(this, 'uomId', uomId);
+    RealmObjectBase.set(this, 'type', type);
+    RealmObjectBase.set(this, 'saleOk', saleOk);
+    RealmObjectBase.set(this, 'saleDescription', saleDescription);
+    RealmObjectBase.set(this, 'companyId', companyId);
+    RealmObjectBase.set(this, 'image', image);
+    RealmObjectBase.set<RealmList<String?>>(
+        this, 'taxIds', RealmList<String?>(taxIds));
     RealmObjectBase.set(this, 'updatedAt', updatedAt);
     RealmObjectBase.set(this, 'note', note);
     RealmObjectBase.set(this, 'printName', printName);
     RealmObjectBase.set(this, 'printerOverride', printerOverride);
     RealmObjectBase.set(this, 'printer', printer);
-    RealmObjectBase.set(this, 'categoryTag', categoryTag);
+    RealmObjectBase.set(this, 'categoryId', categoryId);
     RealmObjectBase.set(this, 'isActive', isActive);
     RealmObjectBase.set<RealmList<String>>(
         this, 'tags', RealmList<String>(tags));
     RealmObjectBase.set<RealmMap<num>>(
         this, 'pricelist', RealmMap<num>(pricelist));
+    RealmObjectBase.set(this, 'active', active);
   }
 
   Product._();
@@ -48,19 +67,69 @@ class Product extends _Product with RealmEntity, RealmObjectBase, RealmObject {
   set name(String value) => RealmObjectBase.set(this, 'name', value);
 
   @override
-  String get code => RealmObjectBase.get<String>(this, 'code') as String;
+  String get defaultCode =>
+      RealmObjectBase.get<String>(this, 'defaultCode') as String;
   @override
-  set code(String value) => RealmObjectBase.set(this, 'code', value);
+  set defaultCode(String value) =>
+      RealmObjectBase.set(this, 'defaultCode', value);
 
   @override
-  num get cost => RealmObjectBase.get<num>(this, 'cost') as num;
+  String? get barcode =>
+      RealmObjectBase.get<String>(this, 'barcode') as String?;
   @override
-  set cost(num value) => RealmObjectBase.set(this, 'cost', value);
+  set barcode(String? value) => RealmObjectBase.set(this, 'barcode', value);
 
   @override
-  num get price => RealmObjectBase.get<num>(this, 'price') as num;
+  num get standaredPrice =>
+      RealmObjectBase.get<num>(this, 'standaredPrice') as num;
   @override
-  set price(num value) => RealmObjectBase.set(this, 'price', value);
+  set standaredPrice(num value) =>
+      RealmObjectBase.set(this, 'standaredPrice', value);
+
+  @override
+  num get listPrice => RealmObjectBase.get<num>(this, 'listPrice') as num;
+  @override
+  set listPrice(num value) => RealmObjectBase.set(this, 'listPrice', value);
+
+  @override
+  String? get uomId => RealmObjectBase.get<String>(this, 'uomId') as String?;
+  @override
+  set uomId(String? value) => RealmObjectBase.set(this, 'uomId', value);
+
+  @override
+  String? get type => RealmObjectBase.get<String>(this, 'type') as String?;
+  @override
+  set type(String? value) => RealmObjectBase.set(this, 'type', value);
+
+  @override
+  bool? get saleOk => RealmObjectBase.get<bool>(this, 'saleOk') as bool?;
+  @override
+  set saleOk(bool? value) => RealmObjectBase.set(this, 'saleOk', value);
+
+  @override
+  String? get saleDescription =>
+      RealmObjectBase.get<String>(this, 'saleDescription') as String?;
+  @override
+  set saleDescription(String? value) =>
+      RealmObjectBase.set(this, 'saleDescription', value);
+
+  @override
+  String get companyId =>
+      RealmObjectBase.get<String>(this, 'companyId') as String;
+  @override
+  set companyId(String value) => RealmObjectBase.set(this, 'companyId', value);
+
+  @override
+  String get image => RealmObjectBase.get<String>(this, 'image') as String;
+  @override
+  set image(String value) => RealmObjectBase.set(this, 'image', value);
+
+  @override
+  RealmList<String?> get taxIds =>
+      RealmObjectBase.get<String?>(this, 'taxIds') as RealmList<String?>;
+  @override
+  set taxIds(covariant RealmList<String?> value) =>
+      throw RealmUnsupportedSetError();
 
   @override
   DateTime get updatedAt =>
@@ -94,11 +163,11 @@ class Product extends _Product with RealmEntity, RealmObjectBase, RealmObject {
   set printer(String? value) => RealmObjectBase.set(this, 'printer', value);
 
   @override
-  String? get categoryTag =>
-      RealmObjectBase.get<String>(this, 'categoryTag') as String?;
+  String? get categoryId =>
+      RealmObjectBase.get<String>(this, 'categoryId') as String?;
   @override
-  set categoryTag(String? value) =>
-      RealmObjectBase.set(this, 'categoryTag', value);
+  set categoryId(String? value) =>
+      RealmObjectBase.set(this, 'categoryId', value);
 
   @override
   bool? get isActive => RealmObjectBase.get<bool>(this, 'isActive') as bool?;
@@ -120,6 +189,11 @@ class Product extends _Product with RealmEntity, RealmObjectBase, RealmObject {
       throw RealmUnsupportedSetError();
 
   @override
+  bool get active => RealmObjectBase.get<bool>(this, 'active') as bool;
+  @override
+  set active(bool value) => RealmObjectBase.set(this, 'active', value);
+
+  @override
   Stream<RealmObjectChanges<Product>> get changes =>
       RealmObjectBase.getChanges<Product>(this);
 
@@ -133,18 +207,27 @@ class Product extends _Product with RealmEntity, RealmObjectBase, RealmObject {
   EJsonValue toEJson() {
     return <String, dynamic>{
       'name': name.toEJson(),
-      'code': code.toEJson(),
-      'cost': cost.toEJson(),
-      'price': price.toEJson(),
+      'defaultCode': defaultCode.toEJson(),
+      'barcode': barcode.toEJson(),
+      'standaredPrice': standaredPrice.toEJson(),
+      'listPrice': listPrice.toEJson(),
+      'uomId': uomId.toEJson(),
+      'type': type.toEJson(),
+      'saleOk': saleOk.toEJson(),
+      'saleDescription': saleDescription.toEJson(),
+      'companyId': companyId.toEJson(),
+      'image': image.toEJson(),
+      'taxIds': taxIds.toEJson(),
       'updatedAt': updatedAt.toEJson(),
       'note': note.toEJson(),
       'printName': printName.toEJson(),
       'printerOverride': printerOverride.toEJson(),
       'printer': printer.toEJson(),
-      'categoryTag': categoryTag.toEJson(),
+      'categoryId': categoryId.toEJson(),
       'isActive': isActive.toEJson(),
       'tags': tags.toEJson(),
       'pricelist': pricelist.toEJson(),
+      'active': active.toEJson(),
     };
   }
 
@@ -154,22 +237,34 @@ class Product extends _Product with RealmEntity, RealmObjectBase, RealmObject {
     return switch (ejson) {
       {
         'name': EJsonValue name,
-        'code': EJsonValue code,
-        'cost': EJsonValue cost,
-        'price': EJsonValue price,
+        'defaultCode': EJsonValue defaultCode,
+        'standaredPrice': EJsonValue standaredPrice,
+        'listPrice': EJsonValue listPrice,
+        'companyId': EJsonValue companyId,
+        'image': EJsonValue image,
         'updatedAt': EJsonValue updatedAt,
+        'active': EJsonValue active,
       } =>
         Product(
           fromEJson(name),
-          fromEJson(code),
-          fromEJson(cost),
-          fromEJson(price),
+          fromEJson(defaultCode),
+          fromEJson(standaredPrice),
+          fromEJson(listPrice),
+          fromEJson(companyId),
+          fromEJson(image),
           fromEJson(updatedAt),
+          fromEJson(active),
+          barcode: fromEJson(ejson['barcode']),
+          uomId: fromEJson(ejson['uomId']),
+          type: fromEJson(ejson['type']),
+          saleOk: fromEJson(ejson['saleOk']),
+          saleDescription: fromEJson(ejson['saleDescription']),
+          taxIds: fromEJson(ejson['taxIds']),
           note: fromEJson(ejson['note']),
           printName: fromEJson(ejson['printName']),
           printerOverride: fromEJson(ejson['printerOverride']),
           printer: fromEJson(ejson['printer']),
-          categoryTag: fromEJson(ejson['categoryTag']),
+          categoryId: fromEJson(ejson['categoryId']),
           isActive: fromEJson(ejson['isActive']),
           tags: fromEJson(ejson['tags']),
           pricelist: fromEJson(ejson['pricelist']),
@@ -183,20 +278,31 @@ class Product extends _Product with RealmEntity, RealmObjectBase, RealmObject {
     register(_toEJson, _fromEJson);
     return const SchemaObject(ObjectType.realmObject, Product, 'Product', [
       SchemaProperty('name', RealmPropertyType.string),
-      SchemaProperty('code', RealmPropertyType.string),
-      SchemaProperty('cost', RealmPropertyType.double),
-      SchemaProperty('price', RealmPropertyType.double),
+      SchemaProperty('defaultCode', RealmPropertyType.string),
+      SchemaProperty('barcode', RealmPropertyType.string, optional: true),
+      SchemaProperty('standaredPrice', RealmPropertyType.double),
+      SchemaProperty('listPrice', RealmPropertyType.double),
+      SchemaProperty('uomId', RealmPropertyType.string, optional: true),
+      SchemaProperty('type', RealmPropertyType.string, optional: true),
+      SchemaProperty('saleOk', RealmPropertyType.bool, optional: true),
+      SchemaProperty('saleDescription', RealmPropertyType.string,
+          optional: true),
+      SchemaProperty('companyId', RealmPropertyType.string),
+      SchemaProperty('image', RealmPropertyType.string),
+      SchemaProperty('taxIds', RealmPropertyType.string,
+          optional: true, collectionType: RealmCollectionType.list),
       SchemaProperty('updatedAt', RealmPropertyType.timestamp),
       SchemaProperty('note', RealmPropertyType.string, optional: true),
       SchemaProperty('printName', RealmPropertyType.string, optional: true),
       SchemaProperty('printerOverride', RealmPropertyType.bool, optional: true),
       SchemaProperty('printer', RealmPropertyType.string, optional: true),
-      SchemaProperty('categoryTag', RealmPropertyType.string, optional: true),
+      SchemaProperty('categoryId', RealmPropertyType.string, optional: true),
       SchemaProperty('isActive', RealmPropertyType.bool, optional: true),
       SchemaProperty('tags', RealmPropertyType.string,
           collectionType: RealmCollectionType.list),
       SchemaProperty('pricelist', RealmPropertyType.double,
           collectionType: RealmCollectionType.map),
+      SchemaProperty('active', RealmPropertyType.bool),
     ]);
   }();
 
