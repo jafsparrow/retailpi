@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:realm/realm.dart';
-import 'package:retailpi/features/category/models/category.dart';
+import 'package:retailpi/features/category/data/models/category.dart';
 import 'package:retailpi/features/pricelists/models/pricelist.dart';
 import 'package:retailpi/features/products/models/product.dart';
 

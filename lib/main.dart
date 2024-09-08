@@ -2,9 +2,9 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:realm/realm.dart';
-import 'package:retailpi/common/providers/product_provider.dart';
-import 'package:retailpi/common/providers/realm_provider.dart';
-import 'package:retailpi/common/utils/excel_upload.dart';
+import 'package:retailpi/core/providers/product_provider.dart';
+import 'package:retailpi/core/providers/realm_provider.dart';
+import 'package:retailpi/core/utils/excel_upload.dart';
 import 'package:retailpi/features/products/models/product.dart';
 
 void main() {
@@ -29,12 +29,13 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        home: const Home2());
+        home: Home2());
   }
 }
 
 class Home2 extends ConsumerWidget {
-  const Home2({super.key});
+  late var test_hello;
+  Home2({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -72,9 +73,7 @@ class Home2 extends ConsumerWidget {
               itemBuilder: (context, index) {
                 final product = products[index];
                 return ListTile(
-                  title: Text(product.name),
-                  subtitle: Text(product.price.toString()),
-                  trailing: Text(product.code),
+                  title: Text('product name if loaded correctly'),
                 );
               },
             ),

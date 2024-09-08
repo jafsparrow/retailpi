@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:retailpi/common/providers/product_provider.dart';
+import 'package:retailpi/core/providers/product_provider.dart';
 import 'package:retailpi/features/products/models/product.dart';
 
 class ProductScreen extends ConsumerWidget {
@@ -17,8 +17,8 @@ class ProductScreen extends ConsumerWidget {
         itemBuilder: (context, index) {
           final product = products[index];
           return ListTile(
-            title: Text(product.name),
-            subtitle: Text('\$${product.name}'),
+            title: Text('hello here is the product name'),
+            subtitle: Text('\${again me...}}'),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [

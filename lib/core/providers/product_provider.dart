@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:realm/realm.dart';
-import 'package:retailpi/common/providers/realm_provider.dart';
+import 'package:retailpi/core/providers/realm_provider.dart';
 import 'package:retailpi/features/products/models/product.dart';
 import 'package:retailpi/features/products/respositories/product_repository.dart';
 import 'package:retailpi/features/products/state/product_notifier.dart';
@@ -28,17 +28,17 @@ class ProductNotifier extends StateNotifier<List<Product>> {
   }
 
   uploadProducts(dynamic data) {
-    _realm.write(() {
-      for (var item in data) {
-        _realm.add(Product(
-          item['name']!,
-          'codemebro',
-          item['code']!,
-          item['cost']!,
-          item['price']!,
-        ));
-      }
-    });
+    // _realm.write(() {
+    //   for (var item in data) {
+    //     _realm.add(Product(
+    //       item['name']!,
+    //       'codemebro',
+    //       item['code']!,
+    //       item['cost']!,
+    //       item['price']!,
+    //     ));
+    //   }
+    // });
   }
 }
 
