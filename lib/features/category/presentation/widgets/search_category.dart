@@ -17,13 +17,13 @@ class SearchCategory extends ConsumerWidget {
             icon: Icon(Icons.search),
             onPressed: () {
               ref
-                  .read(categoryListProvider.notifier)
+                  .read(categoryNotifierProvider.notifier)
                   .searchCategory(_searchController.text);
             },
           ),
         ),
         onChanged: (query) {
-          ref.read(categoryListProvider.notifier).searchCategory(query);
+          ref.read(categoryNotifierProvider.notifier).searchCategory(query);
         },
       ),
     );

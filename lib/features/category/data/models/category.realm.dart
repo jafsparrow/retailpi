@@ -13,15 +13,12 @@ class Category extends _Category
     ObjectId id,
     String name,
     String categoryPath, {
-    Category? parentCategory,
-    Iterable<Category> children = const [],
+    ObjectId? parentId,
   }) {
     RealmObjectBase.set(this, 'id', id);
     RealmObjectBase.set(this, 'name', name);
     RealmObjectBase.set(this, 'categoryPath', categoryPath);
-    RealmObjectBase.set(this, 'parentCategory', parentCategory);
-    RealmObjectBase.set<RealmList<Category>>(
-        this, 'children', RealmList<Category>(children));
+    RealmObjectBase.set(this, 'parentId', parentId);
   }
 
   Category._();
@@ -44,18 +41,10 @@ class Category extends _Category
       RealmObjectBase.set(this, 'categoryPath', value);
 
   @override
-  Category? get parentCategory =>
-      RealmObjectBase.get<Category>(this, 'parentCategory') as Category?;
+  ObjectId? get parentId =>
+      RealmObjectBase.get<ObjectId>(this, 'parentId') as ObjectId?;
   @override
-  set parentCategory(covariant Category? value) =>
-      RealmObjectBase.set(this, 'parentCategory', value);
-
-  @override
-  RealmList<Category> get children =>
-      RealmObjectBase.get<Category>(this, 'children') as RealmList<Category>;
-  @override
-  set children(covariant RealmList<Category> value) =>
-      throw RealmUnsupportedSetError();
+  set parentId(ObjectId? value) => RealmObjectBase.set(this, 'parentId', value);
 
   @override
   Stream<RealmObjectChanges<Category>> get changes =>
@@ -73,8 +62,7 @@ class Category extends _Category
       'id': id.toEJson(),
       'name': name.toEJson(),
       'categoryPath': categoryPath.toEJson(),
-      'parentCategory': parentCategory.toEJson(),
-      'children': children.toEJson(),
+      'parentId': parentId.toEJson(),
     };
   }
 
@@ -91,8 +79,7 @@ class Category extends _Category
           fromEJson(id),
           fromEJson(name),
           fromEJson(categoryPath),
-          parentCategory: fromEJson(ejson['parentCategory']),
-          children: fromEJson(ejson['children']),
+          parentId: fromEJson(ejson['parentId']),
         ),
       _ => raiseInvalidEJson(ejson),
     };
@@ -105,10 +92,7 @@ class Category extends _Category
       SchemaProperty('id', RealmPropertyType.objectid, primaryKey: true),
       SchemaProperty('name', RealmPropertyType.string),
       SchemaProperty('categoryPath', RealmPropertyType.string),
-      SchemaProperty('parentCategory', RealmPropertyType.object,
-          optional: true, linkTarget: 'Category'),
-      SchemaProperty('children', RealmPropertyType.object,
-          linkTarget: 'Category', collectionType: RealmCollectionType.list),
+      SchemaProperty('parentId', RealmPropertyType.objectid, optional: true),
     ]);
   }();
 

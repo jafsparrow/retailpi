@@ -28,7 +28,7 @@ final categoryByIdProvider = Provider<Category?>((ref) {
 });
 
 // List of categories
-final categoryListProvider =
+final categoryNotifierProvider =
     StateNotifierProvider<CategoryListNotifier, List<Category>>((ref) {
   final repository = ref.watch(categoryRepositoryProvider);
   return CategoryListNotifier(repository)..loadCategories();

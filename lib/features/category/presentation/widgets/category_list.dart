@@ -5,7 +5,7 @@ import '../providers/category_provider.dart';
 class CategoryList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final categories = ref.watch(categoryListProvider);
+    final categories = ref.watch(categoryNotifierProvider);
 
     return ListView.builder(
       itemCount: categories.length,

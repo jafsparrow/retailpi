@@ -8,6 +8,5 @@ class _Category {
   late ObjectId id;
   late String name;
   late String categoryPath;
-  _Category? parentCategory;
-  late List<_Category> children;
+  late ObjectId? parentId;
 }
