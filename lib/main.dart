@@ -5,6 +5,7 @@ import 'package:realm/realm.dart';
 import 'package:retailpi/core/providers/product_provider.dart';
 import 'package:retailpi/core/providers/realm_provider.dart';
 import 'package:retailpi/core/utils/excel_upload.dart';
+import 'package:retailpi/features/category/presentation/pages/category_page.dart';
 import 'package:retailpi/features/products/models/product.dart';
 
 void main() {
@@ -29,7 +30,7 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        home: Home2());
+        home: CategoryPage());
   }
 }
 
