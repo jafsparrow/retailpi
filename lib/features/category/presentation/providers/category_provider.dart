@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:realm/realm.dart';
 import 'package:retailpi/core/providers/realm_provider.dart';
+import 'package:retailpi/core/realm_models/product_related.dart';
 import 'package:retailpi/features/category/data/data-sources/realm_data_source.dart';
-import 'package:retailpi/features/category/data/models/category.dart';
 import 'package:retailpi/features/category/data/repositories/category_repository.dart';
 
 final categoryRepositoryProvider = Provider((ref) {
@@ -11,12 +11,12 @@ final categoryRepositoryProvider = Provider((ref) {
   return CategoryRepository(dataSource);
 });
 
-final addCategoryProvider = Provider((ref) {
-  final repository = ref.watch(categoryRepositoryProvider);
-  return (Category category) async {
-    await repository.addCategory(category);
-  };
-});
+// final addCategoryProvider = Provider((ref) {
+//   final repository = ref.watch(categoryRepositoryProvider);
+//   return (Category category) async {
+//     await repository.addCategory(category);
+//   };
+// });
 
 final selectedCategoryIdProvider = StateProvider<ObjectId>((ref) {
   return ObjectId();
@@ -44,9 +44,19 @@ class CategoryListNotifier extends StateNotifier<List<Category>> {
     state = _repository.getCategories();
   }
 
-  void addCategory(Category category) {
-    _repository.addCategory(category);
-    state = [...state, category];
+  void addCategory({required name, Category? parent}) {
+    _repository.addCategory(name: name, parent: parent);
+    loadCategories();
+  }
+
+  void updateCategory(
+      {required Category category,
+      required String name,
+      Category? parentCategory}) {
+    _repository.updateCategory(
+        category: category, name: name, parentCategory: parentCategory);
+
+    loadCategories();
   }
 
   void searchCategory(String query) {

@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:realm/realm.dart';
 import 'package:retailpi/core/providers/realm_provider.dart';
-import 'package:retailpi/features/products/models/product.dart';
+import 'package:retailpi/core/realm_models/product_related.dart';
 import 'package:retailpi/features/products/respositories/product_repository.dart';
 import 'package:retailpi/features/products/state/product_notifier.dart';
 

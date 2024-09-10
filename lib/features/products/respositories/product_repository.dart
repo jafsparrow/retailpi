@@ -1,5 +1,5 @@
 import 'package:realm/realm.dart';
-import 'package:retailpi/features/products/models/product.dart';
+import 'package:retailpi/core/realm_models/product_related.dart';
 
 class ProductRepository {
   final Realm realm;

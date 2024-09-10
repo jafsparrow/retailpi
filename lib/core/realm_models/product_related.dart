@@ -1,14 +1,14 @@
 import 'package:realm/realm.dart';
 
-part 'product.realm.dart';
+part 'product_related.realm.dart';
 
 @RealmModel()
 class _ProductTemplate {
   @PrimaryKey()
   late ObjectId id;
   late String name;
-
-  late ObjectId categoryId;
+  @Ignored()
+  late _Category? category; // Reference to the category
   late String defaultCode;
   late num standaredPrice;
   late num listPrice;
@@ -49,4 +49,28 @@ class _Product {
 
   late Map<String, num> pricelist;
   // late RealmList<Pricelist> pricelists;
+}
+
+@RealmModel()
+class _Category {
+  @PrimaryKey()
+  late ObjectId id;
+  late String name;
+  _Category? parentCategory; // Reference to the parent category
+  late String categoryPath; // Path like 'parent/child/grandchild'
+}
+
+@RealmModel()
+class _Variant {
+  late String id;
+  late String defaultCode;
+  late String barcode;
+  late num qtyAvailable;
+  late List<String?> sellerIds;
+  late List<_VariantAttributes> attributes;
+}
+
+@RealmModel()
+class _VariantAttributes {
+  late String someThing;
 }
