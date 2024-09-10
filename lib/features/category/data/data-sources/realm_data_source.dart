@@ -38,6 +38,9 @@ class RealmDataSource {
     return _realm.find<Category>(id);
   }
 
+  deleteCategory() {
+    // TODO - need to think about deleting it on deactivating it, as some product mihgt have the categoryId mapped to it..
+  }
   String generateCategoryPath(Category category) {
     List<String> path = [];
 

@@ -7,6 +7,187 @@ part of 'product_related.dart';
 // **************************************************************************
 
 // ignore_for_file: type=lint
+class Product extends _Product with RealmEntity, RealmObjectBase, RealmObject {
+  Product(
+    ObjectId id,
+    String companyId,
+    String defaultCode,
+    num listPrice,
+    String sku,
+    num stock, {
+    ProductTemplate? productTemplate,
+    String? barcode,
+    String? combinationIndex,
+    Map<String, String> attributes = const {},
+    Map<String, num> pricelist = const {},
+  }) {
+    RealmObjectBase.set(this, 'id', id);
+    RealmObjectBase.set(this, 'productTemplate', productTemplate);
+    RealmObjectBase.set(this, 'companyId', companyId);
+    RealmObjectBase.set(this, 'defaultCode', defaultCode);
+    RealmObjectBase.set(this, 'barcode', barcode);
+    RealmObjectBase.set(this, 'combinationIndex', combinationIndex);
+    RealmObjectBase.set<RealmMap<String>>(
+        this, 'attributes', RealmMap<String>(attributes));
+    RealmObjectBase.set(this, 'listPrice', listPrice);
+    RealmObjectBase.set(this, 'sku', sku);
+    RealmObjectBase.set(this, 'stock', stock);
+    RealmObjectBase.set<RealmMap<num>>(
+        this, 'pricelist', RealmMap<num>(pricelist));
+  }
+
+  Product._();
+
+  @override
+  ObjectId get id => RealmObjectBase.get<ObjectId>(this, 'id') as ObjectId;
+  @override
+  set id(ObjectId value) => RealmObjectBase.set(this, 'id', value);
+
+  @override
+  ProductTemplate? get productTemplate =>
+      RealmObjectBase.get<ProductTemplate>(this, 'productTemplate')
+          as ProductTemplate?;
+  @override
+  set productTemplate(covariant ProductTemplate? value) =>
+      RealmObjectBase.set(this, 'productTemplate', value);
+
+  @override
+  String get companyId =>
+      RealmObjectBase.get<String>(this, 'companyId') as String;
+  @override
+  set companyId(String value) => RealmObjectBase.set(this, 'companyId', value);
+
+  @override
+  String get defaultCode =>
+      RealmObjectBase.get<String>(this, 'defaultCode') as String;
+  @override
+  set defaultCode(String value) =>
+      RealmObjectBase.set(this, 'defaultCode', value);
+
+  @override
+  String? get barcode =>
+      RealmObjectBase.get<String>(this, 'barcode') as String?;
+  @override
+  set barcode(String? value) => RealmObjectBase.set(this, 'barcode', value);
+
+  @override
+  String? get combinationIndex =>
+      RealmObjectBase.get<String>(this, 'combinationIndex') as String?;
+  @override
+  set combinationIndex(String? value) =>
+      RealmObjectBase.set(this, 'combinationIndex', value);
+
+  @override
+  RealmMap<String> get attributes =>
+      RealmObjectBase.get<String>(this, 'attributes') as RealmMap<String>;
+  @override
+  set attributes(covariant RealmMap<String> value) =>
+      throw RealmUnsupportedSetError();
+
+  @override
+  num get listPrice => RealmObjectBase.get<num>(this, 'listPrice') as num;
+  @override
+  set listPrice(num value) => RealmObjectBase.set(this, 'listPrice', value);
+
+  @override
+  String get sku => RealmObjectBase.get<String>(this, 'sku') as String;
+  @override
+  set sku(String value) => RealmObjectBase.set(this, 'sku', value);
+
+  @override
+  num get stock => RealmObjectBase.get<num>(this, 'stock') as num;
+  @override
+  set stock(num value) => RealmObjectBase.set(this, 'stock', value);
+
+  @override
+  RealmMap<num> get pricelist =>
+      RealmObjectBase.get<num>(this, 'pricelist') as RealmMap<num>;
+  @override
+  set pricelist(covariant RealmMap<num> value) =>
+      throw RealmUnsupportedSetError();
+
+  @override
+  Stream<RealmObjectChanges<Product>> get changes =>
+      RealmObjectBase.getChanges<Product>(this);
+
+  @override
+  Stream<RealmObjectChanges<Product>> changesFor([List<String>? keyPaths]) =>
+      RealmObjectBase.getChangesFor<Product>(this, keyPaths);
+
+  @override
+  Product freeze() => RealmObjectBase.freezeObject<Product>(this);
+
+  EJsonValue toEJson() {
+    return <String, dynamic>{
+      'id': id.toEJson(),
+      'productTemplate': productTemplate.toEJson(),
+      'companyId': companyId.toEJson(),
+      'defaultCode': defaultCode.toEJson(),
+      'barcode': barcode.toEJson(),
+      'combinationIndex': combinationIndex.toEJson(),
+      'attributes': attributes.toEJson(),
+      'listPrice': listPrice.toEJson(),
+      'sku': sku.toEJson(),
+      'stock': stock.toEJson(),
+      'pricelist': pricelist.toEJson(),
+    };
+  }
+
+  static EJsonValue _toEJson(Product value) => value.toEJson();
+  static Product _fromEJson(EJsonValue ejson) {
+    if (ejson is! Map<String, dynamic>) return raiseInvalidEJson(ejson);
+    return switch (ejson) {
+      {
+        'id': EJsonValue id,
+        'companyId': EJsonValue companyId,
+        'defaultCode': EJsonValue defaultCode,
+        'listPrice': EJsonValue listPrice,
+        'sku': EJsonValue sku,
+        'stock': EJsonValue stock,
+      } =>
+        Product(
+          fromEJson(id),
+          fromEJson(companyId),
+          fromEJson(defaultCode),
+          fromEJson(listPrice),
+          fromEJson(sku),
+          fromEJson(stock),
+          productTemplate: fromEJson(ejson['productTemplate']),
+          barcode: fromEJson(ejson['barcode']),
+          combinationIndex: fromEJson(ejson['combinationIndex']),
+          attributes: fromEJson(ejson['attributes']),
+          pricelist: fromEJson(ejson['pricelist']),
+        ),
+      _ => raiseInvalidEJson(ejson),
+    };
+  }
+
+  static final schema = () {
+    RealmObjectBase.registerFactory(Product._);
+    register(_toEJson, _fromEJson);
+    return const SchemaObject(ObjectType.realmObject, Product, 'Product', [
+      SchemaProperty('id', RealmPropertyType.objectid, primaryKey: true),
+      SchemaProperty('productTemplate', RealmPropertyType.object,
+          optional: true, linkTarget: 'ProductTemplate'),
+      SchemaProperty('companyId', RealmPropertyType.string),
+      SchemaProperty('defaultCode', RealmPropertyType.string),
+      SchemaProperty('barcode', RealmPropertyType.string, optional: true),
+      SchemaProperty('combinationIndex', RealmPropertyType.string,
+          optional: true),
+      SchemaProperty('attributes', RealmPropertyType.string,
+          collectionType: RealmCollectionType.map),
+      SchemaProperty('listPrice', RealmPropertyType.double),
+      SchemaProperty('sku', RealmPropertyType.string),
+      SchemaProperty('stock', RealmPropertyType.double),
+      SchemaProperty('pricelist', RealmPropertyType.double,
+          collectionType: RealmCollectionType.map),
+    ]);
+  }();
+
+  @override
+  SchemaObject get objectSchema => RealmObjectBase.getSchema(this) ?? schema;
+}
+
 class ProductTemplate extends _ProductTemplate
     with RealmEntity, RealmObjectBase, RealmObject {
   ProductTemplate(
@@ -18,6 +199,7 @@ class ProductTemplate extends _ProductTemplate
     String companyId,
     DateTime updatedAt,
     bool active, {
+    Category? category,
     String? uomId,
     String? type,
     bool? saleOk,
@@ -32,6 +214,7 @@ class ProductTemplate extends _ProductTemplate
   }) {
     RealmObjectBase.set(this, 'id', id);
     RealmObjectBase.set(this, 'name', name);
+    RealmObjectBase.set(this, 'category', category);
     RealmObjectBase.set(this, 'defaultCode', defaultCode);
     RealmObjectBase.set(this, 'standaredPrice', standaredPrice);
     RealmObjectBase.set(this, 'listPrice', listPrice);
@@ -64,6 +247,13 @@ class ProductTemplate extends _ProductTemplate
   String get name => RealmObjectBase.get<String>(this, 'name') as String;
   @override
   set name(String value) => RealmObjectBase.set(this, 'name', value);
+
+  @override
+  Category? get category =>
+      RealmObjectBase.get<Category>(this, 'category') as Category?;
+  @override
+  set category(covariant Category? value) =>
+      RealmObjectBase.set(this, 'category', value);
 
   @override
   String get defaultCode =>
@@ -184,6 +374,7 @@ class ProductTemplate extends _ProductTemplate
     return <String, dynamic>{
       'id': id.toEJson(),
       'name': name.toEJson(),
+      'category': category.toEJson(),
       'defaultCode': defaultCode.toEJson(),
       'standaredPrice': standaredPrice.toEJson(),
       'listPrice': listPrice.toEJson(),
@@ -227,6 +418,7 @@ class ProductTemplate extends _ProductTemplate
           fromEJson(companyId),
           fromEJson(updatedAt),
           fromEJson(active),
+          category: fromEJson(ejson['category']),
           uomId: fromEJson(ejson['uomId']),
           type: fromEJson(ejson['type']),
           saleOk: fromEJson(ejson['saleOk']),
@@ -250,6 +442,8 @@ class ProductTemplate extends _ProductTemplate
         ObjectType.realmObject, ProductTemplate, 'ProductTemplate', [
       SchemaProperty('id', RealmPropertyType.objectid, primaryKey: true),
       SchemaProperty('name', RealmPropertyType.string),
+      SchemaProperty('category', RealmPropertyType.object,
+          optional: true, linkTarget: 'Category'),
       SchemaProperty('defaultCode', RealmPropertyType.string),
       SchemaProperty('standaredPrice', RealmPropertyType.double),
       SchemaProperty('listPrice', RealmPropertyType.double),
@@ -270,186 +464,6 @@ class ProductTemplate extends _ProductTemplate
       SchemaProperty('active', RealmPropertyType.bool),
       SchemaProperty('tags', RealmPropertyType.string,
           collectionType: RealmCollectionType.list),
-    ]);
-  }();
-
-  @override
-  SchemaObject get objectSchema => RealmObjectBase.getSchema(this) ?? schema;
-}
-
-class Product extends _Product with RealmEntity, RealmObjectBase, RealmObject {
-  Product(
-    ObjectId id,
-    ObjectId templateId,
-    String companyId,
-    String defaultCode,
-    num listPrice,
-    String sku,
-    num stock, {
-    String? barcode,
-    String? combinationIndex,
-    Map<String, String> attributes = const {},
-    Map<String, num> pricelist = const {},
-  }) {
-    RealmObjectBase.set(this, 'id', id);
-    RealmObjectBase.set(this, 'templateId', templateId);
-    RealmObjectBase.set(this, 'companyId', companyId);
-    RealmObjectBase.set(this, 'defaultCode', defaultCode);
-    RealmObjectBase.set(this, 'barcode', barcode);
-    RealmObjectBase.set(this, 'combinationIndex', combinationIndex);
-    RealmObjectBase.set<RealmMap<String>>(
-        this, 'attributes', RealmMap<String>(attributes));
-    RealmObjectBase.set(this, 'listPrice', listPrice);
-    RealmObjectBase.set(this, 'sku', sku);
-    RealmObjectBase.set(this, 'stock', stock);
-    RealmObjectBase.set<RealmMap<num>>(
-        this, 'pricelist', RealmMap<num>(pricelist));
-  }
-
-  Product._();
-
-  @override
-  ObjectId get id => RealmObjectBase.get<ObjectId>(this, 'id') as ObjectId;
-  @override
-  set id(ObjectId value) => RealmObjectBase.set(this, 'id', value);
-
-  @override
-  ObjectId get templateId =>
-      RealmObjectBase.get<ObjectId>(this, 'templateId') as ObjectId;
-  @override
-  set templateId(ObjectId value) =>
-      RealmObjectBase.set(this, 'templateId', value);
-
-  @override
-  String get companyId =>
-      RealmObjectBase.get<String>(this, 'companyId') as String;
-  @override
-  set companyId(String value) => RealmObjectBase.set(this, 'companyId', value);
-
-  @override
-  String get defaultCode =>
-      RealmObjectBase.get<String>(this, 'defaultCode') as String;
-  @override
-  set defaultCode(String value) =>
-      RealmObjectBase.set(this, 'defaultCode', value);
-
-  @override
-  String? get barcode =>
-      RealmObjectBase.get<String>(this, 'barcode') as String?;
-  @override
-  set barcode(String? value) => RealmObjectBase.set(this, 'barcode', value);
-
-  @override
-  String? get combinationIndex =>
-      RealmObjectBase.get<String>(this, 'combinationIndex') as String?;
-  @override
-  set combinationIndex(String? value) =>
-      RealmObjectBase.set(this, 'combinationIndex', value);
-
-  @override
-  RealmMap<String> get attributes =>
-      RealmObjectBase.get<String>(this, 'attributes') as RealmMap<String>;
-  @override
-  set attributes(covariant RealmMap<String> value) =>
-      throw RealmUnsupportedSetError();
-
-  @override
-  num get listPrice => RealmObjectBase.get<num>(this, 'listPrice') as num;
-  @override
-  set listPrice(num value) => RealmObjectBase.set(this, 'listPrice', value);
-
-  @override
-  String get sku => RealmObjectBase.get<String>(this, 'sku') as String;
-  @override
-  set sku(String value) => RealmObjectBase.set(this, 'sku', value);
-
-  @override
-  num get stock => RealmObjectBase.get<num>(this, 'stock') as num;
-  @override
-  set stock(num value) => RealmObjectBase.set(this, 'stock', value);
-
-  @override
-  RealmMap<num> get pricelist =>
-      RealmObjectBase.get<num>(this, 'pricelist') as RealmMap<num>;
-  @override
-  set pricelist(covariant RealmMap<num> value) =>
-      throw RealmUnsupportedSetError();
-
-  @override
-  Stream<RealmObjectChanges<Product>> get changes =>
-      RealmObjectBase.getChanges<Product>(this);
-
-  @override
-  Stream<RealmObjectChanges<Product>> changesFor([List<String>? keyPaths]) =>
-      RealmObjectBase.getChangesFor<Product>(this, keyPaths);
-
-  @override
-  Product freeze() => RealmObjectBase.freezeObject<Product>(this);
-
-  EJsonValue toEJson() {
-    return <String, dynamic>{
-      'id': id.toEJson(),
-      'templateId': templateId.toEJson(),
-      'companyId': companyId.toEJson(),
-      'defaultCode': defaultCode.toEJson(),
-      'barcode': barcode.toEJson(),
-      'combinationIndex': combinationIndex.toEJson(),
-      'attributes': attributes.toEJson(),
-      'listPrice': listPrice.toEJson(),
-      'sku': sku.toEJson(),
-      'stock': stock.toEJson(),
-      'pricelist': pricelist.toEJson(),
-    };
-  }
-
-  static EJsonValue _toEJson(Product value) => value.toEJson();
-  static Product _fromEJson(EJsonValue ejson) {
-    if (ejson is! Map<String, dynamic>) return raiseInvalidEJson(ejson);
-    return switch (ejson) {
-      {
-        'id': EJsonValue id,
-        'templateId': EJsonValue templateId,
-        'companyId': EJsonValue companyId,
-        'defaultCode': EJsonValue defaultCode,
-        'listPrice': EJsonValue listPrice,
-        'sku': EJsonValue sku,
-        'stock': EJsonValue stock,
-      } =>
-        Product(
-          fromEJson(id),
-          fromEJson(templateId),
-          fromEJson(companyId),
-          fromEJson(defaultCode),
-          fromEJson(listPrice),
-          fromEJson(sku),
-          fromEJson(stock),
-          barcode: fromEJson(ejson['barcode']),
-          combinationIndex: fromEJson(ejson['combinationIndex']),
-          attributes: fromEJson(ejson['attributes']),
-          pricelist: fromEJson(ejson['pricelist']),
-        ),
-      _ => raiseInvalidEJson(ejson),
-    };
-  }
-
-  static final schema = () {
-    RealmObjectBase.registerFactory(Product._);
-    register(_toEJson, _fromEJson);
-    return const SchemaObject(ObjectType.realmObject, Product, 'Product', [
-      SchemaProperty('id', RealmPropertyType.objectid, primaryKey: true),
-      SchemaProperty('templateId', RealmPropertyType.objectid),
-      SchemaProperty('companyId', RealmPropertyType.string),
-      SchemaProperty('defaultCode', RealmPropertyType.string),
-      SchemaProperty('barcode', RealmPropertyType.string, optional: true),
-      SchemaProperty('combinationIndex', RealmPropertyType.string,
-          optional: true),
-      SchemaProperty('attributes', RealmPropertyType.string,
-          collectionType: RealmCollectionType.map),
-      SchemaProperty('listPrice', RealmPropertyType.double),
-      SchemaProperty('sku', RealmPropertyType.string),
-      SchemaProperty('stock', RealmPropertyType.double),
-      SchemaProperty('pricelist', RealmPropertyType.double,
-          collectionType: RealmCollectionType.map),
     ]);
   }();
 
