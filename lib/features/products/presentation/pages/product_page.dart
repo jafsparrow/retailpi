@@ -30,7 +30,7 @@ class ProductScreen extends ConsumerWidget {
                 ),
               ),
               // Trigger filtering when search query changes
-              onChanged: (query) => productNotifier.searchProduct(query),
+              onChanged: (query) => {},
             ),
           ),
           // List of products
@@ -41,7 +41,7 @@ class ProductScreen extends ConsumerWidget {
                 final product = products[index];
                 return Card(
                   child: ListTile(
-                    title: Text('product.productTemplate!.name'),
+                    title: Text(product.name!),
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
