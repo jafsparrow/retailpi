@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:retailpi/features/products/presentation/providers/product_provider.dart';
+import 'package:retailpi/features/products/presentation/providers/products_provider.dart';
 
 class ProductScreen extends ConsumerWidget {
   @override

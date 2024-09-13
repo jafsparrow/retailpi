@@ -4,7 +4,7 @@ import 'package:retailpi/features/products/data/respositories/product_repository
 import 'package:retailpi/features/products/data/sources/realm_product_data_source.dart';
 import 'package:retailpi/features/products/domain/entities/product.dart';
 import 'package:retailpi/features/products/domain/repositories/product_repository.dart';
-import 'package:retailpi/features/products/presentation/providers/product_notifier.dart';
+import 'package:retailpi/features/products/presentation/providers/products_notifier.dart';
 
 final realmProductDataSourceProvider = Provider<RealmProductDataSource>((ref) {
   final realm = ref.watch(realmProvider);
