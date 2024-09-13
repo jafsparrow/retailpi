@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:retailpi/core/providers/realm_provider.dart';
+import 'package:retailpi/features/category/presentation/providers/category_provider.dart';
 import 'package:retailpi/features/products/data/respositories/product_repository_impl.dart';
 import 'package:retailpi/features/products/data/sources/realm_product_data_source.dart';
 import 'package:retailpi/features/products/domain/entities/product.dart';
@@ -14,7 +15,8 @@ final realmProductDataSourceProvider = Provider<RealmProductDataSource>((ref) {
 // Provider for ProductRepositoryImpl
 final productRepositoryProvider = Provider<ProductRepository>((ref) {
   final dataSource = ref.read(realmProductDataSourceProvider);
-  return ProductRepositoryImpl(dataSource);
+  final categoryRepository = ref.read(categoryRepositoryProvider);
+  return ProductRepositoryImpl(dataSource, categoryRepository);
 });
 
 // ViewModel Example

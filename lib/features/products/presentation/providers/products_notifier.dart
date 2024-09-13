@@ -28,18 +28,4 @@ class ProductStateNotifier extends StateNotifier<List<Product>> {
   //     }).toList();
   //   }
   // }
-
-  uploadProducts(dynamic data) {
-    // _realm.write(() {
-    //   for (var item in data) {
-    //     _realm.add(Product(
-    //       item['name']!,
-    //       'codemebro',
-    //       item['code']!,
-    //       item['cost']!,
-    //       item['price']!,
-    //     ));
-    //   }
-    // });
-  }
 }

@@ -5,4 +5,7 @@ abstract class ProductRepository {
   Future<List<Product>> fetchAllProducts();
   Future<List<ProductVariant>> fetchAllProductWithVariants();
   Future<ProductVariant?> fetchProductByBarcode(String barcode);
+
+  Future<void> uploadProducts(String filePath);
+  Future<void> addProducts(List<Product> products);
 }

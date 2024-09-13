@@ -6,15 +6,18 @@ class Product {
   int? qtyAvailable;
   String? uomName;
   String? name;
+  String? defaultCode;
   String? displayName;
   int? reorderingMinQty;
   int? reorderingMaxQty;
   bool? saleOk;
-  int? listPrice;
+  num? listPrice;
   String? taxString;
   List<TaxId>? taxesId;
+  String? categoryId;
 
-  Product({required this.name});
+  Product(
+      {required this.name, this.categoryId, this.listPrice, this.defaultCode});
 }
 
 class AttributeLineIds {

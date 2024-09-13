@@ -14,4 +14,26 @@ class RealmProductDataSource {
   //   final lowerQuery = query.toLowerCase();
 
   // }
+
+  List<ProductTemplate> featchAllProductTemplate() {
+    return _realm.all<ProductTemplate>().toList();
+  }
+
+  uploadProducts(dynamic data, Category categoryrealm) {
+    _realm.write(() {
+      for (var item in data) {
+        _realm.add(ProductTemplate(ObjectId(), item['name']!, item['code ']!,
+            item['cost']!, item['price']!, 'companyId', DateTime.now(), true,
+            category: categoryrealm));
+      }
+    });
+  }
+
+  Future<void> addProducts(List<ProductTemplate> productTemplatess) async {
+    _realm.write(() {
+      for (var product in productTemplatess) {
+        _realm.add(product);
+      }
+    });
+  }
 }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:realm/realm.dart';
 import 'package:retailpi/features/products/presentation/pages/product_page.dart';
+import 'package:retailpi/features/products/presentation/pages/product_upload.dart';
 import 'package:retailpi/features/products/presentation/providers/products_provider.dart';
 import 'package:retailpi/core/providers/realm_provider.dart';
 import 'package:retailpi/core/realm_models/product_related.dart';
@@ -31,6 +32,6 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        home: ProductScreen());
+        home: ProductScreen()); //UploadProductsPage()); // ProductScreen());
   }
 }
