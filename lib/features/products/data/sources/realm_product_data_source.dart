@@ -36,4 +36,12 @@ class RealmProductDataSource {
       }
     });
   }
+
+  List<ProductTemplate> searchProducts(String query) {
+    final products = _realm.all<ProductTemplate>().query(
+        'name CONTAINS[c] \$0 OR defaultCode CONTAINS[c] \$0',
+        [query]).toList();
+
+    return products;
+  }
 }

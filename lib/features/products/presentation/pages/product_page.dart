@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:retailpi/features/products/domain/entities/product.dart';
 import 'package:retailpi/features/products/presentation/providers/products_provider.dart';
 
 class ProductScreen extends ConsumerWidget {
@@ -30,7 +33,14 @@ class ProductScreen extends ConsumerWidget {
                 ),
               ),
               // Trigger filtering when search query changes
-              onChanged: (query) => {},
+              onChanged: (query) => {
+                if (query.isNotEmpty)
+                  {
+                    ref
+                        .read(productStateNotifierProvider.notifier)
+                        .searchProducts(query)
+                  }
+              },
             ),
           ),
           // List of products
@@ -39,9 +49,11 @@ class ProductScreen extends ConsumerWidget {
               itemCount: products.length,
               itemBuilder: (context, index) {
                 final product = products[index];
+
                 return Card(
                   child: ListTile(
                     title: Text(product.name!),
+                    onTap: () => _showProductBottomSheet(context, product),
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -57,6 +69,34 @@ class ProductScreen extends ConsumerWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  void _showProductBottomSheet(BuildContext context, Product product) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              product.name!,
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 16),
+            Text('Price: \$${product.listPrice!.toStringAsFixed(2)}'),
+            SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+                // Navigate to product details/edit page if necessary
+              },
+              child: Text('Edit Product'),
+            ),
+          ],
+        ),
       ),
     );
   }

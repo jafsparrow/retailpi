@@ -111,6 +111,14 @@ class ProductRepositoryImpl implements ProductRepository {
       await realmProductDataSource.addProducts(realmProducts.toList());
     }
   }
+
+  Future<List<Product>> searchProducts(String query) async {
+    final productTemplateRealms = realmProductDataSource.searchProducts(query);
+
+    final mappedToDomainProduct = productTemplateRealms
+        .map((product) => ProductMapper.toDomainModel(product));
+    return mappedToDomainProduct.toList();
+  }
 }
 
 // class ProductRepository {
