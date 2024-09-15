@@ -5,19 +5,24 @@ class Product {
   List<AttributeLineIds>? attributeLineIds;
   int? qtyAvailable;
   String? uomName;
-  String? name;
+  String name;
   String? defaultCode;
   String? displayName;
   int? reorderingMinQty;
   int? reorderingMaxQty;
   bool? saleOk;
   num? listPrice;
+  num? standardPrice;
   String? taxString;
   List<TaxId>? taxesId;
   String? categoryId;
 
   Product(
-      {required this.name, this.categoryId, this.listPrice, this.defaultCode});
+      {required this.name,
+      this.categoryId,
+      this.listPrice,
+      this.defaultCode,
+      this.standardPrice});
 }
 
 class AttributeLineIds {

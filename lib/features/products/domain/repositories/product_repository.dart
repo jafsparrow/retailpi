@@ -8,5 +8,5 @@ abstract class ProductRepository {
 
   Future<void> uploadProducts(String filePath);
   Future<void> addProducts(List<Product> products);
-  Future<List<Product>> searchProducts(String query);
+  Future<List<Product>> searchProducts(String query, {int limit, int offset});
 }

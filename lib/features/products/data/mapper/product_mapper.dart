@@ -15,6 +15,9 @@ class ProductMapper {
   // Convert Realm model to domain model
   static domain.Product toDomainModel(ProductTemplate realmProduct) {
     return domain.Product(
-        name: realmProduct.name, listPrice: realmProduct.listPrice);
+        name: realmProduct.name,
+        listPrice: realmProduct.listPrice,
+        standardPrice: realmProduct.standaredPrice,
+        defaultCode: realmProduct.defaultCode);
   }
 }

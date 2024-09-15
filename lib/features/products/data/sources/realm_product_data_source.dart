@@ -31,16 +31,21 @@ class RealmProductDataSource {
 
   Future<void> addProducts(List<ProductTemplate> productTemplatess) async {
     _realm.write(() {
+      _realm.deleteAll<ProductTemplate>();
       for (var product in productTemplatess) {
         _realm.add(product);
       }
     });
   }
 
-  List<ProductTemplate> searchProducts(String query) {
-    final products = _realm.all<ProductTemplate>().query(
-        'name CONTAINS[c] \$0 OR defaultCode CONTAINS[c] \$0',
-        [query]).toList();
+  List<ProductTemplate> searchProducts(String query,
+      {int limit = 20, int offset = 0}) {
+    final products = _realm
+        .all<ProductTemplate>()
+        .query('name CONTAINS[c] \$0 OR defaultCode CONTAINS[c] \$0', [query])
+        .skip(offset)
+        .take(limit)
+        .toList();
 
     return products;
   }

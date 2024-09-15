@@ -13,8 +13,14 @@ class ProductStateNotifier extends StateNotifier<List<Product>> {
     state = await _productRepository.fetchAllProducts();
   }
 
-  Future<void> searchProducts(String query) async {
-    state = await _productRepository.searchProducts(query);
+  Future<void> searchProducts(String query,
+      {int limit = 20, int offset = 0}) async {
+    if (query.isEmpty) {
+      loadProducts();
+      return;
+    }
+    state = await _productRepository.searchProducts(query,
+        limit: limit, offset: offset);
   }
 
   // void searchProduct(String query) {

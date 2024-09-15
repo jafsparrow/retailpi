@@ -100,7 +100,7 @@ class ProductRepositoryImpl implements ProductRepository {
           ObjectId(),
           product.name!,
           product.defaultCode!,
-          product.listPrice!,
+          product.standardPrice!,
           product.listPrice!,
           'companyId',
           DateTime.now(),
@@ -112,8 +112,11 @@ class ProductRepositoryImpl implements ProductRepository {
     }
   }
 
-  Future<List<Product>> searchProducts(String query) async {
-    final productTemplateRealms = realmProductDataSource.searchProducts(query);
+  @override
+  Future<List<Product>> searchProducts(String query,
+      {int limit = 20, int offset = 0}) async {
+    final productTemplateRealms = realmProductDataSource.searchProducts(query,
+        limit: limit, offset: offset);
 
     final mappedToDomainProduct = productTemplateRealms
         .map((product) => ProductMapper.toDomainModel(product));

@@ -3,7 +3,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:retailpi/features/products/domain/entities/product.dart';
+import 'package:retailpi/features/products/presentation/pages/product_upload.dart';
 import 'package:retailpi/features/products/presentation/providers/products_provider.dart';
+import 'package:retailpi/features/products/presentation/widgets/product_list_item.dart';
 
 class ProductScreen extends ConsumerWidget {
   @override
@@ -17,6 +19,20 @@ class ProductScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Product List'),
+        actions: [
+          PopupMenuButton(
+            onSelected: (selectedValue) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => UploadProductsPage()),
+              );
+            },
+            icon: Icon(Icons.more_vert),
+            itemBuilder: (_) => [
+              PopupMenuItem(child: Text('Upload Products'), value: 0),
+            ],
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -24,7 +40,7 @@ class ProductScreen extends ConsumerWidget {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextField(
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Search',
                 hintText: 'Enter product name or code',
                 prefixIcon: Icon(Icons.search),
@@ -34,12 +50,12 @@ class ProductScreen extends ConsumerWidget {
               ),
               // Trigger filtering when search query changes
               onChanged: (query) => {
-                if (query.isNotEmpty)
-                  {
-                    ref
-                        .read(productStateNotifierProvider.notifier)
-                        .searchProducts(query)
-                  }
+                // if (query.isNotEmpty)
+                //   {
+                ref
+                    .read(productStateNotifierProvider.notifier)
+                    .searchProducts(query, limit: 50, offset: 0)
+                // }
               },
             ),
           ),
@@ -50,21 +66,28 @@ class ProductScreen extends ConsumerWidget {
               itemBuilder: (context, index) {
                 final product = products[index];
 
-                return Card(
-                  child: ListTile(
-                    title: Text(product.name!),
-                    onTap: () => _showProductBottomSheet(context, product),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Text('Code: ${product.productTemplate?.defaultCode}'),
-                        // Text(
-                        //     'Sell Rate: \$${product.productTemplate?.listPrice}'),
-                        // Text('Cost: \$${product.cost.toStringAsFixed(2)}'),
-                      ],
-                    ),
-                  ),
+                return ProductListItem(
+                  productName: product.name!,
+                  productCode: product.defaultCode!,
+                  productPrice: product.listPrice!,
+                  onEdit: () {},
+                  onClick: () {
+                    _showProductBottomSheet(context, product);
+                  },
                 );
+
+                // return ListTile(
+                //   title: Text(product.name!),
+                //   onTap: () => _showProductBottomSheet(context, product),
+                //   subtitle: Column(
+                //     crossAxisAlignment: CrossAxisAlignment.start,
+                //     children: [
+                //       Text('Code: ${product.defaultCode}'),
+                //       Text('Sell Rate: \$${product.listPrice}'),
+                //       // Text('Cost: \$${product.cost.toStringAsFixed(2)}'),
+                //     ],
+                //   ),
+                // );
               },
             ),
           ),
@@ -76,6 +99,9 @@ class ProductScreen extends ConsumerWidget {
   void _showProductBottomSheet(BuildContext context, Product product) {
     showModalBottomSheet(
       context: context,
+      // shape: const RoundedRectangleBorder(
+      //   borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      // ),
       builder: (context) => Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -83,17 +109,77 @@ class ProductScreen extends ConsumerWidget {
           children: [
             Text(
               product.name!,
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 16),
-            Text('Price: \$${product.listPrice!.toStringAsFixed(2)}'),
-            SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context);
-                // Navigate to product details/edit page if necessary
-              },
-              child: Text('Edit Product'),
+            const SizedBox(height: 8),
+            Text('Price: ${product.listPrice!.toStringAsFixed(2)}'),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // Product Price
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Price:',
+                      style: TextStyle(
+                        fontSize: 14.0,
+                        color: Colors.grey[700],
+                      ),
+                    ),
+                    Text(
+                      '${product.listPrice!.toStringAsFixed(2)}',
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.green[700],
+                      ),
+                    ),
+                  ],
+                ),
+                // Product Cost
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Cost:',
+                      style: TextStyle(
+                        fontSize: 14.0,
+                        color: Colors.grey[700],
+                      ),
+                    ),
+                    Text(
+                      '${product.standardPrice!.toStringAsFixed(2)}',
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.red[700],
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 24.0),
+            // View Details Button
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () {},
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 14.0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                child: const Text(
+                  'View Product Details',
+                  style: TextStyle(
+                    fontSize: 16.0,
+                  ),
+                ),
+              ),
             ),
           ],
         ),

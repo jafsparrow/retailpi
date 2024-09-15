@@ -27,11 +27,12 @@ class UploadProductsFromExcelUseCase {
       var sheet = excel.tables[table];
       for (var row in sheet!.rows.skip(1)) {
         // Skip header row
-        final name = row[0]?.value.toString();
+        final name = row[1]?.value.toString();
         print(name);
-        final code = row[1]?.value.toString();
+        final code = row[2]?.value.toString();
 
-        final cost = row[2]?.value.toString();
+        final cost = row[5]?.value.toString();
+        final price = row[4]?.value.toString();
         print(cost);
 
         if (name != null && code != null && cost != null) {
@@ -39,7 +40,8 @@ class UploadProductsFromExcelUseCase {
           products.add(Product(
               name: name,
               categoryId: 'catid',
-              listPrice: double.parse(cost),
+              listPrice: double.parse(price!),
+              standardPrice: double.parse(cost!),
               defaultCode: code));
         }
       }
