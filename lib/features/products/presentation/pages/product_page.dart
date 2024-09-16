@@ -22,6 +22,9 @@ class ProductScreen extends ConsumerWidget {
         actions: [
           PopupMenuButton(
             onSelected: (selectedValue) {
+              FocusScope.of(context).requestFocus(
+                  FocusNode()); //[todo] : this is temporary fix for text field focus when user moved back to list page.
+
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => UploadProductsPage()),
@@ -40,6 +43,7 @@ class ProductScreen extends ConsumerWidget {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextField(
+              autofocus: false,
               decoration: const InputDecoration(
                 labelText: 'Search',
                 hintText: 'Enter product name or code',
