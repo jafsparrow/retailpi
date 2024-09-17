@@ -66,7 +66,7 @@ class ProductRepositoryImpl implements ProductRepository {
     // read the file from the given location
 
     // read the category of the given category id;
-    realms.Category? categoryRealm =
+    realms.CategoryRealm? categoryRealm =
         categoryRepository.getCategoryById(ObjectId.fromHexString('hexString'));
 
     // _realm.write(() {
@@ -96,7 +96,7 @@ class ProductRepositoryImpl implements ProductRepository {
     // realms.Category? categoryRealm =
     //     categoryRepository.getCategoryById(ObjectId.fromHexString('hexString'));
 
-    final realmProducts = products.map((product) => realms.ProductTemplate(
+    final realmProducts = products.map((product) => realms.ProductTemplateRealm(
           ObjectId(),
           product.name!,
           product.defaultCode!,

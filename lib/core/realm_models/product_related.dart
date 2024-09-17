@@ -3,10 +3,10 @@ import 'package:realm/realm.dart';
 part 'product_related.realm.dart';
 
 @RealmModel()
-class _Product {
+class _ProductVariantRealm {
   @PrimaryKey()
   late ObjectId id;
-  late _ProductTemplate? productTemplate;
+  late _ProductTemplateRealm? productTemplate;
   late String companyId;
   late String defaultCode;
   late String? barcode;
@@ -24,11 +24,11 @@ class _Product {
 }
 
 @RealmModel()
-class _ProductTemplate {
+class _ProductTemplateRealm {
   @PrimaryKey()
   late ObjectId id;
   late String name;
-  late _Category? category; // Reference to the category
+  late _CategoryRealm? category; // Reference to the category
   late String defaultCode;
   late num standaredPrice;
   late num listPrice;
@@ -51,25 +51,25 @@ class _ProductTemplate {
 }
 
 @RealmModel()
-class _Category {
+class _CategoryRealm {
   @PrimaryKey()
   late ObjectId id;
   late String name;
-  _Category? parentCategory; // Reference to the parent category
+  _CategoryRealm? parentCategory; // Reference to the parent category
   late String categoryPath; // Path like 'parent/child/grandchild'
 }
 
 @RealmModel()
-class _Variant {
+class _VariantRealm {
   late String id;
   late String defaultCode;
   late String barcode;
   late num qtyAvailable;
   late List<String?> sellerIds;
-  late List<_VariantAttributes> attributes;
+  late List<_VariantAttributesRealm> attributes;
 }
 
 @RealmModel()
-class _VariantAttributes {
+class _VariantAttributesRealm {
   late String someThing;
 }

@@ -7,15 +7,16 @@ part of 'product_related.dart';
 // **************************************************************************
 
 // ignore_for_file: type=lint
-class Product extends _Product with RealmEntity, RealmObjectBase, RealmObject {
-  Product(
+class ProductVariantRealm extends _ProductVariantRealm
+    with RealmEntity, RealmObjectBase, RealmObject {
+  ProductVariantRealm(
     ObjectId id,
     String companyId,
     String defaultCode,
     num listPrice,
     String sku,
     num stock, {
-    ProductTemplate? productTemplate,
+    ProductTemplateRealm? productTemplate,
     String? barcode,
     String? combinationIndex,
     Map<String, String> attributes = const {},
@@ -36,7 +37,7 @@ class Product extends _Product with RealmEntity, RealmObjectBase, RealmObject {
         this, 'pricelist', RealmMap<num>(pricelist));
   }
 
-  Product._();
+  ProductVariantRealm._();
 
   @override
   ObjectId get id => RealmObjectBase.get<ObjectId>(this, 'id') as ObjectId;
@@ -44,11 +45,11 @@ class Product extends _Product with RealmEntity, RealmObjectBase, RealmObject {
   set id(ObjectId value) => RealmObjectBase.set(this, 'id', value);
 
   @override
-  ProductTemplate? get productTemplate =>
-      RealmObjectBase.get<ProductTemplate>(this, 'productTemplate')
-          as ProductTemplate?;
+  ProductTemplateRealm? get productTemplate =>
+      RealmObjectBase.get<ProductTemplateRealm>(this, 'productTemplate')
+          as ProductTemplateRealm?;
   @override
-  set productTemplate(covariant ProductTemplate? value) =>
+  set productTemplate(covariant ProductTemplateRealm? value) =>
       RealmObjectBase.set(this, 'productTemplate', value);
 
   @override
@@ -107,15 +108,17 @@ class Product extends _Product with RealmEntity, RealmObjectBase, RealmObject {
       throw RealmUnsupportedSetError();
 
   @override
-  Stream<RealmObjectChanges<Product>> get changes =>
-      RealmObjectBase.getChanges<Product>(this);
+  Stream<RealmObjectChanges<ProductVariantRealm>> get changes =>
+      RealmObjectBase.getChanges<ProductVariantRealm>(this);
 
   @override
-  Stream<RealmObjectChanges<Product>> changesFor([List<String>? keyPaths]) =>
-      RealmObjectBase.getChangesFor<Product>(this, keyPaths);
+  Stream<RealmObjectChanges<ProductVariantRealm>> changesFor(
+          [List<String>? keyPaths]) =>
+      RealmObjectBase.getChangesFor<ProductVariantRealm>(this, keyPaths);
 
   @override
-  Product freeze() => RealmObjectBase.freezeObject<Product>(this);
+  ProductVariantRealm freeze() =>
+      RealmObjectBase.freezeObject<ProductVariantRealm>(this);
 
   EJsonValue toEJson() {
     return <String, dynamic>{
@@ -133,8 +136,8 @@ class Product extends _Product with RealmEntity, RealmObjectBase, RealmObject {
     };
   }
 
-  static EJsonValue _toEJson(Product value) => value.toEJson();
-  static Product _fromEJson(EJsonValue ejson) {
+  static EJsonValue _toEJson(ProductVariantRealm value) => value.toEJson();
+  static ProductVariantRealm _fromEJson(EJsonValue ejson) {
     if (ejson is! Map<String, dynamic>) return raiseInvalidEJson(ejson);
     return switch (ejson) {
       {
@@ -145,7 +148,7 @@ class Product extends _Product with RealmEntity, RealmObjectBase, RealmObject {
         'sku': EJsonValue sku,
         'stock': EJsonValue stock,
       } =>
-        Product(
+        ProductVariantRealm(
           fromEJson(id),
           fromEJson(companyId),
           fromEJson(defaultCode),
@@ -163,12 +166,13 @@ class Product extends _Product with RealmEntity, RealmObjectBase, RealmObject {
   }
 
   static final schema = () {
-    RealmObjectBase.registerFactory(Product._);
+    RealmObjectBase.registerFactory(ProductVariantRealm._);
     register(_toEJson, _fromEJson);
-    return const SchemaObject(ObjectType.realmObject, Product, 'Product', [
+    return const SchemaObject(
+        ObjectType.realmObject, ProductVariantRealm, 'ProductVariantRealm', [
       SchemaProperty('id', RealmPropertyType.objectid, primaryKey: true),
       SchemaProperty('productTemplate', RealmPropertyType.object,
-          optional: true, linkTarget: 'ProductTemplate'),
+          optional: true, linkTarget: 'ProductTemplateRealm'),
       SchemaProperty('companyId', RealmPropertyType.string),
       SchemaProperty('defaultCode', RealmPropertyType.string),
       SchemaProperty('barcode', RealmPropertyType.string, optional: true),
@@ -188,9 +192,9 @@ class Product extends _Product with RealmEntity, RealmObjectBase, RealmObject {
   SchemaObject get objectSchema => RealmObjectBase.getSchema(this) ?? schema;
 }
 
-class ProductTemplate extends _ProductTemplate
+class ProductTemplateRealm extends _ProductTemplateRealm
     with RealmEntity, RealmObjectBase, RealmObject {
-  ProductTemplate(
+  ProductTemplateRealm(
     ObjectId id,
     String name,
     String defaultCode,
@@ -199,7 +203,7 @@ class ProductTemplate extends _ProductTemplate
     String companyId,
     DateTime updatedAt,
     bool active, {
-    Category? category,
+    CategoryRealm? category,
     String? uomId,
     String? type,
     bool? saleOk,
@@ -236,7 +240,7 @@ class ProductTemplate extends _ProductTemplate
         this, 'tags', RealmList<String>(tags));
   }
 
-  ProductTemplate._();
+  ProductTemplateRealm._();
 
   @override
   ObjectId get id => RealmObjectBase.get<ObjectId>(this, 'id') as ObjectId;
@@ -249,10 +253,10 @@ class ProductTemplate extends _ProductTemplate
   set name(String value) => RealmObjectBase.set(this, 'name', value);
 
   @override
-  Category? get category =>
-      RealmObjectBase.get<Category>(this, 'category') as Category?;
+  CategoryRealm? get category =>
+      RealmObjectBase.get<CategoryRealm>(this, 'category') as CategoryRealm?;
   @override
-  set category(covariant Category? value) =>
+  set category(covariant CategoryRealm? value) =>
       RealmObjectBase.set(this, 'category', value);
 
   @override
@@ -358,17 +362,17 @@ class ProductTemplate extends _ProductTemplate
       throw RealmUnsupportedSetError();
 
   @override
-  Stream<RealmObjectChanges<ProductTemplate>> get changes =>
-      RealmObjectBase.getChanges<ProductTemplate>(this);
+  Stream<RealmObjectChanges<ProductTemplateRealm>> get changes =>
+      RealmObjectBase.getChanges<ProductTemplateRealm>(this);
 
   @override
-  Stream<RealmObjectChanges<ProductTemplate>> changesFor(
+  Stream<RealmObjectChanges<ProductTemplateRealm>> changesFor(
           [List<String>? keyPaths]) =>
-      RealmObjectBase.getChangesFor<ProductTemplate>(this, keyPaths);
+      RealmObjectBase.getChangesFor<ProductTemplateRealm>(this, keyPaths);
 
   @override
-  ProductTemplate freeze() =>
-      RealmObjectBase.freezeObject<ProductTemplate>(this);
+  ProductTemplateRealm freeze() =>
+      RealmObjectBase.freezeObject<ProductTemplateRealm>(this);
 
   EJsonValue toEJson() {
     return <String, dynamic>{
@@ -395,8 +399,8 @@ class ProductTemplate extends _ProductTemplate
     };
   }
 
-  static EJsonValue _toEJson(ProductTemplate value) => value.toEJson();
-  static ProductTemplate _fromEJson(EJsonValue ejson) {
+  static EJsonValue _toEJson(ProductTemplateRealm value) => value.toEJson();
+  static ProductTemplateRealm _fromEJson(EJsonValue ejson) {
     if (ejson is! Map<String, dynamic>) return raiseInvalidEJson(ejson);
     return switch (ejson) {
       {
@@ -409,7 +413,7 @@ class ProductTemplate extends _ProductTemplate
         'updatedAt': EJsonValue updatedAt,
         'active': EJsonValue active,
       } =>
-        ProductTemplate(
+        ProductTemplateRealm(
           fromEJson(id),
           fromEJson(name),
           fromEJson(defaultCode),
@@ -436,14 +440,14 @@ class ProductTemplate extends _ProductTemplate
   }
 
   static final schema = () {
-    RealmObjectBase.registerFactory(ProductTemplate._);
+    RealmObjectBase.registerFactory(ProductTemplateRealm._);
     register(_toEJson, _fromEJson);
     return const SchemaObject(
-        ObjectType.realmObject, ProductTemplate, 'ProductTemplate', [
+        ObjectType.realmObject, ProductTemplateRealm, 'ProductTemplateRealm', [
       SchemaProperty('id', RealmPropertyType.objectid, primaryKey: true),
       SchemaProperty('name', RealmPropertyType.string),
       SchemaProperty('category', RealmPropertyType.object,
-          optional: true, linkTarget: 'Category'),
+          optional: true, linkTarget: 'CategoryRealm'),
       SchemaProperty('defaultCode', RealmPropertyType.string),
       SchemaProperty('standaredPrice', RealmPropertyType.double),
       SchemaProperty('listPrice', RealmPropertyType.double),
@@ -471,13 +475,13 @@ class ProductTemplate extends _ProductTemplate
   SchemaObject get objectSchema => RealmObjectBase.getSchema(this) ?? schema;
 }
 
-class Category extends _Category
+class CategoryRealm extends _CategoryRealm
     with RealmEntity, RealmObjectBase, RealmObject {
-  Category(
+  CategoryRealm(
     ObjectId id,
     String name,
     String categoryPath, {
-    Category? parentCategory,
+    CategoryRealm? parentCategory,
   }) {
     RealmObjectBase.set(this, 'id', id);
     RealmObjectBase.set(this, 'name', name);
@@ -485,7 +489,7 @@ class Category extends _Category
     RealmObjectBase.set(this, 'categoryPath', categoryPath);
   }
 
-  Category._();
+  CategoryRealm._();
 
   @override
   ObjectId get id => RealmObjectBase.get<ObjectId>(this, 'id') as ObjectId;
@@ -498,10 +502,11 @@ class Category extends _Category
   set name(String value) => RealmObjectBase.set(this, 'name', value);
 
   @override
-  Category? get parentCategory =>
-      RealmObjectBase.get<Category>(this, 'parentCategory') as Category?;
+  CategoryRealm? get parentCategory =>
+      RealmObjectBase.get<CategoryRealm>(this, 'parentCategory')
+          as CategoryRealm?;
   @override
-  set parentCategory(covariant Category? value) =>
+  set parentCategory(covariant CategoryRealm? value) =>
       RealmObjectBase.set(this, 'parentCategory', value);
 
   @override
@@ -512,15 +517,16 @@ class Category extends _Category
       RealmObjectBase.set(this, 'categoryPath', value);
 
   @override
-  Stream<RealmObjectChanges<Category>> get changes =>
-      RealmObjectBase.getChanges<Category>(this);
+  Stream<RealmObjectChanges<CategoryRealm>> get changes =>
+      RealmObjectBase.getChanges<CategoryRealm>(this);
 
   @override
-  Stream<RealmObjectChanges<Category>> changesFor([List<String>? keyPaths]) =>
-      RealmObjectBase.getChangesFor<Category>(this, keyPaths);
+  Stream<RealmObjectChanges<CategoryRealm>> changesFor(
+          [List<String>? keyPaths]) =>
+      RealmObjectBase.getChangesFor<CategoryRealm>(this, keyPaths);
 
   @override
-  Category freeze() => RealmObjectBase.freezeObject<Category>(this);
+  CategoryRealm freeze() => RealmObjectBase.freezeObject<CategoryRealm>(this);
 
   EJsonValue toEJson() {
     return <String, dynamic>{
@@ -531,8 +537,8 @@ class Category extends _Category
     };
   }
 
-  static EJsonValue _toEJson(Category value) => value.toEJson();
-  static Category _fromEJson(EJsonValue ejson) {
+  static EJsonValue _toEJson(CategoryRealm value) => value.toEJson();
+  static CategoryRealm _fromEJson(EJsonValue ejson) {
     if (ejson is! Map<String, dynamic>) return raiseInvalidEJson(ejson);
     return switch (ejson) {
       {
@@ -540,7 +546,7 @@ class Category extends _Category
         'name': EJsonValue name,
         'categoryPath': EJsonValue categoryPath,
       } =>
-        Category(
+        CategoryRealm(
           fromEJson(id),
           fromEJson(name),
           fromEJson(categoryPath),
@@ -551,13 +557,14 @@ class Category extends _Category
   }
 
   static final schema = () {
-    RealmObjectBase.registerFactory(Category._);
+    RealmObjectBase.registerFactory(CategoryRealm._);
     register(_toEJson, _fromEJson);
-    return const SchemaObject(ObjectType.realmObject, Category, 'Category', [
+    return const SchemaObject(
+        ObjectType.realmObject, CategoryRealm, 'CategoryRealm', [
       SchemaProperty('id', RealmPropertyType.objectid, primaryKey: true),
       SchemaProperty('name', RealmPropertyType.string),
       SchemaProperty('parentCategory', RealmPropertyType.object,
-          optional: true, linkTarget: 'Category'),
+          optional: true, linkTarget: 'CategoryRealm'),
       SchemaProperty('categoryPath', RealmPropertyType.string),
     ]);
   }();
@@ -566,14 +573,15 @@ class Category extends _Category
   SchemaObject get objectSchema => RealmObjectBase.getSchema(this) ?? schema;
 }
 
-class Variant extends _Variant with RealmEntity, RealmObjectBase, RealmObject {
-  Variant(
+class VariantRealm extends _VariantRealm
+    with RealmEntity, RealmObjectBase, RealmObject {
+  VariantRealm(
     String id,
     String defaultCode,
     String barcode,
     num qtyAvailable, {
     Iterable<String?> sellerIds = const [],
-    Iterable<VariantAttributes> attributes = const [],
+    Iterable<VariantAttributesRealm> attributes = const [],
   }) {
     RealmObjectBase.set(this, 'id', id);
     RealmObjectBase.set(this, 'defaultCode', defaultCode);
@@ -581,11 +589,11 @@ class Variant extends _Variant with RealmEntity, RealmObjectBase, RealmObject {
     RealmObjectBase.set(this, 'qtyAvailable', qtyAvailable);
     RealmObjectBase.set<RealmList<String?>>(
         this, 'sellerIds', RealmList<String?>(sellerIds));
-    RealmObjectBase.set<RealmList<VariantAttributes>>(
-        this, 'attributes', RealmList<VariantAttributes>(attributes));
+    RealmObjectBase.set<RealmList<VariantAttributesRealm>>(
+        this, 'attributes', RealmList<VariantAttributesRealm>(attributes));
   }
 
-  Variant._();
+  VariantRealm._();
 
   @override
   String get id => RealmObjectBase.get<String>(this, 'id') as String;
@@ -618,23 +626,24 @@ class Variant extends _Variant with RealmEntity, RealmObjectBase, RealmObject {
       throw RealmUnsupportedSetError();
 
   @override
-  RealmList<VariantAttributes> get attributes =>
-      RealmObjectBase.get<VariantAttributes>(this, 'attributes')
-          as RealmList<VariantAttributes>;
+  RealmList<VariantAttributesRealm> get attributes =>
+      RealmObjectBase.get<VariantAttributesRealm>(this, 'attributes')
+          as RealmList<VariantAttributesRealm>;
   @override
-  set attributes(covariant RealmList<VariantAttributes> value) =>
+  set attributes(covariant RealmList<VariantAttributesRealm> value) =>
       throw RealmUnsupportedSetError();
 
   @override
-  Stream<RealmObjectChanges<Variant>> get changes =>
-      RealmObjectBase.getChanges<Variant>(this);
+  Stream<RealmObjectChanges<VariantRealm>> get changes =>
+      RealmObjectBase.getChanges<VariantRealm>(this);
 
   @override
-  Stream<RealmObjectChanges<Variant>> changesFor([List<String>? keyPaths]) =>
-      RealmObjectBase.getChangesFor<Variant>(this, keyPaths);
+  Stream<RealmObjectChanges<VariantRealm>> changesFor(
+          [List<String>? keyPaths]) =>
+      RealmObjectBase.getChangesFor<VariantRealm>(this, keyPaths);
 
   @override
-  Variant freeze() => RealmObjectBase.freezeObject<Variant>(this);
+  VariantRealm freeze() => RealmObjectBase.freezeObject<VariantRealm>(this);
 
   EJsonValue toEJson() {
     return <String, dynamic>{
@@ -647,8 +656,8 @@ class Variant extends _Variant with RealmEntity, RealmObjectBase, RealmObject {
     };
   }
 
-  static EJsonValue _toEJson(Variant value) => value.toEJson();
-  static Variant _fromEJson(EJsonValue ejson) {
+  static EJsonValue _toEJson(VariantRealm value) => value.toEJson();
+  static VariantRealm _fromEJson(EJsonValue ejson) {
     if (ejson is! Map<String, dynamic>) return raiseInvalidEJson(ejson);
     return switch (ejson) {
       {
@@ -657,7 +666,7 @@ class Variant extends _Variant with RealmEntity, RealmObjectBase, RealmObject {
         'barcode': EJsonValue barcode,
         'qtyAvailable': EJsonValue qtyAvailable,
       } =>
-        Variant(
+        VariantRealm(
           fromEJson(id),
           fromEJson(defaultCode),
           fromEJson(barcode),
@@ -670,9 +679,10 @@ class Variant extends _Variant with RealmEntity, RealmObjectBase, RealmObject {
   }
 
   static final schema = () {
-    RealmObjectBase.registerFactory(Variant._);
+    RealmObjectBase.registerFactory(VariantRealm._);
     register(_toEJson, _fromEJson);
-    return const SchemaObject(ObjectType.realmObject, Variant, 'Variant', [
+    return const SchemaObject(
+        ObjectType.realmObject, VariantRealm, 'VariantRealm', [
       SchemaProperty('id', RealmPropertyType.string),
       SchemaProperty('defaultCode', RealmPropertyType.string),
       SchemaProperty('barcode', RealmPropertyType.string),
@@ -680,7 +690,7 @@ class Variant extends _Variant with RealmEntity, RealmObjectBase, RealmObject {
       SchemaProperty('sellerIds', RealmPropertyType.string,
           optional: true, collectionType: RealmCollectionType.list),
       SchemaProperty('attributes', RealmPropertyType.object,
-          linkTarget: 'VariantAttributes',
+          linkTarget: 'VariantAttributesRealm',
           collectionType: RealmCollectionType.list),
     ]);
   }();
@@ -689,15 +699,15 @@ class Variant extends _Variant with RealmEntity, RealmObjectBase, RealmObject {
   SchemaObject get objectSchema => RealmObjectBase.getSchema(this) ?? schema;
 }
 
-class VariantAttributes extends _VariantAttributes
+class VariantAttributesRealm extends _VariantAttributesRealm
     with RealmEntity, RealmObjectBase, RealmObject {
-  VariantAttributes(
+  VariantAttributesRealm(
     String someThing,
   ) {
     RealmObjectBase.set(this, 'someThing', someThing);
   }
 
-  VariantAttributes._();
+  VariantAttributesRealm._();
 
   @override
   String get someThing =>
@@ -706,17 +716,17 @@ class VariantAttributes extends _VariantAttributes
   set someThing(String value) => RealmObjectBase.set(this, 'someThing', value);
 
   @override
-  Stream<RealmObjectChanges<VariantAttributes>> get changes =>
-      RealmObjectBase.getChanges<VariantAttributes>(this);
+  Stream<RealmObjectChanges<VariantAttributesRealm>> get changes =>
+      RealmObjectBase.getChanges<VariantAttributesRealm>(this);
 
   @override
-  Stream<RealmObjectChanges<VariantAttributes>> changesFor(
+  Stream<RealmObjectChanges<VariantAttributesRealm>> changesFor(
           [List<String>? keyPaths]) =>
-      RealmObjectBase.getChangesFor<VariantAttributes>(this, keyPaths);
+      RealmObjectBase.getChangesFor<VariantAttributesRealm>(this, keyPaths);
 
   @override
-  VariantAttributes freeze() =>
-      RealmObjectBase.freezeObject<VariantAttributes>(this);
+  VariantAttributesRealm freeze() =>
+      RealmObjectBase.freezeObject<VariantAttributesRealm>(this);
 
   EJsonValue toEJson() {
     return <String, dynamic>{
@@ -724,14 +734,14 @@ class VariantAttributes extends _VariantAttributes
     };
   }
 
-  static EJsonValue _toEJson(VariantAttributes value) => value.toEJson();
-  static VariantAttributes _fromEJson(EJsonValue ejson) {
+  static EJsonValue _toEJson(VariantAttributesRealm value) => value.toEJson();
+  static VariantAttributesRealm _fromEJson(EJsonValue ejson) {
     if (ejson is! Map<String, dynamic>) return raiseInvalidEJson(ejson);
     return switch (ejson) {
       {
         'someThing': EJsonValue someThing,
       } =>
-        VariantAttributes(
+        VariantAttributesRealm(
           fromEJson(someThing),
         ),
       _ => raiseInvalidEJson(ejson),
@@ -739,10 +749,10 @@ class VariantAttributes extends _VariantAttributes
   }
 
   static final schema = () {
-    RealmObjectBase.registerFactory(VariantAttributes._);
+    RealmObjectBase.registerFactory(VariantAttributesRealm._);
     register(_toEJson, _fromEJson);
-    return const SchemaObject(
-        ObjectType.realmObject, VariantAttributes, 'VariantAttributes', [
+    return const SchemaObject(ObjectType.realmObject, VariantAttributesRealm,
+        'VariantAttributesRealm', [
       SchemaProperty('someThing', RealmPropertyType.string),
     ]);
   }();

@@ -5,9 +5,9 @@ import 'package:retailpi/features/pricelists/models/pricelist.dart';
 
 final realmProvider = Provider<Realm>((ref) {
   final config = Configuration.local([
-    ProductTemplate.schema,
-    Product.schema,
-    Category.schema,
+    ProductTemplateRealm.schema,
+    ProductVariantRealm.schema,
+    CategoryRealm.schema,
     PriceList.schema
   ], schemaVersion: 8);
   final realm = Realm(config);

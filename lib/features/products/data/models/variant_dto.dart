@@ -27,7 +27,7 @@ class ProductVariantDTO {
       required this.displayName,
       required this.qtyAvailable});
 
-  factory ProductVariantDTO.fromRealm(Product productRealm) {
+  factory ProductVariantDTO.fromRealm(ProductVariantRealm productRealm) {
     return ProductVariantDTO(
         id: productRealm.id,
         name: productRealm.productTemplate!.name,

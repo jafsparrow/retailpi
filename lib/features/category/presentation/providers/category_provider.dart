@@ -21,7 +21,7 @@ final categoryRepositoryProvider = Provider((ref) {
 final selectedCategoryIdProvider = StateProvider<ObjectId>((ref) {
   return ObjectId();
 });
-final categoryByIdProvider = Provider<Category?>((ref) {
+final categoryByIdProvider = Provider<CategoryRealm?>((ref) {
   final selectedCategoryId = ref.watch(selectedCategoryIdProvider);
   final repository = ref.watch(categoryRepositoryProvider);
   return repository.getCategoryById(selectedCategoryId);
@@ -29,13 +29,13 @@ final categoryByIdProvider = Provider<Category?>((ref) {
 
 // List of categories
 final categoryNotifierProvider =
-    StateNotifierProvider<CategoryListNotifier, List<Category>>((ref) {
+    StateNotifierProvider<CategoryListNotifier, List<CategoryRealm>>((ref) {
   final repository = ref.watch(categoryRepositoryProvider);
   return CategoryListNotifier(repository)..loadCategories();
 });
 
 // Notifier for managing category list
-class CategoryListNotifier extends StateNotifier<List<Category>> {
+class CategoryListNotifier extends StateNotifier<List<CategoryRealm>> {
   final CategoryRepository _repository;
 
   CategoryListNotifier(this._repository) : super([]);
@@ -44,15 +44,15 @@ class CategoryListNotifier extends StateNotifier<List<Category>> {
     state = _repository.getCategories();
   }
 
-  void addCategory({required name, Category? parent}) {
+  void addCategory({required name, CategoryRealm? parent}) {
     _repository.addCategory(name: name, parent: parent);
     loadCategories();
   }
 
   void updateCategory(
-      {required Category category,
+      {required CategoryRealm category,
       required String name,
-      Category? parentCategory}) {
+      CategoryRealm? parentCategory}) {
     _repository.updateCategory(
         category: category, name: name, parentCategory: parentCategory);
 

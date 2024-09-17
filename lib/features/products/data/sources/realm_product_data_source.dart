@@ -6,8 +6,8 @@ class RealmProductDataSource {
 
   RealmProductDataSource(this._realm);
 
-  List<Product> getProducts() {
-    return _realm.all<Product>().toList();
+  List<ProductVariantRealm> getProducts() {
+    return _realm.all<ProductVariantRealm>().toList();
   }
 
   // List<Product> searchProduct(String query) {
@@ -15,33 +15,40 @@ class RealmProductDataSource {
 
   // }
 
-  List<ProductTemplate> featchAllProductTemplate() {
-    return _realm.all<ProductTemplate>().toList();
+  List<ProductTemplateRealm> featchAllProductTemplate() {
+    return _realm.all<ProductTemplateRealm>().toList();
   }
 
-  uploadProducts(dynamic data, Category categoryrealm) {
+  uploadProducts(dynamic data, CategoryRealm categoryrealm) {
     _realm.write(() {
       for (var item in data) {
-        _realm.add(ProductTemplate(ObjectId(), item['name']!, item['code ']!,
-            item['cost']!, item['price']!, 'companyId', DateTime.now(), true,
+        _realm.add(ProductTemplateRealm(
+            ObjectId(),
+            item['name']!,
+            item['code ']!,
+            item['cost']!,
+            item['price']!,
+            'companyId',
+            DateTime.now(),
+            true,
             category: categoryrealm));
       }
     });
   }
 
-  Future<void> addProducts(List<ProductTemplate> productTemplatess) async {
+  Future<void> addProducts(List<ProductTemplateRealm> productTemplatess) async {
     _realm.write(() {
-      _realm.deleteAll<ProductTemplate>();
+      _realm.deleteAll<ProductTemplateRealm>();
       for (var product in productTemplatess) {
         _realm.add(product);
       }
     });
   }
 
-  List<ProductTemplate> searchProducts(String query,
+  List<ProductTemplateRealm> searchProducts(String query,
       {int limit = 20, int offset = 0}) {
     final products = _realm
-        .all<ProductTemplate>()
+        .all<ProductTemplateRealm>()
         .query('name CONTAINS[c] \$0 OR defaultCode CONTAINS[c] \$0', [query])
         .skip(offset)
         .take(limit)

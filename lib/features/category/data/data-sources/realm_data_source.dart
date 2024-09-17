@@ -6,8 +6,9 @@ class RealmDataSource {
 
   RealmDataSource(this._realm);
 
-  void saveCategory({required name, Category? parent}) {
-    Category category = Category(ObjectId(), name, '', parentCategory: parent);
+  void saveCategory({required name, CategoryRealm? parent}) {
+    CategoryRealm category =
+        CategoryRealm(ObjectId(), name, '', parentCategory: parent);
     category.categoryPath =
         generateCategoryPath(category); // Generate and assign categoryPath
 
@@ -18,7 +19,8 @@ class RealmDataSource {
     });
   }
 
-  void updateCategory(Category category, String name, Category? parent) {
+  void updateCategory(
+      CategoryRealm category, String name, CategoryRealm? parent) {
     print('have i reached in update');
     _realm.write(() {
       category.name = name;
@@ -28,23 +30,23 @@ class RealmDataSource {
     });
   }
 
-  List<Category> getCategories() {
+  List<CategoryRealm> getCategories() {
     // Implementation for fetching categories
-    return _realm.all<Category>().toList();
+    return _realm.all<CategoryRealm>().toList();
     return [];
   }
 
-  Category? getCategoryById(ObjectId id) {
-    return _realm.find<Category>(id);
+  CategoryRealm? getCategoryById(ObjectId id) {
+    return _realm.find<CategoryRealm>(id);
   }
 
   deleteCategory() {
     // TODO - need to think about deleting it on deactivating it, as some product mihgt have the categoryId mapped to it..
   }
-  String generateCategoryPath(Category category) {
+  String generateCategoryPath(CategoryRealm category) {
     List<String> path = [];
 
-    Category? currentCategory = category;
+    CategoryRealm? currentCategory = category;
     while (currentCategory != null) {
       path.insert(
           0,

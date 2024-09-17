@@ -5,7 +5,8 @@ import 'package:retailpi/core/realm_models/product_related.dart';
 import 'package:retailpi/features/category/presentation/providers/category_provider.dart';
 
 class CategoryForm extends ConsumerStatefulWidget {
-  final Category? category; // If this is null, we're creating a new category.
+  final CategoryRealm?
+      category; // If this is null, we're creating a new category.
 
   CategoryForm({this.category});
 
@@ -16,7 +17,7 @@ class CategoryForm extends ConsumerStatefulWidget {
 class _CategoryFormState extends ConsumerState<CategoryForm> {
   final _formKey = GlobalKey<FormState>();
   String? _name;
-  Category? _parentCategory;
+  CategoryRealm? _parentCategory;
 
   @override
   void initState() {
@@ -72,11 +73,11 @@ class _CategoryFormState extends ConsumerState<CategoryForm> {
                 },
                 onSaved: (value) => _name = value,
               ),
-              DropdownButtonFormField<Category>(
+              DropdownButtonFormField<CategoryRealm>(
                 value: widget.category,
                 decoration: InputDecoration(labelText: 'Parent Category'),
                 items: categories
-                    .map((category) => DropdownMenuItem<Category>(
+                    .map((category) => DropdownMenuItem<CategoryRealm>(
                           value: category,
                           child: Text(category.categoryPath),
                         ))

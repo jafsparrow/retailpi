@@ -7,22 +7,22 @@ class CategoryRepository {
 
   CategoryRepository(this._dataSource);
 
-  Future<void> addCategory({required name, Category? parent}) async {
+  Future<void> addCategory({required name, CategoryRealm? parent}) async {
     _dataSource.saveCategory(name: name, parent: parent);
   }
 
   Future<void> updateCategory(
-      {required Category category,
+      {required CategoryRealm category,
       required String name,
-      Category? parentCategory}) async {
+      CategoryRealm? parentCategory}) async {
     _dataSource.updateCategory(category, name, parentCategory);
   }
 
-  List<Category> getCategories() {
+  List<CategoryRealm> getCategories() {
     return _dataSource.getCategories();
   }
 
-  Category? getCategoryById(ObjectId id) {
+  CategoryRealm? getCategoryById(ObjectId id) {
     return _dataSource.getCategoryById(id);
   }
 }
