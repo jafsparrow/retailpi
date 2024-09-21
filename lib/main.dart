@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
       ),
       GoRoute(
         path: '/sales-invoices',
-        builder: (context, state) => const QuotationList(),
+        builder: (context, state) => SalesQuotationScreen(),
       ),
       GoRoute(
         path: '/product-add',

@@ -22,7 +22,7 @@ class _ProductVariantRealm {
   late DateTime? expiryDate;
   late DateTime? productionDate;
 
-  String? mainImage;
+  late String? mainImage;
 
   late List<String> scrollImages;
 }
@@ -37,8 +37,8 @@ class _ProductTemplateRealm {
   late String defaultCode;
   late num standaredPrice;
   late num listPrice;
-  late _UomRealm saleUom;
-  late _UomRealm purchaseUom;
+  late _UomRealm? saleUom;
+  late _UomRealm? purchaseUom;
   late String? type;
   late bool? saleOk;
   late String? saleDescription;
@@ -59,8 +59,8 @@ class _ProductTemplateRealm {
   late bool? printerOverride;
   late String? printer;
   late bool active;
-  late List<String>? tags;
-  late List<String>?
+  late List<String> tags;
+  late List<String>
       searchMatchTerms; // this is for image search and check any of the word matches the result.
 
   late List<_PriceListRealm>
@@ -123,14 +123,14 @@ class _UomCategoryRealm {
   @PrimaryKey()
   late ObjectId id;
   late String name;
-  List<_UomRealm>? uoms;
+  late List<_UomRealm> uoms;
 }
 
 @RealmModel()
 class _UomRealm {
   @PrimaryKey()
   late ObjectId id;
-  late _UomCategoryRealm uomCategory;
+  late _UomCategoryRealm? uomCategory;
   late String
       uomType; // odoo copy - reference/ bigger/smaller. Not sure where has it used in the code..
   late String name;
@@ -220,7 +220,7 @@ class _InvoiceRealm {
   @PrimaryKey()
   late ObjectId id;
   late ObjectId salesDocumentId; // Foreign key to link with the sales order
-  late _PartnerRealm partner; // Customer linked to this invoice
+  late _PartnerRealm? partner; // Customer linked to this invoice
   late DateTime date; // Invoice creation date
   late DateTime? dueDate;
   late double totalAmount; // Total invoice amount
@@ -303,7 +303,7 @@ class _PartnerRealm {
   String? email; // Optional contact information
   String? phone; // Optional contact information
 
-  late _AddressRealm address; // Address reference
+  late _AddressRealm? address; // Address reference
 
   late List<_InvoiceRealm>
       invoices; // Reference to the invoices this partner is involved in
