@@ -33,6 +33,7 @@ class _ProductTemplateRealm {
   late ObjectId id;
   late String name;
   late _CategoryRealm? category; // Reference to the category
+  late _PosCategoryRealm? posCategory;
   late String defaultCode;
   late num standaredPrice;
   late num listPrice;
@@ -317,12 +318,38 @@ class _AddressRealm {
 }
 
 @RealmModel()
-class CompanyRealm {
+class _PartnerCompanyRealm {
   @PrimaryKey()
   late ObjectId id;
 
-  late String companyName; // Name of the company
+  late String name; // Name of the company
 
   // List of partners associated with this company
   late List<_PartnerRealm> partners;
+}
+
+@RealmModel()
+class _UserRealm {
+  @PrimaryKey()
+  late ObjectId id; // UUID or email
+  late String email;
+  late String passwordHash; // Store hashed password
+  late String role; // Define roles such as admin, user
+  late String companyId; // Multi-tenancy
+}
+
+@RealmModel()
+class _RoleRealm {
+  @PrimaryKey()
+  late String name; // e.g., 'admin', 'user', 'manager'
+  late List<String> permissions; // List of model names or actions
+}
+
+@RealmModel()
+class _CompanyRealm {
+  @PrimaryKey()
+  late String id; // UUID for the company
+  late String name; // Company name
+  late String currency;
+  // other company-specific fields (like fiscal settings, legal entity details)
 }
