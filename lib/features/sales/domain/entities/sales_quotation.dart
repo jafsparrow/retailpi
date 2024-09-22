@@ -25,6 +25,24 @@ class SalesQuotation {
       (sum, line) => sum + line.totalPrice,
     );
   }
+
+  SalesQuotation copyWith({
+    String? quotationNumber,
+    DateTime? quotationDate,
+    String? createdByUserId,
+    String? customerId,
+    List<SalesQuotationLine>? quotationLines,
+    double? totalAmount,
+  }) {
+    return SalesQuotation(
+      quotationNumber: quotationNumber ?? this.quotationNumber,
+      quotationDate: quotationDate ?? this.quotationDate,
+      createdByUserId: createdByUserId ?? this.createdByUserId,
+      customerId: customerId ?? this.customerId,
+      quotationLines: quotationLines ?? this.quotationLines,
+      totalAmount: totalAmount ?? this.totalAmount,
+    );
+  }
 }
 
 

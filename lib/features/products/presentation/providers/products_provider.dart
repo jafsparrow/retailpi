@@ -5,6 +5,8 @@ import 'package:retailpi/features/products/data/respositories/product_repository
 import 'package:retailpi/features/products/data/sources/realm_product_data_source.dart';
 import 'package:retailpi/features/products/domain/entities/product.dart';
 import 'package:retailpi/features/products/domain/repositories/product_repository.dart';
+import 'package:retailpi/features/products/domain/usecases/get_top_products_search_usercase.dart';
+import 'package:retailpi/features/products/presentation/providers/product_top_search_notifier.dart';
 import 'package:retailpi/features/products/presentation/providers/products_notifier.dart';
 
 final realmProductDataSourceProvider = Provider<RealmProductDataSource>((ref) {
@@ -26,6 +28,18 @@ final productStateNotifierProvider =
   return ProductStateNotifier(productRepository);
 });
 
+final getTopProductsSearchUsercaseProvider =
+    Provider<GetTopProductsSearchUsecase>((ref) {
+  final productRepository = ref.read(productRepositoryProvider);
+  return GetTopProductsSearchUsecase(productRepository);
+});
+
+final productSearchProvider =
+    StateNotifierProvider<ProductSearchNotifier, List<Product>>((ref) {
+  return ProductSearchNotifier(
+      getTopProductsSearchUsecase:
+          ref.read(getTopProductsSearchUsercaseProvider));
+});
 
 // final productRepositoryProvider = Provider<ProductRepository>((ref) {
 //   final realm = ref.watch(realmProvider);

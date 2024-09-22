@@ -16,7 +16,7 @@ class SalesQuotationNotifier extends StateNotifier<SalesQuotation> {
     required this.createQuotationUseCase,
     // required this.addLineUseCase,
   }) : super(SalesQuotation(
-          quotationNumber: '',
+          quotationNumber: '320',
           quotationDate: DateTime.now(),
           createdByUserId: '',
           customerId: '',
@@ -29,10 +29,14 @@ class SalesQuotationNotifier extends StateNotifier<SalesQuotation> {
     state = quotation;
   }
 
-  void addLineToQuotation(SalesQuotationLine line) {
-    state.quotationLines.add(line);
-    // state.totalAmount = state.calculateTotalAmount();
-    // addLineUseCase.execute(state.quotationNumber, line);
+  void addLineToQuotation(SalesQuotationLine newLine) {
+    // Ensure immutability by creating a new list and replacing the old one
+    final updatedQuotationLines =
+        List<SalesQuotationLine>.from(state.quotationLines)..add(newLine);
+
+    // Emit a new state by creating a new SalesQuotation object with updated lines
+    state = state.copyWith(
+        quotationLines: updatedQuotationLines, quotationNumber: 'fuck you');
   }
 }
 
