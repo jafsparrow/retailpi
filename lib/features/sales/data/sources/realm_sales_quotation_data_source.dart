@@ -6,37 +6,29 @@ class RealmSalesQuotationDataSource {
 
   RealmSalesQuotationDataSource(this._realm);
 
-  List<ProductVariantRealm> getProducts() {
-    return _realm.all<ProductVariantRealm>().toList();
+  List<SalesDocumentRealm> getQuotations() {
+    return _realm.all<SalesDocumentRealm>().toList();
   }
 
-  // List<Product> searchProduct(String query) {
-  //   final lowerQuery = query.toLowerCase();
-
+  // uploadStatements(dynamic data, CategoryRealm categoryrealm) {
+  //   _realm.write(() {
+  //     for (var item in data) {
+  //       _realm.add(ProductTemplateRealm(
+  //           ObjectId(),
+  //           item['name']!,
+  //           item['code ']!,
+  //           item['cost']!,
+  //           item['price']!,
+  //           'companyId',
+  //           DateTime.now(),
+  //           true,
+  //           category: categoryrealm));
+  //     }
+  //   });
   // }
 
-  List<ProductTemplateRealm> featchAllProductTemplate() {
-    return _realm.all<ProductTemplateRealm>().toList();
-  }
-
-  uploadProducts(dynamic data, CategoryRealm categoryrealm) {
-    _realm.write(() {
-      for (var item in data) {
-        _realm.add(ProductTemplateRealm(
-            ObjectId(),
-            item['name']!,
-            item['code ']!,
-            item['cost']!,
-            item['price']!,
-            'companyId',
-            DateTime.now(),
-            true,
-            category: categoryrealm));
-      }
-    });
-  }
-
-  Future<void> addProducts(List<ProductTemplateRealm> productTemplatess) async {
+  Future<void> createQuotations(
+      List<SalesDocumentRealm> productTemplatess) async {
     _realm.write(() {
       _realm.deleteAll<ProductTemplateRealm>();
       for (var product in productTemplatess) {
@@ -45,15 +37,24 @@ class RealmSalesQuotationDataSource {
     });
   }
 
-  List<ProductTemplateRealm> searchProducts(String query,
-      {int limit = 20, int offset = 0}) {
-    final products = _realm
-        .all<ProductTemplateRealm>()
-        .query('name CONTAINS[c] \$0 OR defaultCode CONTAINS[c] \$0', [query])
-        .skip(offset)
-        .take(limit)
-        .toList();
-
-    return products;
+  Future<void> createQuotation(SalesDocumentRealm quotation) async {
+    _realm.write(() {
+      _realm.add<SalesDocumentRealm>(quotation);
+    });
   }
+
+  SalesDocumentRealm? getQuotationById(String id) {
+    return _realm.find<SalesDocumentRealm>(ObjectId.fromHexString(id));
+  }
+  // List<SalesDocumentRealm> searchQuotation(String query,
+  //     {int limit = 20, int offset = 0}) {
+  //   final quotations = _realm
+  //       .all<SalesDocumentRealm>()
+  //       .query('name CONTAINS[c] \$0 OR defaultCode CONTAINS[c] \$0', [query])
+  //       .skip(offset)
+  //       .take(limit)
+  //       .toList();
+
+  //   return quotations;
+  // }
 }
