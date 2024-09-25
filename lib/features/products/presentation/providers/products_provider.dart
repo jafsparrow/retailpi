@@ -36,9 +36,10 @@ final getTopProductsSearchUsercaseProvider =
 
 final productSearchProvider =
     StateNotifierProvider<ProductSearchNotifier, List<Product>>((ref) {
+  final productSearchUsercaseProvider =
+      ref.read(getTopProductsSearchUsercaseProvider);
   return ProductSearchNotifier(
-      getTopProductsSearchUsecase:
-          ref.read(getTopProductsSearchUsercaseProvider));
+      getTopProductsSearchUsecase: productSearchUsercaseProvider);
 });
 
 // final productRepositoryProvider = Provider<ProductRepository>((ref) {

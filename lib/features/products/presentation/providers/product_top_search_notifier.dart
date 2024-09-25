@@ -9,10 +9,15 @@ class ProductSearchNotifier extends StateNotifier<List<Product>> {
       : super([]);
 
   // Fetch and filter products from Realm based on search query
-  Future<void> searchProducts(String query) async {
+  searchProducts(String query) async {
     final filteredProducts =
         await getTopProductsSearchUsecase.getTopProductSearch(query);
 
+    print('searching products');
     state = filteredProducts; // Update the state with the filtered products
+  }
+
+  void hellpPrint(String key) {
+    print(key);
   }
 }

@@ -1,102 +1,121 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:retailpi/features/products/domain/entities/product.dart';
+import 'package:retailpi/features/products/presentation/providers/products_provider.dart';
+import 'package:retailpi/features/sales/domain/entities/sales_quotation_line.dart';
+import 'package:retailpi/features/sales/presentation/widgets/product_search.dart';
 
-// // Update SalesQuotationLineWidget to include discount input
-// class SalesQuotationLineWidget extends ConsumerStatefulWidget {
-//   final int index;
-//   final SalesQuotationLine line;
+class SalesQuotationLineWidget extends ConsumerStatefulWidget {
+  final int index;
+  final SalesQuotationLine line;
 
-//   SalesQuotationLineWidget({required this.index, required this.line});
+  SalesQuotationLineWidget({required this.index, required this.line});
 
-//   @override
-//   _SalesQuotationLineWidgetState createState() => _SalesQuotationLineWidgetState();
-// }
+  @override
+  SalesQuotationLineWidgetState createState() =>
+      SalesQuotationLineWidgetState();
+}
 
-// class _SalesQuotationLineWidgetState extends ConsumerState<SalesQuotationLineWidget> {
-//   TextEditingController _searchController = TextEditingController();
-//   TextEditingController _discountController = TextEditingController(); // new controller for discount
+class SalesQuotationLineWidgetState
+    extends ConsumerState<SalesQuotationLineWidget> {
+  @override
+  void initState() {
+    super.initState();
+    // _searchController.addListener(() {
+    //   _filterProducts(_searchController.text);
+    // });
+  }
 
-//   @override
-//   Widget build(BuildContext context) {
-//     final salesQuotationNotifier = ref.read(salesQuotationProvider.notifier);
-
-//     return Padding(
-//       padding: const EdgeInsets.all(8.0),
-//       child: Column(
-//         children: [
-//           // Existing code for product search and quantity input...
-
-//           // Discount input
-//           TextField(
-//             controller: _discountController,
-//             keyboardType: TextInputType.number,
-//             decoration: InputDecoration(labelText: 'Discount (%)'),
-//             onChanged: (value) {
-//               final discount = double.tryParse(value) ?? 0;
-//               final updatedLine = SalesQuotationLine(
-//                 productId: widget.line.productId,
-//                 productName: widget.line.productName,
-//                 price: widget.line.price,
-//                 quantity: widget.line.quantity,
-//                 discount: discount,
-//               );
-//               updatedLine.calculateTotalPrice();
-//               salesQuotationNotifier.updateLine(widget.index, updatedLine);
-//             },
-//           ),
-
-//           // Total Price after discount
-//           Padding(
-//             padding: const EdgeInsets.only(top: 8.0),
-//             child: Text(
-//               'Total after discount: \$${widget.line.totalPrice.toStringAsFixed(2)}',
-//               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-//             ),
-//           ),
-
-//           // Rest of the existing UI...
-//         ],
-//       ),
-//     );
-//   }
-
-
-// // Barcode scanning field in SalesQuotationLineWidget
-// IconButton(
-//   icon: Icon(Icons.camera_alt),
-//   onPressed: () async {
-//     // Logic to open camera and scan barcode
-//     String? scannedBarcode = await scanBarcode(); // This can be a method using barcode scanning packages
-//     if (scannedBarcode != null) {
-//       // Search product by barcode
-//       final product = ref.read(productProvider.notifier).searchProducts(scannedBarcode).firstOrNull();
-//       if (product != null) {
-//         final updatedLine = SalesQuotationLine(
-//           productId: product.id,
-//           productName: product.name,
-//           price: product.price,
-//           quantity: widget.line.quantity,
-//         );
-//         updatedLine.calculateTotalPrice();
-//         salesQuotationNotifier.updateLine(widget.index, updatedLine);
-//       }
-//     }
-//   },
-// ),
-
-
-// IconButton(
-//   icon: Icon(Icons.undo),
-//   onPressed: () {
-//     final originalLine = SalesQuotationLine(
-//       productId: widget.line.productId,
-//       productName: widget.line.productName,
-//       price: widget.line.price,
-//       quantity: widget.line.quantity,
-//     );
-//     originalLine.calculateTotalPrice();
-//     salesQuotationNotifier.updateLine(widget.index, originalLine);
-//   },
-// ),
-
-
-
-// }
+  @override
+  Widget build(BuildContext context) {
+    // final salesQuotationNotifier = ref.read(salesQuotationProvider.notifier);
+    List<Product> filteredProducts = ref.read(productStateNotifierProvider);
+    final List<Product> matchingProducts = filteredProducts
+        .where((product) => product.id == widget.line.productId)
+        .toList(); // Filter products by productId
+    final product = matchingProducts.isNotEmpty
+        ? matchingProducts[0] // Return the first matching product if found
+        : null; // Return null if no match is found
+    // print(_filteredProducts);
+    return Row(
+      children: [
+        const SizedBox(
+          width: 40, // Fixed width for the number column
+          child: Text('99'),
+        ),
+        Expanded(
+          flex: 2,
+          child: ProductSearchField(
+            onProductSelected: (product) {},
+          ),
+        ),
+        SizedBox(
+          width: 30,
+        ),
+        // Quantity Input
+        SizedBox(
+          width: 80,
+          child: TextField(
+            keyboardType: TextInputType.number,
+            decoration: const InputDecoration(
+              labelText: 'Quantity',
+            ),
+            onChanged: (value) {
+              //   final quantity = double.tryParse(value) ?? 1;
+              //   salesQuotationNotifier.updateLine(
+              //     widget.index,
+              //     SalesQuotationLine(
+              //       productId: widget.line.productId,
+              //       productName: widget.line.productName,
+              //       price: widget.line.price,
+              //       quantity: quantity,
+              //     ),
+              //   );
+            },
+          ),
+        ),
+        Spacer(),
+        // Unit Price Column
+        SizedBox(
+          width: 80,
+          child: TextField(
+            keyboardType: TextInputType.number,
+            decoration: const InputDecoration(
+              labelText: 'Unit Price',
+            ),
+            onChanged: (value) {
+              //   final quantity = double.tryParse(value) ?? 1;
+              //   salesQuotationNotifier.updateLine(
+              //     widget.index,
+              //     SalesQuotationLine(
+              //       productId: widget.line.productId,
+              //       productName: widget.line.productName,
+              //       price: widget.line.price,
+              //       quantity: quantity,
+              //     ),
+              //   );
+            },
+          ),
+        ),
+        Spacer(),
+        // Total Column
+        const SizedBox(
+          width: 80, // Fixed width for the total column
+          child: Text('5%'),
+        ),
+        Spacer(),
+        // Total Column
+        const SizedBox(
+          width: 80, // Fixed width for the total column
+          child: Text('\$60.00'),
+        ),
+        Spacer(),
+        // Icon Column (fixed width for an icon button)
+        const SizedBox(
+          width: 40,
+          child: Icon(Icons.delete),
+        ),
+      ],
+    );
+  }
+}
