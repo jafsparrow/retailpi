@@ -8,8 +8,13 @@ import 'package:retailpi/features/sales/presentation/widgets/product_search.dart
 class SalesQuotationLineWidget extends ConsumerStatefulWidget {
   final int index;
   final SalesQuotationLine line;
-
-  SalesQuotationLineWidget({required this.index, required this.line});
+  final FocusNode productNameFocusNode;
+  final Function(int) onTabOut;
+  SalesQuotationLineWidget(
+      {required this.index,
+      required this.line,
+      required this.onTabOut,
+      required this.productNameFocusNode});
 
   @override
   SalesQuotationLineWidgetState createState() =>
@@ -47,6 +52,7 @@ class SalesQuotationLineWidgetState
           flex: 2,
           child: ProductSearchField(
             onProductSelected: (product) {},
+            productNameFocusNode: widget.productNameFocusNode,
           ),
         ),
         SizedBox(
@@ -94,6 +100,9 @@ class SalesQuotationLineWidgetState
               //       quantity: quantity,
               //     ),
               //   );
+            },
+            onEditingComplete: () {
+              widget.onTabOut(widget.index);
             },
           ),
         ),

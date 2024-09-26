@@ -8,15 +8,16 @@ class SalesQuotation {
   final String customerId;
   final List<SalesQuotationLine> quotationLines;
   final double totalAmount;
+  final double taxedTotal;
 
-  SalesQuotation({
-    required this.quotationNumber,
-    required this.quotationDate,
-    required this.createdByUserId,
-    required this.customerId,
-    required this.quotationLines,
-    required this.totalAmount,
-  });
+  SalesQuotation(
+      {required this.quotationNumber,
+      required this.quotationDate,
+      required this.createdByUserId,
+      required this.customerId,
+      required this.quotationLines,
+      required this.totalAmount,
+      required this.taxedTotal});
 
   // Calculate the total quotation amount
   double calculateTotalAmount() {
@@ -33,15 +34,16 @@ class SalesQuotation {
     String? customerId,
     List<SalesQuotationLine>? quotationLines,
     double? totalAmount,
+    double? taxedTotal,
   }) {
     return SalesQuotation(
-      quotationNumber: quotationNumber ?? this.quotationNumber,
-      quotationDate: quotationDate ?? this.quotationDate,
-      createdByUserId: createdByUserId ?? this.createdByUserId,
-      customerId: customerId ?? this.customerId,
-      quotationLines: quotationLines ?? this.quotationLines,
-      totalAmount: totalAmount ?? this.totalAmount,
-    );
+        quotationNumber: quotationNumber ?? this.quotationNumber,
+        quotationDate: quotationDate ?? this.quotationDate,
+        createdByUserId: createdByUserId ?? this.createdByUserId,
+        customerId: customerId ?? this.customerId,
+        quotationLines: quotationLines ?? this.quotationLines,
+        totalAmount: totalAmount ?? this.totalAmount,
+        taxedTotal: taxedTotal ?? this.taxedTotal);
   }
 }
 

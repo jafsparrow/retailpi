@@ -19,14 +19,14 @@ class SalesQuotationMapper {
   // Convert Realm model to domain model
   static SalesQuotation toDomain(SalesDocumentRealm realmQuotation) {
     return SalesQuotation(
-      quotationNumber: 'helo',
-      quotationDate: DateTime.now(),
-      createdByUserId: 'hellouserid',
-      customerId: 'hellocutomerid',
-      quotationLines:
-          realmQuotation.lineItems.map((line) => toDomainLine(line)).toList(),
-      totalAmount: realmQuotation.totalAmount,
-    );
+        quotationNumber: 'helo',
+        quotationDate: DateTime.now(),
+        createdByUserId: 'hellouserid',
+        customerId: 'hellocutomerid',
+        quotationLines:
+            realmQuotation.lineItems.map((line) => toDomainLine(line)).toList(),
+        totalAmount: realmQuotation.totalAmount,
+        taxedTotal: 3.333);
 
     //     return SalesQuotation(
     //   quotationNumber: realmQuotation.quotationNumber,
@@ -59,7 +59,7 @@ class SalesQuotationMapper {
       productId: realmLine.id.toString(),
       productName: 'later fill up',
       quantity: 33,
-      price: 30.0,
+      unitPrice: 30.0,
       discount: 5,
       totalPrice: 30,
     );

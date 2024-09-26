@@ -7,7 +7,10 @@ import 'package:retailpi/features/products/presentation/providers/products_provi
 class ProductSearchField extends ConsumerStatefulWidget {
   final Function(Product) onProductSelected;
 
-  ProductSearchField({required this.onProductSelected});
+  final FocusNode productNameFocusNode;
+
+  ProductSearchField(
+      {required this.onProductSelected, required this.productNameFocusNode});
 
   @override
   _ProductSearchFieldState createState() => _ProductSearchFieldState();
@@ -31,7 +34,7 @@ class _ProductSearchFieldState extends ConsumerState<ProductSearchField> {
   @override
   Widget build(BuildContext context) {
     return TypeAheadField<Product>(
-      focusNode: FocusNode(),
+      focusNode: widget.productNameFocusNode,
       controller: _typeAheadController,
       builder: (context, controller, focusNode) {
         return TextField(
