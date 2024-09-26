@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:retailpi/features/products/domain/entities/product.dart';
 import 'package:retailpi/features/products/presentation/providers/products_provider.dart';
 import 'package:retailpi/features/sales/domain/entities/sales_quotation_line.dart';
+import 'package:retailpi/features/sales/presentation/state/notifiers/sales_quotation_notifier.dart';
+import 'package:retailpi/features/sales/presentation/state/providers/sales_quotation_provider.dart';
 import 'package:retailpi/features/sales/presentation/widgets/product_search.dart';
 
 class SalesQuotationLineWidget extends ConsumerStatefulWidget {
@@ -23,17 +25,37 @@ class SalesQuotationLineWidget extends ConsumerStatefulWidget {
 
 class SalesQuotationLineWidgetState
     extends ConsumerState<SalesQuotationLineWidget> {
+  late TextEditingController quantiyController = TextEditingController();
+  late TextEditingController unitPriceController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
+
+    quantiyController.text = widget.line.quantity.toString();
+    unitPriceController.text = widget.line.unitPrice.toString();
     // _searchController.addListener(() {
     //   _filterProducts(_searchController.text);
     // });
   }
 
+  void _handleProductSelection(Product product) {
+    final salesQuotationNotifier = ref.read(salesQuotationProvider.notifier);
+    print('handle Product selection called');
+    print(product);
+    final SalesQuotationLine newLine = SalesQuotationLine(
+        productId: product.id!,
+        productName: product.name,
+        quantity: 1,
+        unitPrice: double.parse(product.listPrice.toString()),
+        discount: 1,
+        totalPrice: 11);
+    salesQuotationNotifier.addLineToQuotation(newLine);
+  }
+
   @override
   Widget build(BuildContext context) {
-    // final salesQuotationNotifier = ref.read(salesQuotationProvider.notifier);
+    final salesQuotationNotifier = ref.read(salesQuotationProvider.notifier);
     List<Product> filteredProducts = ref.read(productStateNotifierProvider);
     final List<Product> matchingProducts = filteredProducts
         .where((product) => product.id == widget.line.productId)
@@ -51,7 +73,7 @@ class SalesQuotationLineWidgetState
         Expanded(
           flex: 2,
           child: ProductSearchField(
-            onProductSelected: (product) {},
+            onProductSelected: _handleProductSelection,
             productNameFocusNode: widget.productNameFocusNode,
           ),
         ),
@@ -66,17 +88,14 @@ class SalesQuotationLineWidgetState
             decoration: const InputDecoration(
               labelText: 'Quantity',
             ),
+            controller: quantiyController,
             onChanged: (value) {
-              //   final quantity = double.tryParse(value) ?? 1;
-              //   salesQuotationNotifier.updateLine(
-              //     widget.index,
-              //     SalesQuotationLine(
-              //       productId: widget.line.productId,
-              //       productName: widget.line.productName,
-              //       price: widget.line.price,
-              //       quantity: quantity,
-              //     ),
-              //   );
+              final quantity = double.tryParse(value) ?? 1;
+
+              print('quantitiy changed');
+              salesQuotationNotifier.updateLine(
+                widget.line.copyWith(quantity: quantity, totalPrice: 344),
+              );
             },
           ),
         ),
@@ -89,6 +108,7 @@ class SalesQuotationLineWidgetState
             decoration: const InputDecoration(
               labelText: 'Unit Price',
             ),
+            controller: unitPriceController,
             onChanged: (value) {
               //   final quantity = double.tryParse(value) ?? 1;
               //   salesQuotationNotifier.updateLine(

@@ -36,6 +36,7 @@ class _QuotationScreenState extends ConsumerState<SalesQuotationScreen> {
   // Method to handle tabbing out or pressing enter
   void _handleFieldExit(int index) {
     final salesQuotation = ref.read(salesQuotationProvider);
+    print('has this been called');
     if (index == salesQuotation.quotationLines.length - 1) {
       // If we're on the last line, add a new line when user exits
       _addLine();

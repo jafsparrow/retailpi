@@ -21,10 +21,14 @@ class ManageSalesQuotationLinesUseCase {
       SalesQuotation salesQuotation, SalesQuotationLine updatedLine) {
     final updatedquotationLines = salesQuotation.quotationLines.map((line) {
       if (line.productId == updatedLine.productId) {
+        print('condition of finding the right product called');
         return updatedLine;
       }
+
       return line;
     }).toList();
+
+    print(updatedquotationLines[0].quantity);
     return _calculateSalesQuotation(
         salesQuotation.copyWith(quotationLines: updatedquotationLines));
   }

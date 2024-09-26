@@ -36,6 +36,7 @@ class SalesQuotationNotifier extends StateNotifier<SalesQuotation> {
   }
 
   void updateLine(SalesQuotationLine updatedLine) {
+    print('calling updateline');
     state = manageLinesUseCase.updateLine(state, updatedLine);
   }
 }
