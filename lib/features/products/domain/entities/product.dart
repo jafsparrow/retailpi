@@ -18,7 +18,8 @@ class Product {
   String? categoryId;
 
   Product(
-      {required this.name,
+      {required this.id,
+      required this.name,
       this.categoryId,
       this.listPrice,
       this.defaultCode,

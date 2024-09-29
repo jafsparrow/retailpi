@@ -38,6 +38,7 @@ class UploadProductsFromExcelUseCase {
         if (name != null && code != null && cost != null) {
           print('inside if condition');
           products.add(Product(
+              id: 'someidchange later',
               name: name,
               categoryId: 'catid',
               listPrice: double.parse(price!),

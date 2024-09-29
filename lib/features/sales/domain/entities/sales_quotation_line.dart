@@ -40,7 +40,7 @@ class SalesQuotationLine {
   // [TODO] - creating an empty sale quotation line now, need to think more on it? should I make the field no required.
   factory SalesQuotationLine.empty() {
     return SalesQuotationLine(
-        productId: '000',
+        productId: '0000-0000',
         productName: 'select product',
         quantity: 0,
         unitPrice: 0,

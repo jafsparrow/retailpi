@@ -34,26 +34,6 @@ class ProductRepositoryImpl implements ProductRepository {
         .map((product) => ProductMapper.toDomainModel(product))
         .toList();
     return mappedList;
-    final Product product =
-        Product(name: 'Hello Jafar product as fuck template');
-    return Future(() => [
-          product,
-          product,
-          product,
-          product,
-          product,
-          product,
-          product,
-          product,
-          product,
-          product,
-          product,
-          product,
-          product,
-          product
-        ]);
-    // TODO: implement fetchAllProducts
-    throw UnimplementedError();
   }
 
   @override

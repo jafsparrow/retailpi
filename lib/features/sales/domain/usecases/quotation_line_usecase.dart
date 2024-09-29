@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:retailpi/features/sales/domain/entities/sales_quotation.dart';
 import 'package:retailpi/features/sales/domain/entities/sales_quotation_line.dart';
 
@@ -17,21 +19,33 @@ class ManageSalesQuotationLinesUseCase {
         salesQuotation.copyWith(quotationLines: updatedquotationLines));
   }
 
-  SalesQuotation updateLine(
-      SalesQuotation salesQuotation, SalesQuotationLine updatedLine) {
-    final updatedquotationLines = salesQuotation.quotationLines.map((line) {
-      if (line.productId == updatedLine.productId) {
-        print('condition of finding the right product called');
-        return updatedLine;
-      }
+  SalesQuotation updateLine(SalesQuotation salesQuotation,
+      SalesQuotationLine updatedLine, int index) {
+    final updatedquotationLines = [...(salesQuotation.quotationLines)]
+      ..[index] = updatedLine;
 
-      return line;
-    }).toList();
+    // final updatedquotationLines = salesQuotation.quotationLines.map((line) {
+    //   if (line.productId == updatedLine.productId) {
+    //     print('condition of finding the right product called');
+    //     return updatedLine;
+    //   }
 
-    print(updatedquotationLines[0].quantity);
+    //   return line;
+    // }).toList();
     return _calculateSalesQuotation(
         salesQuotation.copyWith(quotationLines: updatedquotationLines));
   }
+
+  // SalesQuotation updateAtIndex(
+  //     SalesQuotation salesQuotation, SalesQuotationLine newLine, int index) {
+  //   final quotationLines = salesQuotation.quotationLines;
+  //   quotationLines[index] = newLine;
+  //   print(quotationLines[index].productName);
+  //   final salesQuoationUpdatedLines =
+  //       salesQuotation.copyWith(quotationLines: quotationLines);
+  //   return _calculateSalesQuotation(
+  //       salesQuoationUpdatedLines.copyWith(quotationLines: quotationLines));
+  // }
 
   SalesQuotation _calculateSalesQuotation(SalesQuotation salesQuotation) {
     final totalAmount = salesQuotation.quotationLines

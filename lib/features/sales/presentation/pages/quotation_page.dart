@@ -1,32 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:retailpi/features/sales/domain/entities/sales_quotation_line.dart';
 import 'package:retailpi/features/sales/presentation/state/providers/sales_quotation_provider.dart';
 import 'package:retailpi/features/sales/presentation/widgets/sales_quotation_line.dart';
 
 class SalesQuotationScreen extends ConsumerStatefulWidget {
+  const SalesQuotationScreen({super.key});
+
   @override
   _QuotationScreenState createState() => _QuotationScreenState();
 }
 
 class _QuotationScreenState extends ConsumerState<SalesQuotationScreen> {
-  List<FocusNode> _productNameFocusNodes = [];
+  final List<FocusNode> _productNameFocusNodes = [];
 
   // Method to handle adding new line
   void _addLine() {
     final salesQuotationNotifier = ref.read(salesQuotationProvider.notifier);
 
-    salesQuotationNotifier.addLineToQuotation(SalesQuotationLine(
-        productId: 'productId',
-        productName: 'productName',
-        quantity: 1,
-        unitPrice: 1,
-        discount: 1,
-        totalPrice: 1));
     _productNameFocusNodes.add(FocusNode());
 
+    salesQuotationNotifier.addLineToQuotation();
+
     // Request focus for the last added line (productName TextField)
-    Future.delayed(Duration(milliseconds: 100), () {
+    Future.delayed(const Duration(milliseconds: 100), () {
       if (_productNameFocusNodes.isNotEmpty) {
         FocusScope.of(context).requestFocus(_productNameFocusNodes.last);
       }
@@ -90,7 +86,13 @@ class _QuotationScreenState extends ConsumerState<SalesQuotationScreen> {
                     child: const Text('Add Line'),
                   );
                 } else {
-                  final line = salesQuotation.quotationLines[index];
+                  final line =
+                      ref.watch(salesQuotationProvider).quotationLines[index];
+                  // print('*********checking at quotation page.*****');
+
+                  // print(line.productName);
+                  // print(line.unitPrice);
+                  // print('*********checking at quotation page.*****');
                   return SalesQuotationLineWidget(
                     index: index,
                     line: line,

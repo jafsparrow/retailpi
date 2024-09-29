@@ -27,16 +27,21 @@ class SalesQuotationNotifier extends StateNotifier<SalesQuotation> {
     state = quotation;
   }
 
-  void addLineToQuotation(SalesQuotationLine newLine) {
-    state = manageLinesUseCase.addLine(state, newLine);
+  void addLineToQuotation() {
+    // when adding for the first time add a dummy line.
+    final saleQuotationDummyLine = SalesQuotationLine.empty();
+    state = manageLinesUseCase.addLine(state, saleQuotationDummyLine);
   }
 
   void removeLine(String productId) {
     state = manageLinesUseCase.removeLine(state, productId);
   }
 
-  void updateLine(SalesQuotationLine updatedLine) {
-    print('calling updateline');
-    state = manageLinesUseCase.updateLine(state, updatedLine);
+  void updateLine(SalesQuotationLine updatedLine, int index) {
+    state = manageLinesUseCase.updateLine(state, updatedLine, index);
   }
+
+  // void updateLineAtIndex(SalesQuotationLine updatedLine, int index) {
+  //   state = manageLinesUseCase.updateAtIndex(state, updatedLine, index);
+  // }
 }
