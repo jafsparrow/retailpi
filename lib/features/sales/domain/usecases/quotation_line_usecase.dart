@@ -48,8 +48,13 @@ class ManageSalesQuotationLinesUseCase {
   // }
 
   SalesQuotation _calculateSalesQuotation(SalesQuotation salesQuotation) {
-    final totalAmount = salesQuotation.quotationLines
-        .fold(0.0, (sum, line) => sum + line.totalPrice);
+    final totalAmount = salesQuotation.quotationLines.fold(0.0, (sum, line) {
+      print('line item total at now');
+      print(line.totalPrice);
+      print('disocunt is');
+      print(line.discount);
+      return sum + line.totalPrice;
+    });
     final tax = totalAmount * 0.15; // Example tax rate (15%)
     final totalTaxed = totalAmount + tax;
 

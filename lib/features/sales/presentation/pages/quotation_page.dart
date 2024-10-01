@@ -95,7 +95,6 @@ class _QuotationScreenState extends ConsumerState<SalesQuotationScreen> {
                   // print('*********checking at quotation page.*****');
                   return SalesQuotationLineWidget(
                     index: index,
-                    line: line,
                     onTabOut: _handleFieldExit,
                     productNameFocusNode: _productNameFocusNodes[index],
                   );

@@ -5,7 +5,7 @@ class SalesQuotationLine {
   final double quantity;
   final double unitPrice;
   final double discount;
-  final double totalPrice;
+  // final double totalPrice;
 
   SalesQuotationLine({
     required this.productId,
@@ -13,8 +13,11 @@ class SalesQuotationLine {
     required this.quantity,
     required this.unitPrice,
     required this.discount,
-    required this.totalPrice,
+    // required this.totalPrice,
   });
+
+  // Getter to calculate totalPrice dynamically
+  double get totalPrice => (quantity * unitPrice) - discount;
 
   // Calculate total price considering the discount
   double calculateTotalPrice() {
@@ -32,7 +35,7 @@ class SalesQuotationLine {
       productName: productName,
       quantity: quantity ?? this.quantity,
       unitPrice: unitPrice ?? this.unitPrice,
-      totalPrice: totalPrice ?? this.totalPrice,
+      // totalPrice: totalPrice ?? this.totalPrice,
       discount: discount,
     );
   }
@@ -40,11 +43,11 @@ class SalesQuotationLine {
   // [TODO] - creating an empty sale quotation line now, need to think more on it? should I make the field no required.
   factory SalesQuotationLine.empty() {
     return SalesQuotationLine(
-        productId: '0000-0000',
-        productName: 'select product',
-        quantity: 0,
-        unitPrice: 0,
-        discount: 0,
-        totalPrice: 0);
+      productId: '0000-0000',
+      productName: 'select product',
+      quantity: 0,
+      unitPrice: 0,
+      discount: 0,
+    );
   }
 }

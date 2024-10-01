@@ -61,7 +61,7 @@ class SalesQuotationMapper {
       quantity: 33,
       unitPrice: 30.0,
       discount: 5,
-      totalPrice: 30,
+      // totalPrice: 30,
     );
   }
 }
