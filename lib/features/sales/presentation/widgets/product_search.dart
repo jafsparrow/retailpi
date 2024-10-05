@@ -3,14 +3,18 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:retailpi/features/products/domain/entities/product.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:retailpi/features/products/presentation/providers/products_provider.dart';
+import 'package:retailpi/features/sales/presentation/state/providers/sales_quotation_provider.dart';
 
 class ProductSearchField extends ConsumerStatefulWidget {
   final Function(Product) onProductSelected;
-
+  final int index;
   final FocusNode productNameFocusNode;
 
-  ProductSearchField(
-      {required this.onProductSelected, required this.productNameFocusNode});
+  ProductSearchField({
+    required this.onProductSelected,
+    required this.productNameFocusNode,
+    required this.index,
+  });
 
   @override
   _ProductSearchFieldState createState() => _ProductSearchFieldState();
@@ -23,6 +27,15 @@ class _ProductSearchFieldState extends ConsumerState<ProductSearchField> {
   void initState() {
     super.initState();
     _typeAheadController = TextEditingController();
+
+    final line = ref.read(
+      salesQuotationProvider.select(
+        (quotation) => quotation.quotationLines[widget.index],
+      ),
+    );
+    if (line.productName != 'select product') {
+      _typeAheadController.text = line.productName;
+    }
   }
 
   @override

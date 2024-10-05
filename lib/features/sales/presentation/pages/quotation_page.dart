@@ -13,6 +13,19 @@ class SalesQuotationScreen extends ConsumerStatefulWidget {
 class _QuotationScreenState extends ConsumerState<SalesQuotationScreen> {
   final List<FocusNode> _productNameFocusNodes = [];
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    final exisitngQuotationLines =
+        ref.read(salesQuotationProvider).quotationLines;
+    if (exisitngQuotationLines.isNotEmpty) {
+      for (var item in exisitngQuotationLines) {
+        _productNameFocusNodes.add(FocusNode());
+      }
+    }
+    super.initState();
+  }
+
   // Method to handle adding new line
   void _addLine() {
     final salesQuotationNotifier = ref.read(salesQuotationProvider.notifier);

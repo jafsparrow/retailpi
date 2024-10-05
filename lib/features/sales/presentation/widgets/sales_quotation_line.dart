@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:retailpi/features/products/domain/entities/product.dart';
 import 'package:retailpi/features/sales/domain/entities/sales_quotation_line.dart';
@@ -9,8 +10,9 @@ class SalesQuotationLineWidget extends ConsumerStatefulWidget {
   final int index;
   final FocusNode productNameFocusNode;
   final Function(int) onTabOut;
-  SalesQuotationLineWidget(
-      {required this.index,
+  const SalesQuotationLineWidget(
+      {super.key,
+      required this.index,
       required this.onTabOut,
       required this.productNameFocusNode});
 
@@ -60,8 +62,6 @@ class SalesQuotationLineWidgetState
       (quotation) => quotation.quotationLines[widget.index],
     ));
 
-    // final salesQuotationNotifier = ref.read(salesQuotationProvider.notifier);
-    // List<Product> filteredProducts = ref.read(productStateNotifierProvider);
     final quotationLine = ref.watch(
       salesQuotationProvider
           .select((quotation) => quotation.quotationLines[widget.index]),
@@ -69,13 +69,7 @@ class SalesQuotationLineWidgetState
 
     quantiyController.text = quotationLine.quantity.toString();
     unitPriceController.text = quotationLine.unitPrice.toString();
-    // final List<Product> matchingProducts = filteredProducts
-    //     .where((product) => product.id == line.productId)
-    //     .toList(); // Filter products by productId
-    // final product = matchingProducts.isNotEmpty
-    //     ? matchingProducts[0] // Return the first matching product if found
-    //     : null; // Return null if no match is found
-    // // print(_filteredProducts);
+
     return Row(
       children: [
         const SizedBox(
@@ -87,34 +81,50 @@ class SalesQuotationLineWidgetState
           child: ProductSearchField(
             onProductSelected: _handleProductSelection,
             productNameFocusNode: widget.productNameFocusNode,
+            index: widget.index,
           ),
         ),
-        SizedBox(
+        const SizedBox(
           width: 30,
         ),
         // Quantity Input
         SizedBox(
           width: 80,
-          child: TextField(
-            keyboardType: TextInputType.number,
-            decoration: const InputDecoration(
-              labelText: 'Quantity',
+          child: Focus(
+            child: TextField(
+              keyboardType: TextInputType.number,
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(
+                  RegExp(r'[0-9]+[,.]{0,1}[0-9]*'),
+                ),
+              ],
+              decoration: const InputDecoration(
+                labelText: 'Quantity',
+              ),
+              controller: quantiyController,
+              onChanged: (value) {},
+              onEditingComplete: () {},
             ),
-            controller: quantiyController,
-            onChanged: (value) {},
-            onEditingComplete: () {
-              final quantity = double.tryParse(quantiyController.text) ?? 1;
-              _handleQuantityChange(quantity, line);
+            onFocusChange: (hasFocus) {
+              if (!hasFocus) {
+                final quantity = double.tryParse(quantiyController.text) ?? 1;
+                _handleQuantityChange(quantity, line);
+              }
             },
           ),
         ),
-        Spacer(),
+        const Spacer(),
         // Unit Price Column
         SizedBox(
           width: 80,
           child: Focus(
             child: TextField(
               keyboardType: TextInputType.number,
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(
+                  RegExp(r'[0-9]+[,.]{0,1}[0-9]*'),
+                ),
+              ],
               decoration: const InputDecoration(
                 labelText: 'Unit Price',
               ),
@@ -129,24 +139,29 @@ class SalesQuotationLineWidgetState
             ),
             onFocusChange: (hasFocus) {
               final unitPrice = double.tryParse(unitPriceController.text) ?? 1;
-              print('calling onsubmitted method');
-              _handleUnitPriceChange(unitPrice, line);
+
+              if (!hasFocus) {
+                unitPriceController.selection = TextSelection(
+                    baseOffset: 0,
+                    extentOffset: unitPriceController.text.length);
+                _handleUnitPriceChange(unitPrice, line);
+              }
             },
           ),
         ),
-        Spacer(),
+        const Spacer(),
         // Total Column
         const SizedBox(
           width: 80, // Fixed width for the total column
           child: Text('5%'),
         ),
-        Spacer(),
+        const Spacer(),
         // Total Column
         const SizedBox(
           width: 80, // Fixed width for the total column
           child: Text('\$60.00'),
         ),
-        Spacer(),
+        const Spacer(),
         // Icon Column (fixed width for an icon button)
         const SizedBox(
           width: 40,
@@ -155,4 +170,7 @@ class SalesQuotationLineWidgetState
       ],
     );
   }
+
+  //  String _getRegexString() =>
+  //     allowDecimal ? r'[0-9]+[,.]{0,1}[0-9]*' : r'[0-9]';
 }
