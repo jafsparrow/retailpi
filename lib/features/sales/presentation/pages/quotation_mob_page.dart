@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:retailpi/core/utils/constants.dart';
 import 'package:retailpi/features/sales/domain/entities/sales_quotation.dart';
@@ -58,24 +57,35 @@ class _QuotationMobileScreenState
   @override
   Widget build(BuildContext context) {
     final salesQuotation = ref.watch(salesQuotationProvider);
-    return Scaffold(
-      appBar: _buildAppBar(salesQuotation, context),
-      body: Padding(
-        padding: const EdgeInsets.only(
-            left: AppConst.kBodyPadding, right: AppConst.kBodyPadding),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildQuotationLineList(salesQuotation),
-            _colorScrollButtonHorizontal()
-          ],
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+        appBar: _buildAppBar(salesQuotation, context),
+        body: Padding(
+          padding: const EdgeInsets.only(
+              left: AppConst.kBodyPadding, right: AppConst.kBodyPadding),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: TabBarView(
+                  children: [
+                    _buildQuotationLineList(salesQuotation),
+                    Text('hello word'),
+                    Text('tab 2'),
+                  ],
+                ),
+              ),
+              _colorScrollButtonHorizontal()
+            ],
+          ),
         ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {},
+          child: Icon(Icons.add),
+        ),
+        // bottomSheet: _buildQuotationSummary(salesQuotation),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: Icon(Icons.add),
-      ),
-      // bottomSheet: _buildQuotationSummary(salesQuotation),
     );
   }
 
@@ -120,9 +130,28 @@ class _QuotationMobileScreenState
         itemCount: salesQuotation.quotationLines.length + 1,
         itemBuilder: (context, index) {
           if (index == salesQuotation.quotationLines.length) {
-            return TextButton(
-              onPressed: _addLine,
-              child: const Text('Add Line'),
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextButton(
+                  onPressed: _addLine,
+                  child: const Text('Add Line'),
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                TextButton(
+                  onPressed: _addLine,
+                  child: const Text('Add Line'),
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                TextButton(
+                  onPressed: _addLine,
+                  child: const Text('Add Line'),
+                ),
+              ],
             );
           } else {
             final line =
@@ -164,6 +193,13 @@ class _QuotationMobileScreenState
         ],
       ),
       actions: _buildAppBarActions(context),
+      bottom: TabBar(
+        tabs: [
+          Tab(text: 'Items'),
+          Tab(text: 'Optional'),
+          Tab(text: 'Terms'),
+        ],
+      ),
     );
   }
 
@@ -216,10 +252,9 @@ class _QuotationMobileScreenState
                   context: context,
                   builder: (BuildContext context) {
                     return Container(
+                      padding: EdgeInsets.all(8),
                       height: 200,
-                      child: Center(
-                        child: Text('This is a modal bottom sheet'),
-                      ),
+                      child: buildSummartyBottomSheet(),
                     );
                   },
                 );
@@ -229,6 +264,62 @@ class _QuotationMobileScreenState
           );
         }),
       ),
+    );
+  }
+
+  Widget buildSummartyBottomSheet() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Expanded(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              RichText(
+                text: TextSpan(
+                  style: TextStyle(fontSize: 16, color: Colors.black),
+                  children: [
+                    TextSpan(
+                      text: 'Total: ',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    TextSpan(
+                      text: '30 OMR',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              ),
+              Text('Discount Applied: 0.0'),
+              RichText(
+                text: TextSpan(
+                  style: TextStyle(fontSize: 16, color: Colors.black),
+                  children: [
+                    TextSpan(
+                      text: 'Taxed: ',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    TextSpan(
+                      text: '30 OMR',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(
+          width: 10,
+        ),
+        Column(
+          children: [
+            TextButton(onPressed: () {}, child: Text('Discount')),
+            TextButton(onPressed: () {}, child: Text('Print')),
+            FilledButton(onPressed: () {}, child: Text('Confirm')),
+          ],
+        ),
+      ],
     );
   }
 
