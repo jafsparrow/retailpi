@@ -11,12 +11,16 @@ class ManageSalesQuotationLinesUseCase {
         salesQuotation.copyWith(quotationLines: updatedquotationLines));
   }
 
-  SalesQuotation removeLine(SalesQuotation salesQuotation, String productId) {
-    final updatedquotationLines = salesQuotation.quotationLines
-        .where((line) => line.productId != productId)
-        .toList();
+  SalesQuotation removeLine(SalesQuotation salesQuotation, int index) {
+    // final updatedquotationLines = salesQuotation.quotationLines
+    //     .where((line) => line.productId != productId)
+    //     .toList();
+
+    final existingLineItems = salesQuotation.quotationLines;
+    existingLineItems.removeAt(index);
+
     return _calculateSalesQuotation(
-        salesQuotation.copyWith(quotationLines: updatedquotationLines));
+        salesQuotation.copyWith(quotationLines: existingLineItems));
   }
 
   SalesQuotation updateLine(SalesQuotation salesQuotation,

@@ -58,11 +58,7 @@ class SalesQuotationLineWidgetState
 
   @override
   Widget build(BuildContext context) {
-    final line = ref.watch(salesQuotationProvider.select(
-      (quotation) => quotation.quotationLines[widget.index],
-    ));
-
-    final quotationLine = ref.watch(
+    final quotationLine = ref.read(
       salesQuotationProvider
           .select((quotation) => quotation.quotationLines[widget.index]),
     );
@@ -72,9 +68,9 @@ class SalesQuotationLineWidgetState
 
     return Row(
       children: [
-        const SizedBox(
+        SizedBox(
           width: 40, // Fixed width for the number column
-          child: Text('99'),
+          child: Text((widget.index + 1).toString()),
         ),
         Expanded(
           flex: 2,
@@ -108,7 +104,7 @@ class SalesQuotationLineWidgetState
             onFocusChange: (hasFocus) {
               if (!hasFocus) {
                 final quantity = double.tryParse(quantiyController.text) ?? 1;
-                _handleQuantityChange(quantity, line);
+                _handleQuantityChange(quantity, quotationLine);
               }
             },
           ),
@@ -144,7 +140,7 @@ class SalesQuotationLineWidgetState
                 unitPriceController.selection = TextSelection(
                     baseOffset: 0,
                     extentOffset: unitPriceController.text.length);
-                _handleUnitPriceChange(unitPrice, line);
+                _handleUnitPriceChange(unitPrice, quotationLine);
               }
             },
           ),
@@ -163,9 +159,16 @@ class SalesQuotationLineWidgetState
         ),
         const Spacer(),
         // Icon Column (fixed width for an icon button)
-        const SizedBox(
+        SizedBox(
           width: 40,
-          child: Icon(Icons.delete),
+          child: IconButton(
+            icon: const Icon(Icons.delete),
+            onPressed: () {
+              ref
+                  .read(salesQuotationProvider.notifier)
+                  .removeLine(widget.index);
+            },
+          ),
         ),
       ],
     );

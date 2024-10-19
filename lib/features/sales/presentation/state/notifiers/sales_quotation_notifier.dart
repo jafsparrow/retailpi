@@ -33,8 +33,8 @@ class SalesQuotationNotifier extends StateNotifier<SalesQuotation> {
     state = manageLinesUseCase.addLine(state, saleQuotationDummyLine);
   }
 
-  void removeLine(String productId) {
-    state = manageLinesUseCase.removeLine(state, productId);
+  void removeLine(int index) {
+    state = manageLinesUseCase.removeLine(state, index);
   }
 
   void updateLine(SalesQuotationLine updatedLine, int index) {

@@ -13,7 +13,9 @@ import 'package:retailpi/core/utils/excel_upload.dart';
 import 'package:retailpi/features/category/presentation/pages/category_page.dart';
 
 import 'package:go_router/go_router.dart';
+import 'package:retailpi/features/sales/presentation/pages/quotation_mob_page.dart';
 import 'package:retailpi/features/sales/presentation/pages/quotation_page.dart';
+import 'package:retailpi/theme/light_mode.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -40,7 +42,7 @@ class MyApp extends StatelessWidget {
       ),
       GoRoute(
         path: '/sales-invoices',
-        builder: (context, state) => SalesQuotationScreen(),
+        builder: (context, state) => SalesQuotationMobileScreen(),
       ),
       GoRoute(
         path: '/product-add',
@@ -66,6 +68,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
+      theme: lightMode,
       routerConfig: _router,
       title: 'My Flutter App',
     );

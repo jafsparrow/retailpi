@@ -1,0 +1,267 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:retailpi/core/utils/constants.dart';
+import 'package:retailpi/features/sales/domain/entities/sales_quotation.dart';
+import 'package:retailpi/features/sales/presentation/state/providers/sales_quotation_provider.dart';
+import 'package:retailpi/features/sales/presentation/widgets/sales_quotation_line.dart';
+
+class SalesQuotationMobileScreen extends ConsumerStatefulWidget {
+  const SalesQuotationMobileScreen({super.key});
+
+  @override
+  _QuotationMobileScreenState createState() => _QuotationMobileScreenState();
+}
+
+class _QuotationMobileScreenState
+    extends ConsumerState<SalesQuotationMobileScreen> {
+  final List<FocusNode> _productNameFocusNodes = [];
+  late bool hasCustomerSelected = false;
+  @override
+  void initState() {
+    // TODO: implement initState
+    final exisitngQuotationLines =
+        ref.read(salesQuotationProvider).quotationLines;
+    if (exisitngQuotationLines.isNotEmpty) {
+      for (var item in exisitngQuotationLines) {
+        _productNameFocusNodes.add(FocusNode());
+      }
+    }
+    super.initState();
+  }
+
+  // Method to handle adding new line
+  void _addLine() {
+    final salesQuotationNotifier = ref.read(salesQuotationProvider.notifier);
+
+    _productNameFocusNodes.add(FocusNode());
+
+    salesQuotationNotifier.addLineToQuotation();
+
+    // Request focus for the last added line (productName TextField)
+    Future.delayed(const Duration(milliseconds: 100), () {
+      if (_productNameFocusNodes.isNotEmpty) {
+        FocusScope.of(context).requestFocus(_productNameFocusNodes.last);
+      }
+    });
+  }
+
+  // Method to handle tabbing out or pressing enter
+  void _handleFieldExit(int index) {
+    final salesQuotation = ref.read(salesQuotationProvider);
+    if (index == salesQuotation.quotationLines.length - 1) {
+      // If we're on the last line, add a new line when user exits
+      _addLine();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final salesQuotation = ref.watch(salesQuotationProvider);
+    return Scaffold(
+      appBar: _buildAppBar(salesQuotation, context),
+      body: Padding(
+        padding: const EdgeInsets.only(
+            left: AppConst.kBodyPadding, right: AppConst.kBodyPadding),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildQuotationLineList(salesQuotation),
+            _colorScrollButtonHorizontal()
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        child: Icon(Icons.add),
+      ),
+      // bottomSheet: _buildQuotationSummary(salesQuotation),
+    );
+  }
+
+  Container _buildQuotationSummary(SalesQuotation salesQuotation) {
+    return Container(
+      width: double.infinity,
+      height: 100,
+      padding: const EdgeInsets.all(16.0),
+      color: Colors.grey[200],
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text('Total Items: ${salesQuotation.quotationLines.length}'),
+                Text(
+                    'Total Amount: ${salesQuotation.totalAmount.toStringAsFixed(2)}'),
+                Text('Tax: ${salesQuotation.taxedTotal.toStringAsFixed(2)}'),
+                Text(
+                    'Total (Taxed): ${salesQuotation.totalAmount.toStringAsFixed(2)}'),
+              ],
+            ),
+          ),
+          Text(
+            'Summary',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+          ),
+          SizedBox(height: 8),
+          Text('Total Items: 300'),
+          // Add any additional summary details here
+        ],
+      ),
+    );
+  }
+
+  Expanded _buildQuotationLineList(SalesQuotation salesQuotation) {
+    return Expanded(
+      child: ListView.builder(
+        itemCount: salesQuotation.quotationLines.length + 1,
+        itemBuilder: (context, index) {
+          if (index == salesQuotation.quotationLines.length) {
+            return TextButton(
+              onPressed: _addLine,
+              child: const Text('Add Line'),
+            );
+          } else {
+            final line =
+                ref.watch(salesQuotationProvider).quotationLines[index];
+            // print('*********checking at quotation page.*****');
+
+            // print(line.productName);
+            // print(line.unitPrice);
+            // print('*********checking at quotation page.*****');
+            return SalesQuotationLineWidget(
+              index: index,
+              onTabOut: _handleFieldExit,
+              productNameFocusNode: _productNameFocusNodes[index],
+            );
+          }
+        },
+      ),
+    );
+  }
+
+  AppBar _buildAppBar(SalesQuotation salesQuotation, BuildContext context) {
+    return AppBar(
+      title: Row(
+        children: [
+          Flexible(
+            child: Text(
+              hasCustomerSelected
+                  ? 'Customer name'
+                  : 'Select Customer ddddddddddddddddddddddddddddd',
+              style: Theme.of(context).textTheme.titleLarge,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          IconButton(onPressed: () {}, icon: Icon(Icons.arrow_right))
+        ],
+      ),
+      actions: _buildAppBarActions(context),
+    );
+  }
+
+  List<Widget> _buildAppBarActions(BuildContext context) {
+    return [
+      if (!hasCustomerSelected)
+        IconButton(
+          onPressed: () {
+            setState(() {
+              hasCustomerSelected = true;
+            });
+          },
+          icon: Icon(Icons.verified_user_outlined),
+        ),
+      _buildAppBarPopUpMenu(context),
+    ];
+  }
+
+  PopupMenuButton<String> _buildAppBarPopUpMenu(BuildContext context) {
+    return PopupMenuButton(
+        onSelected: (value) => {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(value),
+                ),
+              ),
+            },
+        itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+              const PopupMenuItem(
+                value: 'helloovalue',
+                child: Text('Templates'),
+              ),
+              const PopupMenuItem(value: 'second', child: Text('Meta Data')),
+              const PopupMenuItem(value: 'third', child: Text('stuff')),
+            ]);
+  }
+
+  Widget _colorScrollButtonHorizontal() {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: List.generate(12, (index) {
+          return Padding(
+            padding: const EdgeInsets.only(right: 8.00),
+            child: TextButton(
+              style: TextButton.styleFrom(backgroundColor: Colors.yellow),
+              onPressed: () {
+                // Add your button logic here
+                showModalBottomSheet(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return Container(
+                      height: 200,
+                      child: Center(
+                        child: Text('This is a modal bottom sheet'),
+                      ),
+                    );
+                  },
+                );
+              },
+              child: Text('Button ${index + 1}'),
+            ),
+          );
+        }),
+      ),
+    );
+  }
+
+  Widget customerSubsection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Jafar',
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
+            IconButton(
+              onPressed: () {},
+              icon: Icon(
+                Icons.edit,
+                size: 18,
+              ),
+            ),
+            Spacer(),
+            IconButton(
+                onPressed: () {},
+                icon: Icon(
+                  Icons.delete,
+                  size: 18,
+                ))
+          ],
+        ),
+        Text('Address Line 1 , Line 2'),
+        Text('9338393')
+      ],
+    );
+  }
+}

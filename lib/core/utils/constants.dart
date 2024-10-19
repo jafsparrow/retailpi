@@ -18,4 +18,7 @@ class AppConst {
 
   static const kWidth = 273;
   static const kHeight = 273;
+
+  // paddings
+  static const kBodyPadding = 16.0;
 }
