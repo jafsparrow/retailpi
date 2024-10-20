@@ -68,6 +68,7 @@ class _QuotationMobileScreenState
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
+                flex: 1,
                 child: TabBarView(
                   children: [
                     _buildQuotationLineList(salesQuotation),
@@ -81,7 +82,14 @@ class _QuotationMobileScreenState
           ),
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => FullScreenDialog(),
+                fullscreenDialog: true, // Makes the dialog full screen
+              ),
+            );
+          },
           child: Icon(Icons.add),
         ),
         // bottomSheet: _buildQuotationSummary(salesQuotation),
@@ -89,86 +97,48 @@ class _QuotationMobileScreenState
     );
   }
 
-  Container _buildQuotationSummary(SalesQuotation salesQuotation) {
-    return Container(
-      width: double.infinity,
-      height: 100,
-      padding: const EdgeInsets.all(16.0),
-      color: Colors.grey[200],
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text('Total Items: ${salesQuotation.quotationLines.length}'),
-                Text(
-                    'Total Amount: ${salesQuotation.totalAmount.toStringAsFixed(2)}'),
-                Text('Tax: ${salesQuotation.taxedTotal.toStringAsFixed(2)}'),
-                Text(
-                    'Total (Taxed): ${salesQuotation.totalAmount.toStringAsFixed(2)}'),
-              ],
-            ),
-          ),
-          Text(
-            'Summary',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-          ),
-          SizedBox(height: 8),
-          Text('Total Items: 300'),
-          // Add any additional summary details here
-        ],
-      ),
-    );
-  }
+  Widget _buildQuotationLineList(SalesQuotation salesQuotation) {
+    return ListView.builder(
+      itemCount: salesQuotation.quotationLines.length + 1,
+      itemBuilder: (context, index) {
+        if (index == salesQuotation.quotationLines.length) {
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TextButton(
+                onPressed: _addLine,
+                child: const Text('Add Line'),
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              TextButton(
+                onPressed: _addLine,
+                child: const Text('Add Line'),
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              TextButton(
+                onPressed: _addLine,
+                child: const Text('Add Line'),
+              ),
+            ],
+          );
+        } else {
+          final line = ref.watch(salesQuotationProvider).quotationLines[index];
+          // print('*********checking at quotation page.*****');
 
-  Expanded _buildQuotationLineList(SalesQuotation salesQuotation) {
-    return Expanded(
-      child: ListView.builder(
-        itemCount: salesQuotation.quotationLines.length + 1,
-        itemBuilder: (context, index) {
-          if (index == salesQuotation.quotationLines.length) {
-            return Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                TextButton(
-                  onPressed: _addLine,
-                  child: const Text('Add Line'),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                TextButton(
-                  onPressed: _addLine,
-                  child: const Text('Add Line'),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                TextButton(
-                  onPressed: _addLine,
-                  child: const Text('Add Line'),
-                ),
-              ],
-            );
-          } else {
-            final line =
-                ref.watch(salesQuotationProvider).quotationLines[index];
-            // print('*********checking at quotation page.*****');
-
-            // print(line.productName);
-            // print(line.unitPrice);
-            // print('*********checking at quotation page.*****');
-            return SalesQuotationLineWidget(
-              index: index,
-              onTabOut: _handleFieldExit,
-              productNameFocusNode: _productNameFocusNodes[index],
-            );
-          }
-        },
-      ),
+          // print(line.productName);
+          // print(line.unitPrice);
+          // print('*********checking at quotation page.*****');
+          return SalesQuotationLineWidget(
+            index: index,
+            onTabOut: _handleFieldExit,
+            productNameFocusNode: _productNameFocusNodes[index],
+          );
+        }
+      },
     );
   }
 
@@ -353,6 +323,25 @@ class _QuotationMobileScreenState
         Text('Address Line 1 , Line 2'),
         Text('9338393')
       ],
+    );
+  }
+}
+
+class FullScreenDialog extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Full Screen Dialog'),
+      ),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: Text('Close Dialog'),
+        ),
+      ),
     );
   }
 }
