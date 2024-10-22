@@ -15,6 +15,7 @@ import 'package:retailpi/features/category/presentation/pages/category_page.dart
 import 'package:go_router/go_router.dart';
 import 'package:retailpi/features/sales/presentation/pages/quotation_mob_page.dart';
 import 'package:retailpi/features/sales/presentation/pages/quotation_page.dart';
+import 'package:retailpi/features/sales/presentation/pages/quotation_pos_page.dart';
 import 'package:retailpi/theme/light_mode.dart';
 
 void main() {
@@ -34,7 +35,7 @@ class MyApp extends StatelessWidget {
     routes: [
       GoRoute(
         path: '/dashboard',
-        builder: (context, state) => DashboardScreen(),
+        builder: (context, state) => PosScreen(),
       ),
       GoRoute(
         path: '/products',
