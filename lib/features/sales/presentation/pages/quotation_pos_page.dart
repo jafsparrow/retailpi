@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:retailpi/features/sales/presentation/pages/cart_list_page.dart';
 import 'package:retailpi/features/sales/presentation/widgets/product_list.dart';
 
 class PosScreen extends ConsumerStatefulWidget {
@@ -60,9 +61,20 @@ class _PosScreenState extends ConsumerState<PosScreen> {
                     width: 10,
                   ),
                   Expanded(
-                      child: Card(
-                    child: TextButton(onPressed: () {}, child: Text('Card')),
-                  )),
+                    child: Card(
+                      child: TextButton(
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              fullscreenDialog: true,
+                              builder: (context) => CartListPage(),
+                            ),
+                          );
+                        },
+                        child: Text('Cart'),
+                      ),
+                    ),
+                  ),
                 ],
               ))
         ],
