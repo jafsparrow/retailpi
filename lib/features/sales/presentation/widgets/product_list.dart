@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:retailpi/features/products/domain/entities/product.dart';
+import 'package:retailpi/features/products/presentation/providers/products_provider.dart';
+import 'package:retailpi/features/sales/domain/entities/sales_quotation_line.dart';
+import 'package:retailpi/features/sales/presentation/state/providers/sales_quotation_provider.dart';
+import 'package:retailpi/features/sales/presentation/widgets/cart_item_adjustment.dart';
 
 class ProductList extends ConsumerWidget {
   ProductList({super.key});
@@ -21,19 +26,55 @@ class ProductList extends ConsumerWidget {
     'Elbow 4 upvc',
     'Tee 4 upvc'
   ];
+
+  // Method to handle adding new line
+  void _addLine(WidgetRef ref, Product product) {
+    final salesQuotationNotifier = ref.read(salesQuotationProvider.notifier);
+    SalesQuotationLine newLine = SalesQuotationLine(
+        productId: product.id!,
+        productName: product.name,
+        quantity: 1,
+        unitPrice: double.parse(
+          product.standardPrice.toString(),
+        ),
+        discount: 0);
+
+    salesQuotationNotifier.addLineToQuotation(quotationLine: newLine);
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Listen to the product list state
+    final products = ref.watch(productStateNotifierProvider);
+    print(products);
     return Card(
       child: Padding(
         padding: EdgeInsets.all(8),
         child: ListView.separated(
-          itemCount: product.length,
+          itemCount: products.length,
           itemBuilder: (context, index) {
             return ListTile(
               contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 20),
-              title: Text(product[index]),
-              trailing: SizedBox(
-                width: 30,
+              title: Text(products[index].name),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      showFullScreenProductCountDialog(
+                          context, ref, products[index]);
+                    },
+                    child: Icon(
+                      Icons.square,
+                    ),
+                  ),
+                  GestureDetector(
+                    child: Icon(Icons.plus_one),
+                    onTap: () {
+                      _addLine(ref, products[index]);
+                    },
+                  ),
+                ],
               ),
             );
           },
@@ -45,6 +86,32 @@ class ProductList extends ConsumerWidget {
             );
           },
         ),
+      ),
+    );
+  }
+
+  void showFullScreenProductCountDialog(
+      BuildContext context, WidgetRef ref, Product product) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        fullscreenDialog: true,
+        builder: (BuildContext context) {
+          return CartItemAdjustment(
+            selectedQuotationLineItem: SalesQuotationLine(
+              productId: product.id!,
+              productName: product.name,
+              quantity: 1,
+              unitPrice: double.parse(product.standardPrice!.toString()),
+              discount: 0,
+            ),
+            onConfirm: (SalesQuotationLine editedLine) {
+              print(editedLine);
+              ref
+                  .read(salesQuotationProvider.notifier)
+                  .addLineToQuotation(quotationLine: editedLine);
+            },
+          );
+        },
       ),
     );
   }

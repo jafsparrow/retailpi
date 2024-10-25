@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:retailpi/features/sales/domain/entities/sales_quotation_line.dart';
+import 'package:retailpi/features/sales/presentation/state/providers/sales_quotation_provider.dart';
 import 'package:retailpi/features/sales/presentation/widgets/cart_item_adjustment.dart';
 
 class CartList extends ConsumerStatefulWidget {
@@ -39,22 +41,24 @@ class _CartListState extends ConsumerState<CartList> {
 
   @override
   Widget build(BuildContext context) {
+    List<SalesQuotationLine> quotationLines =
+        ref.watch(salesQuotationProvider).quotationLines;
     return ListView.builder(
-        itemCount: cartList.length,
+        itemCount: quotationLines.length,
         itemBuilder: (context, index) {
           return ListTile(
             onTap: () {
-              showFullScreenProductCountDialog(context);
+              showFullScreenProductCountDialog(context, quotationLines[index]);
             },
             leading: Icon(Icons.delete),
-            title: Text(cartList[index]),
+            title: Text(quotationLines[index].productName),
             subtitle: RichText(
               text: TextSpan(
-                text: '3x ',
+                text: '${quotationLines[index].quantity} x ',
                 style: TextStyle(color: Colors.grey.shade500, fontSize: 20),
                 children: <TextSpan>[
                   TextSpan(
-                    text: '3.500',
+                    text: quotationLines[index].unitPrice.toString(),
                     style: TextStyle(
                         fontWeight: FontWeight.bold, color: Colors.red),
                   ),
@@ -65,19 +69,25 @@ class _CartListState extends ConsumerState<CartList> {
             trailing: Container(
                 color: Colors.yellow,
                 child: Text(
-                  '10.500',
+                  quotationLines[index].totalPrice.toString(),
                   style: TextStyle(fontSize: 20),
                 )),
           );
         });
   }
 
-  void showFullScreenProductCountDialog(BuildContext context) {
+  void showFullScreenProductCountDialog(
+      BuildContext context, SalesQuotationLine selectedQuotationLine) {
     Navigator.of(context).push(
       MaterialPageRoute(
         fullscreenDialog: true,
         builder: (BuildContext context) {
-          return CartItemAdjustment();
+          return CartItemAdjustment(
+            selectedQuotationLineItem: selectedQuotationLine,
+            onConfirm: (SalesQuotationLine editedLine) {
+              print(editedLine);
+            },
+          );
         },
       ),
     );

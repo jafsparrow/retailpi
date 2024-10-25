@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:retailpi/features/sales/domain/entities/sales_quotation_line.dart';
 import '../../../../core/widgets/keypad_custom.dart';
 
 class CartItemAdjustment extends ConsumerStatefulWidget {
-  const CartItemAdjustment({super.key});
+  final SalesQuotationLine selectedQuotationLineItem;
+  final Function(SalesQuotationLine) onConfirm;
+  const CartItemAdjustment({
+    super.key,
+    required this.selectedQuotationLineItem,
+    required this.onConfirm,
+  });
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -12,19 +19,57 @@ class CartItemAdjustment extends ConsumerStatefulWidget {
 
 class _CartItemAdjustmentState extends ConsumerState<CartItemAdjustment> {
   String _currencyInput = '';
-  String _selectedValue = 'Price'; // Initially selected value
+  String _selectedValue = 'Quantity'; // Initially selected value
+  String intialValue = '30.30';
+  String appliedDiscount = '';
+  String enteredPrice = '';
+  String enteredQuantity = '1';
 
   void _onKeypadTap(String value) {
     setState(() {
       _currencyInput = value;
+      switch (_selectedValue) {
+        case 'Quantity':
+          if (_currencyInput.isNotEmpty) {
+            enteredQuantity = _currencyInput;
+          } else {
+            enteredQuantity = '1';
+          }
+          break;
+
+        case 'Price':
+          enteredPrice = _currencyInput;
+          break;
+
+        case 'Discount':
+          appliedDiscount = _currencyInput;
+          break;
+        default:
+      }
+      print(value);
     });
+  }
+
+  void _onConfirmTheAdjustmentEntries() {
+    Navigator.of(context).pop();
+    widget.onConfirm(
+      widget.selectedQuotationLineItem.copyWith(
+          quantity: enteredQuantity.isNotEmpty
+              ? double.parse(
+                  enteredQuantity,
+                )
+              : widget.selectedQuotationLineItem.quantity,
+          unitPrice: enteredPrice.isNotEmpty
+              ? double.parse(enteredPrice)
+              : widget.selectedQuotationLineItem.unitPrice),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Wall fan vatsun.'),
+        title: Text(widget.selectedQuotationLineItem.productName),
         leading: IconButton(
           icon: Icon(Icons.close),
           onPressed: () {
@@ -38,29 +83,53 @@ class _CartItemAdjustmentState extends ConsumerState<CartItemAdjustment> {
           children: [
             Container(
               width: double.infinity,
-              height: 100,
+              height: 70,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('300'),
-                  RichText(
-                    text: TextSpan(
-                      text: '30.000 ',
-                      style: TextStyle(
-                        fontSize: 30,
-                        decoration: TextDecoration.lineThrough,
-                        color: Colors.grey.shade600,
-                      ),
-                      children: [
-                        TextSpan(
-                          text: 'with dicount',
-                          style: TextStyle(
-                              fontSize: 25,
-                              color: Colors.black,
-                              decoration: TextDecoration.none),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        padding: EdgeInsets.only(left: 8, right: 8),
+                        color: Colors.white,
+                        child: Text(
+                          enteredQuantity,
+                          style: TextStyle(fontSize: 24),
                         ),
-                      ],
-                    ),
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        'x  ${enteredPrice.isEmpty ? widget.selectedQuotationLineItem.unitPrice : enteredPrice} /Unit',
+                        style: TextStyle(fontSize: 28),
+                      ),
+                    ],
+                  ),
+                  RichText(
+                    text: _currencyInput.isNotEmpty
+                        ? TextSpan(
+                            text: widget.selectedQuotationLineItem.unitPrice
+                                .toString(),
+                            style: TextStyle(
+                              fontSize: 20,
+                              decoration: TextDecoration.lineThrough,
+                              color: Colors.grey.shade600,
+                            ),
+                            children: [
+                              TextSpan(
+                                text: appliedDiscount.isEmpty
+                                    ? ''
+                                    : 'with ${appliedDiscount} % discount',
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    color: Colors.black,
+                                    decoration: TextDecoration.none),
+                              ),
+                            ],
+                          )
+                        : TextSpan(text: ''),
                   ),
                 ],
               ),
@@ -102,6 +171,14 @@ class _CartItemAdjustmentState extends ConsumerState<CartItemAdjustment> {
               ),
             ),
             CurrencyKeypad(onKeyTap: _onKeypadTap),
+            SizedBox(
+              height: 20,
+            ),
+            Container(
+                width: double.infinity,
+                child: FilledButton(
+                    onPressed: _onConfirmTheAdjustmentEntries,
+                    child: Text('OK')))
           ],
         ),
       ),

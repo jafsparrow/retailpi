@@ -35,13 +35,13 @@ class _CurrencyKeypadState extends State<CurrencyKeypad> {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
-        Text(
-          '$_input',
-          style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
-        ),
+        // Text(
+        //   '$_input',
+        //   style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+        // ),
         Container(
-          height: 500,
           width: 300,
           child: GridView.count(
             shrinkWrap: true,

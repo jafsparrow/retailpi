@@ -27,10 +27,11 @@ class SalesQuotationNotifier extends StateNotifier<SalesQuotation> {
     state = quotation;
   }
 
-  void addLineToQuotation() {
+  void addLineToQuotation({SalesQuotationLine? quotationLine}) {
     // when adding for the first time add a dummy line.
     final saleQuotationDummyLine = SalesQuotationLine.empty();
-    state = manageLinesUseCase.addLine(state, saleQuotationDummyLine);
+    state = manageLinesUseCase.addLine(
+        state, quotationLine ?? saleQuotationDummyLine);
   }
 
   void removeLine(int index) {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:retailpi/features/sales/presentation/pages/cart_list_page.dart';
+import 'package:retailpi/features/sales/presentation/widgets/cart_item_adjustment.dart';
 import 'package:retailpi/features/sales/presentation/widgets/product_list.dart';
 
 class PosScreen extends ConsumerStatefulWidget {
@@ -193,28 +194,34 @@ class _PosScreenState extends ConsumerState<PosScreen> {
 
   _buildTagsSection() {
     return Container(
-        width: double.infinity,
-        height: 80,
-        child: Card(
-            child: Padding(
+      width: double.infinity,
+      height: 80,
+      child: Card(
+        child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: chipData.length,
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
-                  child: Chip(
-                      label: Text(chipData[index]),
-                      deleteIcon: Icon(Icons.close),
-                      onDeleted: () {
-                        setState(() {
-                          chipData.removeAt(
-                              index); // Remove chip on close button click
-                        });
-                      }),
-                );
-              }),
-        )));
+            scrollDirection: Axis.horizontal,
+            itemCount: chipData.length,
+            itemBuilder: (context, index) {
+              return Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: Chip(
+                  label: Text(chipData[index]),
+                  deleteIcon: Icon(Icons.close),
+                  onDeleted: () {
+                    setState(
+                      () {
+                        chipData.removeAt(
+                            index); // Remove chip on close button click
+                      },
+                    );
+                  },
+                ),
+              );
+            },
+          ),
+        ),
+      ),
+    );
   }
 }
