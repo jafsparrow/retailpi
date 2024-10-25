@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:retailpi/features/products/presentation/providers/products_provider.dart';
 import 'package:retailpi/features/sales/presentation/pages/cart_list_page.dart';
 import 'package:retailpi/features/sales/presentation/widgets/cart_item_adjustment.dart';
 import 'package:retailpi/features/sales/presentation/widgets/product_list.dart';
@@ -38,7 +39,7 @@ class _PosScreenState extends ConsumerState<PosScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _buildAppBar(context),
+      appBar: _buildAppBar(context, ref),
       body: Column(
         children: [
           // tags selected for filtering;
@@ -119,7 +120,7 @@ class _PosScreenState extends ConsumerState<PosScreen> {
     );
   }
 
-  AppBar _buildAppBar(BuildContext context) {
+  AppBar _buildAppBar(BuildContext context, WidgetRef ref) {
     return AppBar(
       title: !_isSearching
           ? Text('App Bar Title') // Show title when not searching
@@ -133,6 +134,9 @@ class _PosScreenState extends ConsumerState<PosScreen> {
               onChanged: (query) {
                 // Handle search query
                 print(query);
+                ref
+                    .read(productStateNotifierProvider.notifier)
+                    .searchProducts(query, limit: 50, offset: 0);
               },
             ),
       actions: [
@@ -144,6 +148,9 @@ class _PosScreenState extends ConsumerState<PosScreen> {
                 _searchController.clear();
               }
               _isSearching = !_isSearching; // Toggle search mode
+              ref
+                  .read(productStateNotifierProvider.notifier)
+                  .searchProducts('');
             });
           },
         ),

@@ -110,8 +110,10 @@ class _CartItemAdjustmentState extends ConsumerState<CartItemAdjustment> {
                   RichText(
                     text: _currencyInput.isNotEmpty
                         ? TextSpan(
-                            text: widget.selectedQuotationLineItem.unitPrice
-                                .toString(),
+                            text: enteredPrice.isNotEmpty
+                                ? widget.selectedQuotationLineItem.unitPrice
+                                    .toString()
+                                : '',
                             style: TextStyle(
                               fontSize: 20,
                               decoration: TextDecoration.lineThrough,
