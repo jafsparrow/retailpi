@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:retailpi/features/products/presentation/pages/product_upload.dart';
 import 'package:retailpi/features/products/presentation/providers/products_provider.dart';
 import 'package:retailpi/features/sales/presentation/pages/cart_list_page.dart';
+import 'package:retailpi/features/sales/presentation/state/providers/sales_quotation_provider.dart';
 import 'package:retailpi/features/sales/presentation/widgets/cart_item_adjustment.dart';
 import 'package:retailpi/features/sales/presentation/widgets/product_list.dart';
 
@@ -13,7 +15,47 @@ class PosScreen extends ConsumerStatefulWidget {
 }
 
 class _PosScreenState extends ConsumerState<PosScreen> {
+  final LayerLink _layerLink = LayerLink();
+  OverlayEntry? _overlayEntry;
+
+  void _showOverlay(BuildContext context) {
+    _overlayEntry = _createOverlayEntry(context);
+    Overlay.of(context)?.insert(_overlayEntry!);
+  }
+
+  OverlayEntry _createOverlayEntry(BuildContext context) {
+    return OverlayEntry(
+      builder: (context) => Positioned(
+        width: MediaQuery.of(context).size.width, // Adjust as needed
+        child: CompositedTransformFollower(
+          link: _layerLink,
+          showWhenUnlinked: false,
+          offset: Offset(
+              0, 1), // Adjust the position offset (below the target widget)
+          child: Material(
+            elevation: 4.0,
+            child: Container(
+              color: Colors.blueAccent,
+              padding: EdgeInsets.all(8),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text('Overlay Content'),
+                  ElevatedButton(
+                    onPressed: _closeSuggestions,
+                    child: Text('Close Overlay'),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   bool _isSearching = false;
+  bool _showSuggestions = false;
   TextEditingController _searchController = TextEditingController();
   List<String> chipData = ['Chip 1', 'Chip 2', 'Chip 3', 'Chip 4', 'Chip 5'];
   List<int> activeOrder = [
@@ -36,13 +78,48 @@ class _PosScreenState extends ConsumerState<PosScreen> {
     733
   ];
 
+  void _toggleSearch() {
+    setState(() {
+      _isSearching = !_isSearching;
+      _showSuggestions = _isSearching;
+      if (!_isSearching) {
+        _searchController.clear();
+        _removeOverlay();
+      }
+      if (_showSuggestions) {
+        _showOverlay(context);
+      }
+    });
+  }
+
+  void _closeSuggestions() {
+    setState(() {
+      _showSuggestions = false;
+      _removeOverlay();
+    });
+  }
+
+  void _removeOverlay() {
+    _overlayEntry?.remove();
+    _overlayEntry = null;
+  }
+
   @override
   Widget build(BuildContext context) {
+    int cartCount = ref.watch(salesQuotationProvider).quotationLines.length;
+    double cartTotal = ref.watch(salesQuotationProvider).totalAmount;
     return Scaffold(
       appBar: _buildAppBar(context, ref),
       body: Column(
         children: [
           // tags selected for filtering;
+          CompositedTransformTarget(
+            link: _layerLink,
+            child: Container(
+              width: double.infinity,
+              height: 0,
+            ),
+          ),
           _buildTagsSection(),
 
           // Product list section
@@ -50,35 +127,7 @@ class _PosScreenState extends ConsumerState<PosScreen> {
             child: ProductList(),
           ),
           // summary of the cart and caritems buttton
-          Container(
-              height: 50,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                      child: Card(
-                    child: TextButton(onPressed: () {}, child: Text('Pay')),
-                  )),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Expanded(
-                    child: Card(
-                      child: TextButton(
-                        onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              fullscreenDialog: true,
-                              builder: (context) => CartListPage(),
-                            ),
-                          );
-                        },
-                        child: Text('Cart'),
-                      ),
-                    ),
-                  ),
-                ],
-              ))
+          if (cartCount != 0) _buildCardSummary(context, cartTotal)
         ],
       ), //body,
       floatingActionButton: Stack(
@@ -120,6 +169,51 @@ class _PosScreenState extends ConsumerState<PosScreen> {
     );
   }
 
+  Container _buildCardSummary(BuildContext context, double cartTotal) {
+    return Container(
+        height: 50,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            SizedBox(
+                width: 100,
+                child: Card(
+                  child: TextButton(onPressed: () {}, child: Text('Pay')),
+                )),
+            SizedBox(
+              width: 10,
+            ),
+            Expanded(
+              child: Card(
+                child: TextButton(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        fullscreenDialog: true,
+                        builder: (context) => CartListPage(),
+                      ),
+                    );
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('Cart'),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      VerticalDivider(),
+                      Text(
+                        cartTotal.toString(),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ));
+  }
+
   AppBar _buildAppBar(BuildContext context, WidgetRef ref) {
     return AppBar(
       title: !_isSearching
@@ -131,6 +225,7 @@ class _PosScreenState extends ConsumerState<PosScreen> {
                 border: InputBorder.none,
               ),
               autofocus: true, // Automatically focuses the input
+
               onChanged: (query) {
                 // Handle search query
                 print(query);
@@ -140,20 +235,15 @@ class _PosScreenState extends ConsumerState<PosScreen> {
               },
             ),
       actions: [
-        IconButton(
-          icon: Icon(_isSearching ? Icons.close : Icons.search),
-          onPressed: () {
-            setState(() {
-              if (_isSearching) {
-                _searchController.clear();
-              }
-              _isSearching = !_isSearching; // Toggle search mode
-              ref
-                  .read(productStateNotifierProvider.notifier)
-                  .searchProducts('');
-            });
-          },
-        ),
+        _isSearching
+            ? IconButton(
+                icon: Icon(Icons.close),
+                onPressed: _toggleSearch,
+              )
+            : IconButton(
+                icon: Icon(Icons.search),
+                onPressed: _toggleSearch,
+              ),
         SizedBox(
           width: 10,
         ),
@@ -173,7 +263,21 @@ class _PosScreenState extends ConsumerState<PosScreen> {
         SizedBox(
           width: 10,
         ),
-        Icon(Icons.more_vert)
+        PopupMenuButton(
+          onSelected: (selectedValue) {
+            FocusScope.of(context).requestFocus(
+                FocusNode()); //[todo] : this is temporary fix for text field focus when user moved back to list page.
+
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => UploadProductsPage()),
+            );
+          },
+          icon: Icon(Icons.more_vert),
+          itemBuilder: (_) => [
+            PopupMenuItem(child: Text('Upload Products'), value: 0),
+          ],
+        ),
       ],
     );
   }
@@ -199,7 +303,7 @@ class _PosScreenState extends ConsumerState<PosScreen> {
         });
   }
 
-  _buildTagsSection() {
+  Widget _buildTagsSection() {
     return Container(
       width: double.infinity,
       height: 80,

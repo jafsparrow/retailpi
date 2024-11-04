@@ -56,6 +56,30 @@ class ProductList extends ConsumerWidget {
             return ListTile(
               contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 20),
               title: Text(products[index].name),
+              subtitle: GestureDetector(
+                child: Text(products[index].defaultCode ?? 'No Code'),
+                onTap: () {
+                  showBottomSheet(
+                    context: context,
+                    builder: (context) {
+                      return Container(
+                        color: Theme.of(context).colorScheme.onPrimaryContainer,
+                        height: 140,
+                        width: double.infinity,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(products[index].name),
+                            Text(
+                              products[index].listPrice.toString(),
+                            )
+                          ],
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
