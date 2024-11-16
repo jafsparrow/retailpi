@@ -43,37 +43,41 @@ class _CartListState extends ConsumerState<CartList> {
   Widget build(BuildContext context) {
     List<SalesQuotationLine> quotationLines =
         ref.watch(salesQuotationProvider).quotationLines;
-    return ListView.builder(
-        itemCount: quotationLines.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            onTap: () {
-              showFullScreenProductCountDialog(context, quotationLines[index]);
-            },
-            leading: Icon(Icons.delete),
-            title: Text(quotationLines[index].productName),
-            subtitle: RichText(
-              text: TextSpan(
-                text: '${quotationLines[index].quantity} x ',
-                style: TextStyle(color: Colors.grey.shade500, fontSize: 20),
-                children: <TextSpan>[
-                  TextSpan(
-                    text: quotationLines[index].unitPrice.toString(),
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold, color: Colors.red),
+    return Padding(
+      padding: EdgeInsets.all(8),
+      child: Material(
+        child: ListView.builder(
+            itemCount: quotationLines.length,
+            itemBuilder: (context, index) {
+              return ListTile(
+                onTap: () {
+                  showFullScreenProductCountDialog(
+                      context, quotationLines[index]);
+                },
+                leading: const Icon(Icons.delete),
+                title: Text(quotationLines[index].productName),
+                subtitle: RichText(
+                  text: TextSpan(
+                    text: '${quotationLines[index].quantity} x ',
+                    style: TextStyle(color: Colors.grey.shade500, fontSize: 20),
+                    children: <TextSpan>[
+                      TextSpan(
+                        text: quotationLines[index].unitPrice.toString(),
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.black),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            ),
-            isThreeLine: false,
-            trailing: Container(
-                color: Colors.yellow,
-                child: Text(
+                ),
+                isThreeLine: false,
+                trailing: Text(
                   quotationLines[index].totalPrice.toString(),
-                  style: TextStyle(fontSize: 20),
-                )),
-          );
-        });
+                  style: const TextStyle(fontSize: 20),
+                ),
+              );
+            }),
+      ),
+    );
   }
 
   void showFullScreenProductCountDialog(

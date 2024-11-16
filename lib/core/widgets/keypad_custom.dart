@@ -61,7 +61,7 @@ class _CurrencyKeypadState extends State<CurrencyKeypad> {
     return GestureDetector(
       onTap: () => _handleKeyTap(key),
       child: Container(
-        margin: EdgeInsets.all(8.0),
+        margin: EdgeInsets.all(15.0),
         decoration: BoxDecoration(
           shape: BoxShape.rectangle,
           borderRadius: BorderRadius.all(Radius.circular(10)),

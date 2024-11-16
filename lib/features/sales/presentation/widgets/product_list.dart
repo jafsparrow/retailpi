@@ -46,18 +46,39 @@ class ProductList extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // Listen to the product list state
     final products = ref.watch(productStateNotifierProvider);
-    print(products);
+
     return Card(
       child: Padding(
-        padding: EdgeInsets.all(8),
+        padding: const EdgeInsets.all(8),
         child: ListView.separated(
           itemCount: products.length,
           itemBuilder: (context, index) {
             return ListTile(
-              contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 20),
-              title: Text(products[index].name),
+              contentPadding:
+                  const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
+              title: Text(
+                products[index].name,
+                style: TextStyle(overflow: TextOverflow.fade),
+              ),
               subtitle: GestureDetector(
-                child: Text(products[index].defaultCode ?? 'No Code'),
+                child: Row(
+                  children: [
+                    Text(products[index].defaultCode ?? 'No Code'),
+                    const SizedBox(
+                      width: 15,
+                    ),
+                    Text(
+                      products[index].standardPrice.toString(),
+                      style: TextStyle(overflow: TextOverflow.clip),
+                    ),
+                    const Spacer(),
+                    const VerticalDivider(),
+                    Text(
+                      products[index].listPrice.toString(),
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
                 onTap: () {
                   showBottomSheet(
                     context: context,
@@ -72,7 +93,9 @@ class ProductList extends ConsumerWidget {
                             Text(products[index].name),
                             Text(
                               products[index].listPrice.toString(),
-                            )
+                            ),
+                            Divider(),
+                            Text(products[index].standardPrice.toString()),
                           ],
                         ),
                       );
@@ -89,11 +112,14 @@ class ProductList extends ConsumerWidget {
                           context, ref, products[index]);
                     },
                     child: Icon(
-                      Icons.square,
+                      Icons.keyboard_sharp,
                     ),
                   ),
+                  SizedBox(
+                    width: 10,
+                  ),
                   GestureDetector(
-                    child: Icon(Icons.plus_one),
+                    child: Icon(Icons.add_circle),
                     onTap: () {
                       _addLine(ref, products[index]);
                     },

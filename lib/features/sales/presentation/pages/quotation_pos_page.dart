@@ -6,6 +6,7 @@ import 'package:retailpi/features/sales/presentation/pages/cart_list_page.dart';
 import 'package:retailpi/features/sales/presentation/state/providers/sales_quotation_provider.dart';
 import 'package:retailpi/features/sales/presentation/widgets/cart_item_adjustment.dart';
 import 'package:retailpi/features/sales/presentation/widgets/product_list.dart';
+import 'package:retailpi/features/sales/presentation/widgets/search_suggestion.dart';
 
 class PosScreen extends ConsumerStatefulWidget {
   const PosScreen({super.key});
@@ -17,42 +18,6 @@ class PosScreen extends ConsumerStatefulWidget {
 class _PosScreenState extends ConsumerState<PosScreen> {
   final LayerLink _layerLink = LayerLink();
   OverlayEntry? _overlayEntry;
-
-  void _showOverlay(BuildContext context) {
-    _overlayEntry = _createOverlayEntry(context);
-    Overlay.of(context)?.insert(_overlayEntry!);
-  }
-
-  OverlayEntry _createOverlayEntry(BuildContext context) {
-    return OverlayEntry(
-      builder: (context) => Positioned(
-        width: MediaQuery.of(context).size.width, // Adjust as needed
-        child: CompositedTransformFollower(
-          link: _layerLink,
-          showWhenUnlinked: false,
-          offset: Offset(
-              0, 1), // Adjust the position offset (below the target widget)
-          child: Material(
-            elevation: 4.0,
-            child: Container(
-              color: Colors.blueAccent,
-              padding: EdgeInsets.all(8),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text('Overlay Content'),
-                  ElevatedButton(
-                    onPressed: _closeSuggestions,
-                    child: Text('Close Overlay'),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
 
   bool _isSearching = false;
   bool _showSuggestions = false;
@@ -78,6 +43,57 @@ class _PosScreenState extends ConsumerState<PosScreen> {
     733
   ];
 
+  @override
+  void initState() {
+    super.initState();
+
+    // Start listening to changes.
+    _searchController.addListener(_searchProduct);
+  }
+
+  void _showOverlay(BuildContext context) {
+    _overlayEntry = _createOverlayEntry(context);
+    Overlay.of(context)?.insert(_overlayEntry!);
+  }
+
+  OverlayEntry _createOverlayEntry(BuildContext context) {
+    return OverlayEntry(
+      builder: (context) => Positioned(
+        width: MediaQuery.of(context).size.width, // Adjust as needed
+        child: CompositedTransformFollower(
+          link: _layerLink,
+          showWhenUnlinked: false,
+          offset: Offset(
+              0, 1), // Adjust the position offset (below the target widget)
+          child: Material(
+            elevation: 4.0,
+            child: Container(
+              height: 200,
+              color: Colors.blueAccent,
+              padding: EdgeInsets.all(8),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Expanded(
+                    child: SearchSuggestion(onSuggestion: _setTheSearchText),
+                  ),
+                  Row(
+                    children: [
+                      Spacer(),
+                      IconButton(
+                          onPressed: _closeSuggestions,
+                          icon: Icon(Icons.ac_unit))
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   void _toggleSearch() {
     setState(() {
       _isSearching = !_isSearching;
@@ -102,6 +118,16 @@ class _PosScreenState extends ConsumerState<PosScreen> {
   void _removeOverlay() {
     _overlayEntry?.remove();
     _overlayEntry = null;
+  }
+
+  void _searchProduct() {
+    ref
+        .read(productStateNotifierProvider.notifier)
+        .searchProducts(_searchController.text, limit: 50, offset: 0);
+  }
+
+  void _setTheSearchText(String query) {
+    _searchController.text = _searchController.text + query;
   }
 
   @override
@@ -334,5 +360,13 @@ class _PosScreenState extends ConsumerState<PosScreen> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is removed from the widget tree.
+    // This also removes the _printLatestValue listener.
+    _searchController.dispose();
+    super.dispose();
   }
 }
