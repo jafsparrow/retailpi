@@ -46,36 +46,120 @@ class _CartListState extends ConsumerState<CartList> {
     return Padding(
       padding: EdgeInsets.all(8),
       child: Material(
-        child: ListView.builder(
-            itemCount: quotationLines.length,
-            itemBuilder: (context, index) {
-              return ListTile(
-                onTap: () {
-                  showFullScreenProductCountDialog(
-                      context, quotationLines[index]);
-                },
-                leading: const Icon(Icons.delete),
-                title: Text(quotationLines[index].productName),
-                subtitle: RichText(
-                  text: TextSpan(
-                    text: '${quotationLines[index].quantity} x ',
-                    style: TextStyle(color: Colors.grey.shade500, fontSize: 20),
-                    children: <TextSpan>[
-                      TextSpan(
-                        text: quotationLines[index].unitPrice.toString(),
-                        style: const TextStyle(
-                            fontWeight: FontWeight.bold, color: Colors.black),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              padding: EdgeInsets.all(8),
+              height: 50,
+              child: Expanded(
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index) {
+                    return ElevatedButton(
+                      child: Text('Bro'),
+                      onPressed: () {},
+                    );
+                  },
+                  itemCount: 3,
+                ),
+              ),
+            ),
+            Expanded(
+              child: ListView.separated(
+                itemCount: quotationLines.length,
+                itemBuilder: (context, index) {
+                  return Column(
+                    children: [
+                      Container(
+                        // padding: EdgeInsets.all(8),
+                        color: Colors.amber,
+                        child: ListTile(
+                          onTap: () {
+                            showFullScreenProductCountDialog(
+                                context, quotationLines[index]);
+                          },
+                          leading: const Icon(Icons.delete),
+                          title: Text(quotationLines[index].productName),
+                          subtitle: RichText(
+                            text: TextSpan(
+                              text: '${quotationLines[index].quantity} x ',
+                              style: TextStyle(
+                                  color: Colors.grey.shade500, fontSize: 20),
+                              children: <TextSpan>[
+                                TextSpan(
+                                  text: quotationLines[index]
+                                      .unitPrice
+                                      .toString(),
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black),
+                                ),
+                              ],
+                            ),
+                          ),
+                          isThreeLine: false,
+                          trailing: Text(
+                            quotationLines[index].totalPrice.toString(),
+                            style: const TextStyle(fontSize: 20),
+                          ),
+                        ),
                       ),
+                      ListTile(
+                        contentPadding: EdgeInsets.all(0),
+                        tileColor: Colors.blue,
+                        onTap: () {
+                          showFullScreenProductCountDialog(
+                              context, quotationLines[index]);
+                        },
+                        leading: const Icon(Icons.delete),
+                        title: Text(quotationLines[index].productName),
+                        subtitle: RichText(
+                          text: TextSpan(
+                            text: '${quotationLines[index].quantity} x ',
+                            style: TextStyle(
+                              color: Colors.grey.shade500,
+                            ),
+                            children: <TextSpan>[
+                              TextSpan(
+                                text:
+                                    quotationLines[index].unitPrice.toString(),
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
+                              ),
+                              TextSpan(text: '  |  '),
+                              TextSpan(
+                                text:
+                                    quotationLines[index].totalPrice.toString(),
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                        isThreeLine: false,
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.check_box),
+                            Icon(Icons.arrow_downward),
+                          ],
+                        ),
+                      )
                     ],
-                  ),
-                ),
-                isThreeLine: false,
-                trailing: Text(
-                  quotationLines[index].totalPrice.toString(),
-                  style: const TextStyle(fontSize: 20),
-                ),
-              );
-            }),
+                  );
+                },
+                separatorBuilder: (BuildContext context, int index) {
+                  return Divider();
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

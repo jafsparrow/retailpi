@@ -6,6 +6,8 @@ class SalesQuotationLine {
   final double unitPrice;
   final double discount;
   // final double totalPrice;
+  List<SalesQuotationLine> alternatives; // Up to 4 alternatives.
+  int selectedAlternativeIndex; // Tracks which alternative is selected (-1 if none)
 
   SalesQuotationLine({
     required this.productId,
@@ -14,6 +16,9 @@ class SalesQuotationLine {
     required this.unitPrice,
     required this.discount,
     // required this.totalPrice,
+    this.alternatives = const [],
+    this.selectedAlternativeIndex =
+        -1, // -1 indicates no alternative is selected
   });
 
   // Getter to calculate totalPrice dynamically
