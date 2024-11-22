@@ -10,3 +10,18 @@ class CreateQuotationUseCase {
     await repository.createQuotation(quotation);
   }
 }
+
+
+
+// // domain/use_cases/cart_use_cases.dart
+// class AddCartItemUseCase {
+//   // Logic for adding an item to a cart
+// }
+
+// class SwitchCartUseCase {
+//   // Logic for switching between active carts
+// }
+
+// class SaveCartStateUseCase {
+//   // Logic for persisting cart state to shared_preferences
+// }
