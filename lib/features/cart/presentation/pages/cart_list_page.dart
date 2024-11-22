@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:retailpi/features/sales/domain/entities/cart.dart';
-import 'package:retailpi/features/sales/domain/entities/cart_item.dart';
+import 'package:retailpi/features/cart/domain/entities/cart.dart';
+import 'package:retailpi/features/cart/domain/entities/cart_item.dart';
 import 'package:retailpi/features/sales/domain/entities/sales_quotation.dart';
 import 'package:retailpi/features/sales/domain/entities/sales_quotation_line.dart';
-import 'package:retailpi/features/sales/presentation/state/providers/cart_providers.dart';
+import 'package:retailpi/features/cart/presentation/state/providers/cart_providers.dart';
 import 'package:retailpi/features/sales/presentation/state/providers/sales_quotation_provider.dart';
-import 'package:retailpi/features/sales/presentation/widgets/cart_list.dart';
+import 'package:retailpi/features/cart/presentation/widgets/cart_list.dart';
 
 class CartListPage extends ConsumerStatefulWidget {
   const CartListPage({super.key});

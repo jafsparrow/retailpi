@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:retailpi/features/sales/presentation/state/providers/cart_providers.dart';
+import 'package:retailpi/features/cart/presentation/state/providers/cart_providers.dart';
 
 class CartSwitcher extends ConsumerWidget {
   const CartSwitcher({super.key});

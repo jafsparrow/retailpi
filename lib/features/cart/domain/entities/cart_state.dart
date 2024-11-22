@@ -1,4 +1,4 @@
-import 'package:retailpi/features/sales/domain/entities/cart.dart';
+import 'package:retailpi/features/cart/domain/entities/cart.dart';
 
 class CartState {
   List<Cart> carts;

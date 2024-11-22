@@ -1,4 +1,4 @@
-import 'package:retailpi/features/sales/domain/entities/cart_state.dart';
+import 'package:retailpi/features/cart/domain/entities/cart_state.dart';
 
 abstract class CartPersistenceRepository {
   Future<void> saveCartState(CartState cartState);

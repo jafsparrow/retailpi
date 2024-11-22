@@ -1,4 +1,4 @@
-import 'package:retailpi/features/sales/domain/entities/cart_item.dart';
+import 'package:retailpi/features/cart/domain/entities/cart_item.dart';
 
 // domain/entities/sales_quotation.dart
 class Cart {

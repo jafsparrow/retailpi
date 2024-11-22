@@ -2,10 +2,10 @@ import 'dart:math';
 
 import 'package:excel/excel.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:retailpi/features/sales/domain/entities/cart.dart';
-import 'package:retailpi/features/sales/domain/entities/cart_item.dart';
-import 'package:retailpi/features/sales/domain/entities/cart_state.dart';
-import 'package:retailpi/features/sales/domain/repositories/cart_persistance_repository.dart';
+import 'package:retailpi/features/cart/domain/entities/cart.dart';
+import 'package:retailpi/features/cart/domain/entities/cart_item.dart';
+import 'package:retailpi/features/cart/domain/entities/cart_state.dart';
+import 'package:retailpi/features/cart/domain/repositories/cart_persistance_repository.dart';
 
 class CartStateNotifier extends StateNotifier<CartState> {
   final CartPersistenceRepository cartPersistenceRepository;

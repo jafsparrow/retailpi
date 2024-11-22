@@ -3,12 +3,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:retailpi/features/products/domain/entities/product.dart';
 import 'package:retailpi/features/products/presentation/providers/products_provider.dart';
-import 'package:retailpi/features/sales/domain/entities/cart_item.dart';
+import 'package:retailpi/features/cart/domain/entities/cart_item.dart';
 import 'package:retailpi/features/sales/domain/entities/sales_quotation_line.dart';
-import 'package:retailpi/features/sales/presentation/state/notifiers/cart_state_notifier.dart';
-import 'package:retailpi/features/sales/presentation/state/providers/cart_providers.dart';
+import 'package:retailpi/features/cart/presentation/state/notifiers/cart_state_notifier.dart';
+import 'package:retailpi/features/cart/presentation/state/providers/cart_providers.dart';
 import 'package:retailpi/features/sales/presentation/state/providers/sales_quotation_provider.dart';
-import 'package:retailpi/features/sales/presentation/widgets/cart_item_adjustment.dart';
+import 'package:retailpi/features/cart/presentation/widgets/cart_item_adjustment.dart';
 
 class ProductList extends ConsumerWidget {
   ProductList({super.key});

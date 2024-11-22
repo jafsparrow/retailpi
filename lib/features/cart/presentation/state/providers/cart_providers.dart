@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:retailpi/features/sales/data/repositories/cart_persistance_repository_impl.dart';
-import 'package:retailpi/features/sales/domain/entities/cart.dart';
-import 'package:retailpi/features/sales/domain/entities/cart_state.dart';
-import 'package:retailpi/features/sales/presentation/state/notifiers/cart_state_notifier.dart';
+import 'package:retailpi/features/cart/domain/entities/cart.dart';
+import 'package:retailpi/features/cart/domain/entities/cart_state.dart';
+import 'package:retailpi/features/cart/presentation/state/notifiers/cart_state_notifier.dart';
 
 final cartPersistenceProvider =
     Provider((ref) => CartPersistenceRepsitoryImpl());

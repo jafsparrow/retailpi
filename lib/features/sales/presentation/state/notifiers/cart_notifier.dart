@@ -1,7 +1,7 @@
 // presentation/notifiers/cart_notifier.dart
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:retailpi/features/sales/domain/entities/cart.dart';
-import 'package:retailpi/features/sales/domain/entities/cart_item.dart';
+import 'package:retailpi/features/cart/domain/entities/cart.dart';
+import 'package:retailpi/features/cart/domain/entities/cart_item.dart';
 
 class CartNotifier extends StateNotifier<List<Cart>> {
   Cart? _activeCart; // Track active cart

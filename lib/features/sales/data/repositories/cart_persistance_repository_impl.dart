@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:retailpi/features/sales/domain/entities/cart_state.dart';
-import 'package:retailpi/features/sales/domain/repositories/cart_persistance_repository.dart';
+import 'package:retailpi/features/cart/domain/entities/cart_state.dart';
+import 'package:retailpi/features/cart/domain/repositories/cart_persistance_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CartPersistenceRepsitoryImpl implements CartPersistenceRepository {

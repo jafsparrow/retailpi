@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:retailpi/features/products/presentation/pages/product_upload.dart';
 import 'package:retailpi/features/products/presentation/providers/products_provider.dart';
-import 'package:retailpi/features/sales/presentation/pages/cart_list_page.dart';
+import 'package:retailpi/features/cart/presentation/pages/cart_list_page.dart';
 import 'package:retailpi/features/sales/presentation/state/providers/sales_quotation_provider.dart';
-import 'package:retailpi/features/sales/presentation/widgets/cart_item_adjustment.dart';
+import 'package:retailpi/features/cart/presentation/widgets/cart_item_adjustment.dart';
 import 'package:retailpi/features/sales/presentation/widgets/product_list.dart';
 import 'package:retailpi/features/sales/presentation/widgets/search_suggestion.dart';
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:retailpi/features/sales/domain/entities/cart_item.dart';
+import 'package:retailpi/features/cart/domain/entities/cart_item.dart';
 import 'package:retailpi/features/sales/domain/entities/sales_quotation_line.dart';
 import '../../../../core/widgets/keypad_custom.dart';
 
