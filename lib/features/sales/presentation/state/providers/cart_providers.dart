@@ -24,13 +24,33 @@ final loadCartStateProvider = FutureProvider<void>((ref) async {
 
 final activeCartProvider = Provider<Cart?>((ref) {
   final cartState = ref.watch(cartStateProvider);
+  // return null;
   return cartState.carts.firstWhere(
     (cart) => cart.id == cartState.activeCartId,
-    // orElse: () => null,
+    orElse: () => Cart(
+        id: '33',
+        createdDateTime: DateTime.now(),
+        createdByUserId: 'createdByUserId',
+        customerId: 'customerId',
+        cartItems: []),
   );
 });
 
 final cartIdsProvider = Provider<List<String>>((ref) {
   final cartState = ref.watch(cartStateProvider);
   return cartState.carts.map((cart) => cart.id).toList();
+});
+
+final activeCartTotalProvider = Provider<double>((ref) {
+  final cartState = ref.watch(cartStateProvider);
+  final activeCart = cartState.carts.firstWhere(
+    (cart) => cart.id == cartState.activeCartId,
+  );
+
+  if (activeCart == null) return 0.0;
+
+  // Calculate the total amount for the active cart
+  return activeCart.cartItems.fold(0.0, (total, item) {
+    return total + (item.quantity * item.unitPrice) - item.discount;
+  });
 });

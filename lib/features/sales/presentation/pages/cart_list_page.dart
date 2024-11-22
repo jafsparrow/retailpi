@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:retailpi/features/sales/domain/entities/cart.dart';
+import 'package:retailpi/features/sales/domain/entities/cart_item.dart';
 import 'package:retailpi/features/sales/domain/entities/sales_quotation.dart';
 import 'package:retailpi/features/sales/domain/entities/sales_quotation_line.dart';
+import 'package:retailpi/features/sales/presentation/state/providers/cart_providers.dart';
 import 'package:retailpi/features/sales/presentation/state/providers/sales_quotation_provider.dart';
 import 'package:retailpi/features/sales/presentation/widgets/cart_list.dart';
 
@@ -15,11 +18,11 @@ class CartListPage extends ConsumerStatefulWidget {
 class _CartListPageState extends ConsumerState<CartListPage> {
   @override
   Widget build(BuildContext context) {
-    SalesQuotation quotation = ref.watch(salesQuotationProvider);
-    List<SalesQuotationLine> quotationLines = quotation.quotationLines;
+    Cart? cart = ref.watch(activeCartProvider);
+    List<CartItem> cartItems = cart!.cartItems ?? [];
     return Scaffold(
       appBar: _buildAppBar(context),
-      body: quotationLines.isNotEmpty
+      body: cartItems.isNotEmpty
           ? Column(
               children: [
                 // cart items.
@@ -47,7 +50,7 @@ class _CartListPageState extends ConsumerState<CartListPage> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Text(quotation.totalAmount.toString()),
+                                Text('total'),
                                 SizedBox(
                                   width: 10,
                                 ),

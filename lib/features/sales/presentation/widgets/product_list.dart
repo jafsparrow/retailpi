@@ -3,7 +3,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:retailpi/features/products/domain/entities/product.dart';
 import 'package:retailpi/features/products/presentation/providers/products_provider.dart';
+import 'package:retailpi/features/sales/domain/entities/cart_item.dart';
 import 'package:retailpi/features/sales/domain/entities/sales_quotation_line.dart';
+import 'package:retailpi/features/sales/presentation/state/notifiers/cart_state_notifier.dart';
+import 'package:retailpi/features/sales/presentation/state/providers/cart_providers.dart';
 import 'package:retailpi/features/sales/presentation/state/providers/sales_quotation_provider.dart';
 import 'package:retailpi/features/sales/presentation/widgets/cart_item_adjustment.dart';
 
@@ -27,19 +30,35 @@ class ProductList extends ConsumerWidget {
     'Tee 4 upvc'
   ];
 
+  // // Method to handle adding new line
+  // void _addLine(WidgetRef ref, Product product) {
+  //   final salesQuotationNotifier = ref.read(salesQuotationProvider.notifier);
+  //   SalesQuotationLine newLine = SalesQuotationLine(
+  //       productId: product.id!,
+  //       productName: product.name,
+  //       quantity: 1,
+  //       unitPrice: double.parse(
+  //         product.standardPrice.toString(),
+  //       ),
+  //       discount: 0);
+
+  //   salesQuotationNotifier.addLineToQuotation(quotationLine: newLine);
+  // }
+
   // Method to handle adding new line
   void _addLine(WidgetRef ref, Product product) {
-    final salesQuotationNotifier = ref.read(salesQuotationProvider.notifier);
-    SalesQuotationLine newLine = SalesQuotationLine(
-        productId: product.id!,
-        productName: product.name,
-        quantity: 1,
-        unitPrice: double.parse(
-          product.standardPrice.toString(),
-        ),
-        discount: 0);
+    final cartStateNotifier = ref.read(cartStateProvider.notifier);
+    CartItem newLine = CartItem(
+      id: product.id!,
+      name: product.name,
+      quantity: 1,
+      unitPrice: double.parse(
+        product.standardPrice.toString(),
+      ),
+      discount: 0,
+    );
 
-    salesQuotationNotifier.addLineToQuotation(quotationLine: newLine);
+    cartStateNotifier.addToCart(newLine);
   }
 
   @override
@@ -147,18 +166,16 @@ class ProductList extends ConsumerWidget {
         fullscreenDialog: true,
         builder: (BuildContext context) {
           return CartItemAdjustment(
-            selectedQuotationLineItem: SalesQuotationLine(
-              productId: product.id!,
-              productName: product.name,
+            cartItem: CartItem(
+              id: product.id!,
+              name: product.name,
               quantity: 1,
               unitPrice: double.parse(product.standardPrice!.toString()),
               discount: 0,
             ),
-            onConfirm: (SalesQuotationLine editedLine) {
+            onConfirm: (CartItem editedLine) {
               print(editedLine);
-              ref
-                  .read(salesQuotationProvider.notifier)
-                  .addLineToQuotation(quotationLine: editedLine);
+              ref.read(cartStateProvider.notifier).addToCart(editedLine);
             },
           );
         },

@@ -10,6 +10,8 @@ class CartSwitcher extends ConsumerWidget {
     final cartIds = ref.watch(cartIdsProvider);
     final activeCartId = ref.watch(cartStateProvider).activeCartId;
 
+    print('jafar is awesome');
+    print(cartIds);
     return Container(
       padding: const EdgeInsets.all(16),
       child: ListView.builder(

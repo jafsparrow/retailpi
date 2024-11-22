@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:retailpi/features/sales/domain/entities/cart_item.dart';
 import 'package:retailpi/features/sales/domain/entities/sales_quotation_line.dart';
 import '../../../../core/widgets/keypad_custom.dart';
 
 class CartItemAdjustment extends ConsumerStatefulWidget {
-  final SalesQuotationLine selectedQuotationLineItem;
-  final Function(SalesQuotationLine) onConfirm;
+  final CartItem cartItem;
+  final Function(CartItem) onConfirm;
   const CartItemAdjustment({
     super.key,
-    required this.selectedQuotationLineItem,
+    required this.cartItem,
     required this.onConfirm,
   });
 
@@ -53,15 +54,15 @@ class _CartItemAdjustmentState extends ConsumerState<CartItemAdjustment> {
   void _onConfirmTheAdjustmentEntries() {
     Navigator.of(context).pop();
     widget.onConfirm(
-      widget.selectedQuotationLineItem.copyWith(
+      widget.cartItem.copyWith(
           quantity: enteredQuantity.isNotEmpty
               ? double.parse(
                   enteredQuantity,
                 )
-              : widget.selectedQuotationLineItem.quantity,
+              : widget.cartItem.quantity,
           unitPrice: enteredPrice.isNotEmpty
               ? double.parse(enteredPrice)
-              : widget.selectedQuotationLineItem.unitPrice),
+              : widget.cartItem.unitPrice),
     );
   }
 
@@ -69,7 +70,7 @@ class _CartItemAdjustmentState extends ConsumerState<CartItemAdjustment> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.selectedQuotationLineItem.productName),
+        title: Text(widget.cartItem.name),
         leading: IconButton(
           icon: Icon(Icons.close),
           onPressed: () {
@@ -102,7 +103,7 @@ class _CartItemAdjustmentState extends ConsumerState<CartItemAdjustment> {
                         width: 10,
                       ),
                       Text(
-                        'x  ${enteredPrice.isEmpty ? widget.selectedQuotationLineItem.unitPrice : enteredPrice} /Unit',
+                        'x  ${enteredPrice.isEmpty ? widget.cartItem.unitPrice : enteredPrice} /Unit',
                         style: TextStyle(fontSize: 28),
                       ),
                     ],
@@ -111,8 +112,7 @@ class _CartItemAdjustmentState extends ConsumerState<CartItemAdjustment> {
                     text: _currencyInput.isNotEmpty
                         ? TextSpan(
                             text: enteredPrice.isNotEmpty
-                                ? widget.selectedQuotationLineItem.unitPrice
-                                    .toString()
+                                ? widget.cartItem.unitPrice.toString()
                                 : '',
                             style: TextStyle(
                               fontSize: 20,

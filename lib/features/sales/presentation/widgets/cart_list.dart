@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:retailpi/features/sales/domain/entities/cart_item.dart';
+import 'package:retailpi/features/sales/domain/entities/cart_state.dart';
 import 'package:retailpi/features/sales/domain/entities/sales_quotation_line.dart';
+import 'package:retailpi/features/sales/presentation/state/providers/cart_providers.dart';
 import 'package:retailpi/features/sales/presentation/state/providers/sales_quotation_provider.dart';
 import 'package:retailpi/features/sales/presentation/widgets/cart_item_adjustment.dart';
 
@@ -41,8 +44,12 @@ class _CartListState extends ConsumerState<CartList> {
 
   @override
   Widget build(BuildContext context) {
-    List<SalesQuotationLine> quotationLines =
-        ref.watch(salesQuotationProvider).quotationLines;
+    CartState cartState = ref.watch(cartStateProvider);
+
+    print(cartState);
+    print('jafar at cartlist broo');
+    List<CartItem> quotationLines =
+        ref.watch(activeCartProvider)!.cartItems ?? [];
     return Padding(
       padding: EdgeInsets.all(8),
       child: Material(
@@ -80,7 +87,7 @@ class _CartListState extends ConsumerState<CartList> {
                                 context, quotationLines[index]);
                           },
                           leading: const Icon(Icons.delete),
-                          title: Text(quotationLines[index].productName),
+                          title: Text(quotationLines[index].name),
                           subtitle: RichText(
                             text: TextSpan(
                               text: '${quotationLines[index].quantity} x ',
@@ -113,7 +120,7 @@ class _CartListState extends ConsumerState<CartList> {
                               context, quotationLines[index]);
                         },
                         leading: const Icon(Icons.delete),
-                        title: Text(quotationLines[index].productName),
+                        title: Text(quotationLines[index].name),
                         subtitle: RichText(
                           text: TextSpan(
                             text: '${quotationLines[index].quantity} x ',
@@ -165,14 +172,14 @@ class _CartListState extends ConsumerState<CartList> {
   }
 
   void showFullScreenProductCountDialog(
-      BuildContext context, SalesQuotationLine selectedQuotationLine) {
+      BuildContext context, CartItem cartItem) {
     Navigator.of(context).push(
       MaterialPageRoute(
         fullscreenDialog: true,
         builder: (BuildContext context) {
           return CartItemAdjustment(
-            selectedQuotationLineItem: selectedQuotationLine,
-            onConfirm: (SalesQuotationLine editedLine) {
+            cartItem: cartItem,
+            onConfirm: (CartItem editedLine) {
               print(editedLine);
             },
           );

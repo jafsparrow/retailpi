@@ -13,6 +13,7 @@ import 'package:retailpi/core/utils/excel_upload.dart';
 import 'package:retailpi/features/category/presentation/pages/category_page.dart';
 
 import 'package:go_router/go_router.dart';
+import 'package:retailpi/features/sales/presentation/pages/pos_page.dart';
 import 'package:retailpi/features/sales/presentation/pages/quotation_mob_page.dart';
 import 'package:retailpi/features/sales/presentation/pages/quotation_page.dart';
 import 'package:retailpi/features/sales/presentation/pages/quotation_pos_page.dart';
@@ -35,7 +36,7 @@ class MyApp extends StatelessWidget {
     routes: [
       GoRoute(
         path: '/dashboard',
-        builder: (context, state) => PosScreen(),
+        builder: (context, state) => PosPage(), // PosScreen(),
       ),
       GoRoute(
         path: '/products',
