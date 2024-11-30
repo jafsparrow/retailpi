@@ -59,17 +59,15 @@ class _CartListState extends ConsumerState<CartList> {
             Container(
               padding: EdgeInsets.all(8),
               height: 50,
-              child: Expanded(
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) {
-                    return ElevatedButton(
-                      child: Text('Bro'),
-                      onPressed: () {},
-                    );
-                  },
-                  itemCount: 3,
-                ),
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (context, index) {
+                  return ElevatedButton(
+                    child: Text('Bro'),
+                    onPressed: () {},
+                  );
+                },
+                itemCount: 3,
               ),
             ),
             Expanded(
