@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:excel/excel.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:retailpi/features/cart/domain/entities/cart.dart';
 import 'package:retailpi/features/cart/domain/entities/cart_item.dart';
@@ -20,6 +19,8 @@ class CartStateNotifier extends StateNotifier<CartState> {
   // }
 
   void addToCart(CartItem cartItem) {
+    // cartItem at this point is not alternative, so cartItem index Id should be set to zero at this point.
+    // final updatedCartItem = cartItem.copyWith(cartIndex: -1);
     // if there is no cart before, add a new cart to the array and have the selected id be the same.
     if (state.carts.isEmpty) {
       Cart cart = Cart(
@@ -122,6 +123,42 @@ class CartStateNotifier extends StateNotifier<CartState> {
     state = savedState;
   }
 
+  void addAlternativeItem(
+      String cartId, String cartItemId, CartItem alternative) {
+    if (state.carts.isEmpty) return;
+
+    final activeCartIndex = state.carts.indexWhere((cart) => cart.id == cartId);
+    if (activeCartIndex == -1) return;
+
+    final activeCart = state.carts[activeCartIndex];
+    final updatedItems = activeCart.cartItems.map((item) {
+      if (item.id == cartItemId) {
+        final colorIndex = item.alternatives.isNotEmpty
+            ? item.alternatives.last.colorIndex + 1
+            : 0;
+        final updatedAlternative = alternative.copyWith(colorIndex: colorIndex);
+        return item.copyWith(alternateItem: updatedAlternative);
+      }
+      return item;
+    }).toList();
+
+    final updatedCart = activeCart.copyWith(carttItems: updatedItems);
+
+    state = CartState(
+      carts: state.carts
+          .map((cart) => cart.id == activeCart.id ? updatedCart : cart)
+          .toList(),
+      activeCartId: state.activeCartId,
+    );
+
+    _persistState();
+  }
+
+  void changeSelectedItemOfCartItem(
+      String cartItemid, int alternativeIndex, bool hasSelected) {
+    // if there is an alternative index with selected checkbox, it should be considered the selection based carItems.
+    // if every altenative is unselected, then the selectedAlternative index should be back to -1 which indicates the default item on this cartItem should be chosen to calculate total.
+  }
   Future<void> _persistState() async {
     // await cartPersistenceRepository.saveCartState(state);
   }

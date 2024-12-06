@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:retailpi/features/cart/presentation/state/providers/product_list_mode_provider.dart';
 import 'package:retailpi/features/products/presentation/pages/product_upload.dart';
 import 'package:retailpi/features/products/presentation/providers/products_provider.dart';
 import 'package:retailpi/features/cart/presentation/pages/cart_list_page.dart';
@@ -116,7 +117,6 @@ class _PosPageState extends ConsumerState<PosPage> {
     final activeCart = ref.watch(activeCartProvider);
     int cartCount = activeCart!.cartItems.length;
     double cartTotal = 30.03; // activeCart!.totalAmount;
-
     return Scaffold(
       appBar: _buildAppBar(context, ref),
       body: Column(
@@ -178,7 +178,79 @@ class _PosPageState extends ConsumerState<PosPage> {
     );
   }
 
-  Container _buildCardSummary(BuildContext context, double cartTotal) {
+  AppBar _buildAppBar(BuildContext context, WidgetRef ref) {
+    return AppBar(
+      title: !_isSearching
+          ? Text('App Bar Title') // Show title when not searching
+          : TextField(
+              controller: _searchController,
+              decoration: const InputDecoration(
+                hintText: 'Search...',
+                border: InputBorder.none,
+              ),
+              autofocus: true, // Automatically focuses the input
+
+              onChanged: (query) {
+                // Handle search query
+                print(query);
+                ref
+                    .read(productStateNotifierProvider.notifier)
+                    .searchProducts(query, limit: 50, offset: 0);
+              },
+            ),
+      actions: [
+        _isSearching
+            ? IconButton(
+                icon: const Icon(Icons.close),
+                onPressed: _toggleSearch,
+              )
+            : IconButton(
+                icon: const Icon(Icons.search),
+                onPressed: _toggleSearch,
+              ),
+        const SizedBox(
+          width: 10,
+        ),
+        const Icon(Icons.qr_code),
+        const SizedBox(
+          width: 10,
+        ),
+        IconButton(
+          onPressed: () {
+            showModalBottomSheet(
+                context: context,
+                builder: (BuildContext context) {
+                  return _buildActiveOrdersBottomSheet();
+                });
+          },
+          icon: const Icon(Icons.grid_3x3),
+        ),
+        const SizedBox(
+          width: 10,
+        ),
+        PopupMenuButton(
+          onSelected: (selectedValue) {
+            FocusScope.of(context).requestFocus(
+                FocusNode()); //[todo] : this is temporary fix for text field focus when user moved back to list page.
+
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => UploadProductsPage()),
+            );
+          },
+          icon: const Icon(Icons.more_vert),
+          itemBuilder: (_) => [
+            const PopupMenuItem(
+              child: const Text('Upload Products'),
+              value: 0,
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildCardSummary(BuildContext context, double cartTotal) {
     return Container(
         height: 50,
         child: Row(
@@ -196,6 +268,13 @@ class _PosPageState extends ConsumerState<PosPage> {
               child: Card(
                 child: TextButton(
                   onPressed: () {
+                    // every time user is going to the carlist page by clicking on cart button s
+                    // should reset the alternative selection.
+
+                    ref
+                        .read(productListCartModeProvider.notifier)
+                        .setNormalMode();
+
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         fullscreenDialog: true,
@@ -221,74 +300,6 @@ class _PosPageState extends ConsumerState<PosPage> {
             ),
           ],
         ));
-  }
-
-  AppBar _buildAppBar(BuildContext context, WidgetRef ref) {
-    return AppBar(
-      title: !_isSearching
-          ? Text('App Bar Title') // Show title when not searching
-          : TextField(
-              controller: _searchController,
-              decoration: InputDecoration(
-                hintText: 'Search...',
-                border: InputBorder.none,
-              ),
-              autofocus: true, // Automatically focuses the input
-
-              onChanged: (query) {
-                // Handle search query
-                print(query);
-                ref
-                    .read(productStateNotifierProvider.notifier)
-                    .searchProducts(query, limit: 50, offset: 0);
-              },
-            ),
-      actions: [
-        _isSearching
-            ? IconButton(
-                icon: Icon(Icons.close),
-                onPressed: _toggleSearch,
-              )
-            : IconButton(
-                icon: Icon(Icons.search),
-                onPressed: _toggleSearch,
-              ),
-        SizedBox(
-          width: 10,
-        ),
-        Icon(Icons.qr_code),
-        SizedBox(
-          width: 10,
-        ),
-        IconButton(
-            onPressed: () {
-              showModalBottomSheet(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return _buildActiveOrdersBottomSheet();
-                  });
-            },
-            icon: Icon(Icons.grid_3x3)),
-        SizedBox(
-          width: 10,
-        ),
-        PopupMenuButton(
-          onSelected: (selectedValue) {
-            FocusScope.of(context).requestFocus(
-                FocusNode()); //[todo] : this is temporary fix for text field focus when user moved back to list page.
-
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => UploadProductsPage()),
-            );
-          },
-          icon: Icon(Icons.more_vert),
-          itemBuilder: (_) => [
-            PopupMenuItem(child: Text('Upload Products'), value: 0),
-          ],
-        ),
-      ],
-    );
   }
 
   Widget _buildActiveOrdersBottomSheet() {

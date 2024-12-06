@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class SalesPredefinedColor {
-  final List<Color> predefinedColors = [
-    Colors.red,
+  static List<Color> predefinedColors = [
+    const Color.fromARGB(255, 48, 36, 36),
     Colors.blue,
     Colors.green,
     Colors.yellow,

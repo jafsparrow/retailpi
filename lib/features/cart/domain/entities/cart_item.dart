@@ -7,6 +7,12 @@ class CartItem {
   final double discount;
   // final double totalPrice;
   List<CartItem> alternatives; // Up to 4 alternatives.
+  int colorIndex;
+  // this is used to track the index at which or
+  //for which the alternative is at so that a
+  //color can be choosen and total can be
+  //calculated for the particular color by
+  //adding up the alternative items from earch cartItems at this index.
   int selectedAlternativeIndex; // Tracks which alternative is selected (-1 if none)
 
   CartItem({
@@ -17,6 +23,8 @@ class CartItem {
     required this.discount,
     // required this.totalPrice,
     this.alternatives = const [],
+    this.colorIndex =
+        -1, //default -1, meaning it is the default cart item (ie; not an alternative)
     this.selectedAlternativeIndex =
         -1, // -1 indicates no alternative is selected
   });
@@ -35,6 +43,8 @@ class CartItem {
     double? unitPrice,
     double? totalPrice,
     double? discount,
+    CartItem? alternateItem,
+    int? colorIndex,
   }) {
     return CartItem(
       id: id,
@@ -43,6 +53,10 @@ class CartItem {
       unitPrice: unitPrice ?? this.unitPrice,
       // totalPrice: totalPrice ?? this.totalPrice,
       discount: discount ?? this.discount,
+      colorIndex: colorIndex ?? this.colorIndex,
+      alternatives: alternateItem != null
+          ? [...alternatives, alternateItem!]
+          : alternatives,
     );
   }
 

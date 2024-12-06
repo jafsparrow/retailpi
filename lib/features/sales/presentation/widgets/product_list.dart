@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:retailpi/features/cart/presentation/state/notifiers/cart_item_alternative.dart';
+import 'package:retailpi/features/cart/presentation/state/providers/product_list_mode_provider.dart';
 import 'package:retailpi/features/products/domain/entities/product.dart';
 import 'package:retailpi/features/products/presentation/providers/products_provider.dart';
 import 'package:retailpi/features/cart/domain/entities/cart_item.dart';
@@ -48,6 +50,8 @@ class ProductList extends ConsumerWidget {
   // Method to handle adding new line
   void _addLine(WidgetRef ref, Product product) {
     final cartStateNotifier = ref.read(cartStateProvider.notifier);
+    final productCartMode = ref.watch(productListCartModeProvider);
+
     CartItem newLine = CartItem(
       id: product.id!,
       name: product.name,
@@ -58,7 +62,16 @@ class ProductList extends ConsumerWidget {
       discount: 0,
     );
 
-    cartStateNotifier.addToCart(newLine);
+    if (productCartMode.mode == ProductListMode.alternative) {
+      final currentCartId = productCartMode.cartId;
+      final cartItemId = productCartMode.cartItemId;
+
+      //TODO: if its the alternative, do the needfull here.
+      cartStateNotifier.addAlternativeItem(
+          currentCartId!, cartItemId!, newLine);
+    } else {
+      cartStateNotifier.addToCart(newLine);
+    }
   }
 
   @override
