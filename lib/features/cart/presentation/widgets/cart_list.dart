@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:retailpi/core/styles/sales_alternative_colors.dart';
 import 'package:retailpi/features/cart/domain/entities/cart_item.dart';
+import 'package:retailpi/features/cart/domain/entities/cart_line.dart';
 import 'package:retailpi/features/cart/domain/entities/cart_state.dart';
 import 'package:retailpi/features/cart/presentation/state/providers/product_list_mode_provider.dart';
 import 'package:retailpi/features/cart/presentation/widgets/cart_line_widget.dart';
@@ -51,7 +52,7 @@ class _CartListState extends ConsumerState<CartList> {
 
     print(cartState);
     print('jafar at cartlist broo');
-    List<CartItem> cartItems = ref.watch(activeCartProvider)!.cartItems ?? [];
+    List<CartLine> cartLines = ref.watch(activeCartProvider)!.lines ?? [];
     return Padding(
       padding: const EdgeInsets.all(8),
       child: Material(
@@ -74,11 +75,13 @@ class _CartListState extends ConsumerState<CartList> {
             ),
             Expanded(
               child: ListView.separated(
-                itemCount: cartItems.length,
+                itemCount: cartLines.length,
                 itemBuilder: (context, index) {
                   return Column(
                     children: [
-                      CartLineWidget(),
+                      CartLineWidget(
+                        line: cartLines[index],
+                      ),
 
                       // ListTile(
                       //   contentPadding: EdgeInsets.all(0),

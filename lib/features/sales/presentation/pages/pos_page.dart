@@ -115,7 +115,7 @@ class _PosPageState extends ConsumerState<PosPage> {
   @override
   Widget build(BuildContext context) {
     final activeCart = ref.watch(activeCartProvider);
-    int cartCount = activeCart!.cartItems.length;
+    int cartCount = activeCart!.lines.length;
     double cartTotal = 30.03; // activeCart!.totalAmount;
     return Scaffold(
       appBar: _buildAppBar(context, ref),

@@ -5,28 +5,12 @@ class CartItem {
   final double quantity;
   final double unitPrice;
   final double discount;
-  // final double totalPrice;
-  List<CartItem> alternatives; // Up to 4 alternatives.
-  int colorIndex;
-  // this is used to track the index at which or
-  //for which the alternative is at so that a
-  //color can be choosen and total can be
-  //calculated for the particular color by
-  //adding up the alternative items from earch cartItems at this index.
-  int selectedAlternativeIndex; // Tracks which alternative is selected (-1 if none)
-
   CartItem({
     required this.id,
     required this.name,
     required this.quantity,
     required this.unitPrice,
     required this.discount,
-    // required this.totalPrice,
-    this.alternatives = const [],
-    this.colorIndex =
-        -1, //default -1, meaning it is the default cart item (ie; not an alternative)
-    this.selectedAlternativeIndex =
-        -1, // -1 indicates no alternative is selected
   });
 
   // Getter to calculate totalPrice dynamically
@@ -53,10 +37,6 @@ class CartItem {
       unitPrice: unitPrice ?? this.unitPrice,
       // totalPrice: totalPrice ?? this.totalPrice,
       discount: discount ?? this.discount,
-      colorIndex: colorIndex ?? this.colorIndex,
-      alternatives: alternateItem != null
-          ? [...alternatives, alternateItem!]
-          : alternatives,
     );
   }
 
@@ -74,7 +54,6 @@ class CartItem {
   Map<String, dynamic> toJson() => {
         'id': id,
         'name': name,
-        'alternatives': alternatives,
         'quantity': quantity,
         'unitPrice': unitPrice,
         'dicount': discount
@@ -84,7 +63,6 @@ class CartItem {
     return CartItem(
       id: json['id'],
       name: json['name'],
-      alternatives: List<CartItem>.from(json['alternatives']),
       quantity: json['quantity'],
       unitPrice: json['unitPrice'],
       discount: json['discount'],

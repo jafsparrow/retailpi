@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:retailpi/features/cart/domain/entities/cart.dart';
 import 'package:retailpi/features/cart/domain/entities/cart_item.dart';
+import 'package:retailpi/features/cart/domain/entities/cart_line.dart';
 import 'package:retailpi/features/sales/domain/entities/sales_quotation.dart';
 import 'package:retailpi/features/sales/domain/entities/sales_quotation_line.dart';
 import 'package:retailpi/features/cart/presentation/state/providers/cart_providers.dart';
@@ -19,10 +20,10 @@ class _CartListPageState extends ConsumerState<CartListPage> {
   @override
   Widget build(BuildContext context) {
     Cart? cart = ref.watch(activeCartProvider);
-    List<CartItem> cartItems = cart!.cartItems ?? [];
+    List<CartLine> lines = cart!.lines ?? [];
     return Scaffold(
       appBar: _buildAppBar(context),
-      body: cartItems.isNotEmpty
+      body: lines.isNotEmpty
           ? Column(
               children: [
                 // cart items.

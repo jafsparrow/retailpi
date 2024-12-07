@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:retailpi/features/cart/domain/entities/cart_line.dart';
 import 'package:retailpi/features/cart/presentation/state/notifiers/cart_item_alternative.dart';
 import 'package:retailpi/features/cart/presentation/state/providers/product_list_mode_provider.dart';
 import 'package:retailpi/features/products/domain/entities/product.dart';
@@ -52,7 +53,7 @@ class ProductList extends ConsumerWidget {
     final cartStateNotifier = ref.read(cartStateProvider.notifier);
     final productCartMode = ref.watch(productListCartModeProvider);
 
-    CartItem newLine = CartItem(
+    CartItem newCartItem = CartItem(
       id: product.id!,
       name: product.name,
       quantity: 1,
@@ -64,13 +65,18 @@ class ProductList extends ConsumerWidget {
 
     if (productCartMode.mode == ProductListMode.alternative) {
       final currentCartId = productCartMode.cartId;
-      final cartItemId = productCartMode.cartItemId;
+      final lineId = productCartMode.lineId;
 
       //TODO: if its the alternative, do the needfull here.
       cartStateNotifier.addAlternativeItem(
-          currentCartId!, cartItemId!, newLine);
+          currentCartId!, lineId!, newCartItem);
     } else {
-      cartStateNotifier.addToCart(newLine);
+      CartLine line = CartLine(
+          id: product.id!,
+          discountValue: 0,
+          isDiscountInPercentage: false,
+          cartItems: [newCartItem]);
+      cartStateNotifier.addToCart(line);
     }
   }
 
@@ -188,7 +194,7 @@ class ProductList extends ConsumerWidget {
             ),
             onConfirm: (CartItem editedLine) {
               print(editedLine);
-              ref.read(cartStateProvider.notifier).addToCart(editedLine);
+              // ref.read(cartStateProvider.notifier).addToCart(editedLine);
             },
           );
         },

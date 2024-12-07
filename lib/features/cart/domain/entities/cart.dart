@@ -1,4 +1,5 @@
 import 'package:retailpi/features/cart/domain/entities/cart_item.dart';
+import 'package:retailpi/features/cart/domain/entities/cart_line.dart';
 
 // domain/entities/sales_quotation.dart
 class Cart {
@@ -6,7 +7,7 @@ class Cart {
   final DateTime createdDateTime;
   final String createdByUserId;
   final String customerId;
-  final List<CartItem> cartItems;
+  final List<CartLine> lines;
   // final double totalAmount;
   // final double taxedTotal;
 
@@ -15,23 +16,23 @@ class Cart {
     required this.createdDateTime,
     required this.createdByUserId,
     required this.customerId,
-    required this.cartItems,
+    required this.lines,
   });
 
   // Calculate the total quotation amount
-  double calculateTotalAmount() {
-    return cartItems.fold(
-      0.0,
-      (sum, line) => sum + line.totalPrice,
-    );
-  }
+  // double calculateTotalAmount() {
+  //   return cartItems.fold(
+  //     0.0,
+  //     (sum, line) => sum + line.totalPrice,
+  //   );
+  // }
 
   Cart copyWith({
     String? id,
     DateTime? quotationDate,
     String? createdByUserId,
     String? customerId,
-    List<CartItem>? carttItems,
+    List<CartLine>? lines,
     double? totalAmount,
     double? taxedTotal,
   }) {
@@ -40,12 +41,12 @@ class Cart {
         createdDateTime: quotationDate ?? this.createdDateTime,
         createdByUserId: createdByUserId ?? this.createdByUserId,
         customerId: customerId ?? this.customerId,
-        cartItems: carttItems ?? this.cartItems);
+        lines: lines ?? this.lines);
   }
 
   Map<String, dynamic> toJson() => {
         'id': id,
-        'cartItems': cartItems.map((item) => item.toJson()).toList(),
+        'cartItems': lines.map((item) => item.toJson()).toList(),
         'createdDateTime': createdDateTime,
         'createdByUserId': createdByUserId,
         'customerId': customerId
@@ -54,8 +55,8 @@ class Cart {
   factory Cart.fromJson(Map<String, dynamic> json) {
     return Cart(
       id: json['id'],
-      cartItems: (json['cartItems'] as List)
-          .map((item) => CartItem.fromJson(item))
+      lines: (json['lines'] as List)
+          .map((item) => CartLine.fromJson(item))
           .toList(),
       createdDateTime: json['createdDateTime'],
       createdByUserId: '',

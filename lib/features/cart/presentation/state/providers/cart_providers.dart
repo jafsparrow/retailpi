@@ -32,7 +32,7 @@ final activeCartProvider = Provider<Cart?>((ref) {
         createdDateTime: DateTime.now(),
         createdByUserId: 'createdByUserId',
         customerId: 'customerId',
-        cartItems: []),
+        lines: []),
   );
 });
 
@@ -41,16 +41,34 @@ final cartIdsProvider = Provider<List<String>>((ref) {
   return cartState.carts.map((cart) => cart.id).toList();
 });
 
-final activeCartTotalProvider = Provider<double>((ref) {
+final activeCartTotalProvider = Provider<List<double>>((ref) {
   final cartState = ref.watch(cartStateProvider);
   final activeCart = cartState.carts.firstWhere(
     (cart) => cart.id == cartState.activeCartId,
   );
 
-  if (activeCart == null) return 0.0;
+  if (activeCart == null) return [];
 
-  // Calculate the total amount for the active cart
-  return activeCart.cartItems.fold(0.0, (total, item) {
-    return total + (item.quantity * item.unitPrice) - item.discount;
+// Find the maximum number of variants in any cart line
+  int maxVariants = activeCart.lines
+      .map((line) => line.cartItems.length)
+      .reduce((a, b) => a > b ? a : b);
+
+  // Calculate totals for each position (variant index)
+  List<double> positionTotals = List.generate(maxVariants, (index) {
+    return activeCart.lines.fold(0.0, (total, cartLine) {
+      // If the cart line has a variant at this position, add its price
+      // Otherwise, fallback to the first item's price
+      return total +
+          (cartLine.cartItems.length > index
+              ? cartLine.cartItems[index].unitPrice *
+                  cartLine.cartItems[index].quantity
+              : cartLine.cartItems[0].unitPrice *
+                  cartLine.cartItems[0].unitPrice);
+    });
   });
+
+  // Print the totals for each position
+  print(positionTotals); // Output: [80.0, 40.0, 30.0]
+  return positionTotals;
 });

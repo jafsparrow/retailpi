@@ -5,23 +5,23 @@ enum ProductListMode { normal, alternative }
 class ProductListCartMode {
   final ProductListMode mode;
   final String? cartId;
-  final String? cartItemId;
+  final String? lineId;
 
   ProductListCartMode({
     required this.mode,
     this.cartId,
-    this.cartItemId,
+    this.lineId,
   });
 
   ProductListCartMode copyWith({
     ProductListMode? mode,
     String? cartId,
-    String? cartItemId,
+    String? lineId,
   }) {
     return ProductListCartMode(
       mode: mode ?? this.mode,
       cartId: cartId ?? this.cartId,
-      cartItemId: cartItemId ?? this.cartItemId,
+      lineId: lineId ?? this.lineId,
     );
   }
 }
@@ -32,14 +32,14 @@ class ProductListModeNotifier extends StateNotifier<ProductListCartMode> {
 
   void setNormalMode() {
     state = ProductListCartMode(
-        mode: ProductListMode.normal, cartId: null, cartItemId: null);
+        mode: ProductListMode.normal, cartId: null, lineId: null);
   }
 
-  void setAlternativeMode(String cartId, String cartItemId) {
+  void setAlternativeMode(String cartId, String lineId) {
     state = ProductListCartMode(
       mode: ProductListMode.alternative,
       cartId: cartId,
-      cartItemId: cartItemId,
+      lineId: lineId,
     );
   }
 }

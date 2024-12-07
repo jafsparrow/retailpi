@@ -2,19 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:retailpi/core/styles/sales_alternative_colors.dart';
 import 'package:retailpi/features/cart/domain/entities/cart_line.dart';
+import 'package:retailpi/features/cart/presentation/state/notifiers/cart_item_alternative.dart';
+import 'package:retailpi/features/cart/presentation/state/providers/cart_providers.dart';
+import 'package:retailpi/features/cart/presentation/state/providers/product_list_mode_provider.dart';
 
 class CartLineWidget extends ConsumerWidget {
+  final CartLine line;
   final List<int> numss = [1, 2, 3, 4];
   // final CartLine cartLine;
-  CartLineWidget({
-    super.key,
-  });
+  CartLineWidget({super.key, required this.line});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       children: [
-        CartLineHeaderWidget(),
+        CartLineHeaderWidget(
+          line: line,
+        ),
+        ...line.cartItems.map((element) {
+          return Container(
+            height: 20,
+            width: 20,
+            color: Colors.red,
+          );
+        }),
         CartItemWidget(
           backgourndColour: SalesPredefinedColor.predefinedColors[1],
         ),
@@ -30,8 +41,13 @@ class CartLineWidget extends ConsumerWidget {
 }
 
 class CartLineHeaderWidget extends ConsumerWidget {
+  final CartLine line;
+
+  CartLineHeaderWidget({super.key, required this.line});
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    String activeCartId = ref.read(activeCartProvider)!.id;
     return Container(
       child: Row(
         children: [
@@ -39,7 +55,12 @@ class CartLineHeaderWidget extends ConsumerWidget {
           Spacer(),
           ...SalesPredefinedColor.predefinedColors.asMap().entries.map((entry) {
             return InkWell(
-              onTap: () {},
+              onTap: () {
+                ref
+                    .read(productListCartModeProvider.notifier)
+                    .setAlternativeMode(activeCartId, line.id);
+                Navigator.pop(context);
+              },
               child: Container(
                 width: 18,
                 height: 10,

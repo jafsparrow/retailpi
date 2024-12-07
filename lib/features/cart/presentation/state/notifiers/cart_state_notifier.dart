@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:retailpi/features/cart/domain/entities/cart.dart';
 import 'package:retailpi/features/cart/domain/entities/cart_item.dart';
+import 'package:retailpi/features/cart/domain/entities/cart_line.dart';
 import 'package:retailpi/features/cart/domain/entities/cart_state.dart';
 import 'package:retailpi/features/cart/domain/repositories/cart_persistance_repository.dart';
 
@@ -18,7 +19,7 @@ class CartStateNotifier extends StateNotifier<CartState> {
   //   _persistState();
   // }
 
-  void addToCart(CartItem cartItem) {
+  void addToCart(CartLine line) {
     // cartItem at this point is not alternative, so cartItem index Id should be set to zero at this point.
     // final updatedCartItem = cartItem.copyWith(cartIndex: -1);
     // if there is no cart before, add a new cart to the array and have the selected id be the same.
@@ -28,7 +29,7 @@ class CartStateNotifier extends StateNotifier<CartState> {
         createdDateTime: DateTime.now(),
         createdByUserId: 'createdByUserId',
         customerId: 'customerId',
-        cartItems: [cartItem],
+        lines: [line],
       );
 
       state = CartState(carts: [cart], activeCartId: cart.id);
@@ -37,7 +38,7 @@ class CartStateNotifier extends StateNotifier<CartState> {
       final activeCart =
           state.carts.firstWhere((cart) => cart.id == state.activeCartId);
       final updatedCart = activeCart.copyWith(
-        carttItems: [...activeCart.cartItems, cartItem],
+        lines: [...activeCart.lines, line],
       );
       state = CartState(
         carts: state.carts
@@ -51,7 +52,8 @@ class CartStateNotifier extends StateNotifier<CartState> {
 
   // Update item in the active cart
   void updateItemInActiveCart({
-    required String itemId,
+    required String lineId,
+    required int index,
     double? quantity,
     double? unitPrice,
     double? discount,
@@ -63,18 +65,18 @@ class CartStateNotifier extends StateNotifier<CartState> {
     if (activeCartIndex == -1) return;
 
     final activeCart = state.carts[activeCartIndex];
-    final updatedItems = activeCart.cartItems.map((item) {
-      if (item.id == itemId) {
-        return item.copyWith(
-          quantity: quantity ?? item.quantity,
-          unitPrice: unitPrice ?? item.unitPrice,
-          discount: discount ?? item.discount,
-        );
+
+    final updatedLines = activeCart.lines.map((line) {
+      if (line.id == lineId) {
+        final updatedCartItems = line.cartItems;
+        updatedCartItems[index] = updatedCartItems[index].copyWith(
+            quantity: quantity, unitPrice: unitPrice, discount: discount);
+        return line.copyWith(cartItems: updatedCartItems);
       }
-      return item;
+      return line;
     }).toList();
 
-    final updatedCart = activeCart.copyWith(carttItems: updatedItems);
+    final updatedCart = activeCart.copyWith(lines: updatedLines);
 
     state = CartState(
       carts: state.carts
@@ -123,26 +125,25 @@ class CartStateNotifier extends StateNotifier<CartState> {
     state = savedState;
   }
 
-  void addAlternativeItem(
-      String cartId, String cartItemId, CartItem alternative) {
+  void addAlternativeItem(String cartId, String lineId, CartItem cartItem) {
+    // TODO if the cart alternative reached maximum length , check it here, exapmole maximum 4 alternative.
     if (state.carts.isEmpty) return;
 
     final activeCartIndex = state.carts.indexWhere((cart) => cart.id == cartId);
     if (activeCartIndex == -1) return;
 
     final activeCart = state.carts[activeCartIndex];
-    final updatedItems = activeCart.cartItems.map((item) {
-      if (item.id == cartItemId) {
-        final colorIndex = item.alternatives.isNotEmpty
-            ? item.alternatives.last.colorIndex + 1
-            : 0;
-        final updatedAlternative = alternative.copyWith(colorIndex: colorIndex);
-        return item.copyWith(alternateItem: updatedAlternative);
+
+    final updatedLines = activeCart.lines.map((line) {
+      if (line.id == lineId) {
+        final updatedCartItems = line.cartItems;
+        updatedCartItems.add(cartItem);
+        return line.copyWith(cartItems: updatedCartItems);
       }
-      return item;
+      return line;
     }).toList();
 
-    final updatedCart = activeCart.copyWith(carttItems: updatedItems);
+    final updatedCart = activeCart.copyWith(lines: updatedLines);
 
     state = CartState(
       carts: state.carts

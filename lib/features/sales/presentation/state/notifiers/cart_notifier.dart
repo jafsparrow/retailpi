@@ -17,7 +17,7 @@ class CartNotifier extends StateNotifier<List<Cart>> {
         final updatedCart = Cart(
           id: cart.id,
           customerId: cart.customerId,
-          cartItems: [...cart.cartItems, item],
+          lines: [],
           createdByUserId: 'tesmp',
           createdDateTime: new DateTime.now(),
         );
