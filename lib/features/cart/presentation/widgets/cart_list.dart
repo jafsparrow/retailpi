@@ -81,6 +81,7 @@ class _CartListState extends ConsumerState<CartList> {
                     children: [
                       CartLineWidget(
                         line: cartLines[index],
+                        lineItemNumber: index + 1,
                       ),
 
                       // ListTile(
