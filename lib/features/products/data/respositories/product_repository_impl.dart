@@ -102,6 +102,30 @@ class ProductRepositoryImpl implements ProductRepository {
         .map((product) => ProductMapper.toDomainModel(product));
     return mappedToDomainProduct.toList();
   }
+
+  @override
+  Future<void> addAProduct(Product products) {
+    // TODO: implement addAProduct
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Product> addATagForTheProduct(String id, List<String> tags) {
+    // TODO: implement addATagForTheProduct
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> deactivateAProduct(String id) {
+    // TODO: implement deactivateAProduct
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Product> updateAProduct(String id, Product product) {
+    // TODO: implement updateAProduct
+    throw UnimplementedError();
+  }
 }
 
 // class ProductRepository {

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:retailpi/features/cart/domain/entities/cart_line.dart';
 import 'package:retailpi/features/cart/presentation/state/notifiers/cart_item_alternative.dart';
 import 'package:retailpi/features/cart/presentation/state/providers/product_list_mode_provider.dart';
+import 'package:retailpi/features/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:retailpi/features/products/domain/entities/product.dart';
 import 'package:retailpi/features/products/presentation/providers/products_provider.dart';
 import 'package:retailpi/features/cart/domain/entities/cart_item.dart';
@@ -94,9 +96,14 @@ class ProductList extends ConsumerWidget {
             return ListTile(
               contentPadding:
                   const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
-              title: Text(
-                products[index].name,
-                style: TextStyle(overflow: TextOverflow.fade),
+              title: GestureDetector(
+                onTap: () {
+                  context.push('/product-detail', extra: products[index]);
+                },
+                child: Text(
+                  products[index].name,
+                  style: TextStyle(overflow: TextOverflow.fade),
+                ),
               ),
               subtitle: GestureDetector(
                 child: Row(

@@ -2,28 +2,35 @@ class ProductVariant {
   final String id;
   final String name; //name from template.
   final String displayName; // combined name of varint attributes.
+  int? listPrice;
+  int? standardPrice;
+
+  String? defaultCode;
+  bool? barcode;
+
   final int? qtyAvailable;
   int? reorderingMinQty;
   int? reorderingMaxQty;
+
   String? productTmplId;
-  int? listPrice;
+
   List<ProductTemplateVariantValueId>? productTemplateVariantValueIds;
-  ProductCategory? category;
+  List<String>? saleTaxes;
+
+  // ProductCategory? category; //need to confirm if I really need category for variant.
   bool? saleOk;
   bool? purchaseOk;
   bool? active;
-  List<String>? taxesId;
+  bool
+      isProductVariant; // this is for fagging the item as part of other variant.
 
-  int? standardPrice;
-  String? defaultCode;
-
-  bool? barcode;
-
-  ProductVariant(
-      {required this.id,
-      required this.name,
-      required this.displayName,
-      required this.qtyAvailable});
+  ProductVariant({
+    required this.id,
+    required this.name,
+    required this.displayName,
+    required this.qtyAvailable,
+    this.isProductVariant = false,
+  });
 }
 
 class ProductTemplateVariantValueId {

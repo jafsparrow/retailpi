@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:realm/realm.dart';
 import 'package:retailpi/features/dashboard/presentation/pages/dashboard_page.dart';
+import 'package:retailpi/features/products/domain/entities/product.dart';
 import 'package:retailpi/features/products/presentation/pages/product_add.dart';
+import 'package:retailpi/features/products/presentation/pages/product_details_page.dart';
 import 'package:retailpi/features/products/presentation/pages/product_page.dart';
 import 'package:retailpi/features/products/presentation/pages/product_upload.dart';
 import 'package:retailpi/features/products/presentation/providers/products_provider.dart';
@@ -13,6 +15,7 @@ import 'package:retailpi/core/utils/excel_upload.dart';
 import 'package:retailpi/features/category/presentation/pages/category_page.dart';
 
 import 'package:go_router/go_router.dart';
+import 'package:retailpi/features/products/presentation/widgets/product_form.dart';
 import 'package:retailpi/features/sales/presentation/pages/pos_page.dart';
 import 'package:retailpi/features/sales/presentation/pages/quotation_mob_page.dart';
 import 'package:retailpi/features/sales/presentation/pages/quotation_page.dart';
@@ -39,8 +42,20 @@ class MyApp extends StatelessWidget {
         builder: (context, state) => PosPage(), // PosScreen(),
       ),
       GoRoute(
-        path: '/products',
-        builder: (context, state) => ProductScreen(),
+        path: '/product-detail',
+        builder: (context, state) {
+          final product = state.extra as Product;
+
+          return ProductDetailsPage(product: product);
+        },
+      ),
+      GoRoute(
+        path: '/product-edit',
+        builder: (context, state) {
+          final product = state.extra as Product;
+
+          return AddEditProductForm(product: product);
+        },
       ),
       GoRoute(
         path: '/sales-invoices',

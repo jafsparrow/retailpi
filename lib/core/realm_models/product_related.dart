@@ -43,7 +43,7 @@ class _ProductTemplateRealm {
   late bool? saleOk;
   late String? saleDescription;
   late String companyId;
-  late String? image;
+  late String? image; //[TODO]
 
   late List<_TaxRealm> salesTaxes; // List of sales taxes applied to the product
   late List<_TaxRealm>

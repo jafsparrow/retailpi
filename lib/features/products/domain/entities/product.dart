@@ -1,29 +1,58 @@
+import 'package:retailpi/features/products/domain/entities/product_variant.dart';
+
 class Product {
   String? id;
-  int? productVariantCount;
-  bool? isProductVariant;
-  List<AttributeLineIds>? attributeLineIds;
-  int? qtyAvailable;
-  String? uomName;
   String name;
-  String? defaultCode;
   String? displayName;
-  int? reorderingMinQty;
-  int? reorderingMaxQty;
-  bool? saleOk;
+  String? description;
+  String? uomName; // unit of measurement
+  String? purchaseUom;
+  String? defaultCode;
+
   num? listPrice;
   num? standardPrice;
-  String? taxString;
-  List<TaxId>? taxesId;
-  String? categoryId;
 
-  Product(
-      {required this.id,
-      required this.name,
-      this.categoryId,
-      this.listPrice,
-      this.defaultCode,
-      this.standardPrice});
+  String? type; //not sure at this point why do i need it.
+  List<String>? imageUrls;
+  int? productVariantCount; // this can be a getter for the count of variant.
+
+  List<ProductVariant>? variants;
+  List<AttributeLineIds>? attributeLineIds;
+  int? qtyAvailable;
+
+  int? reorderMinQuantity;
+  int? reorderingMinQty;
+  int? reorderingMaxQty;
+
+  bool? saleOk;
+
+  String? taxString; // [TODO] not sure what to do with this.
+  List<TaxId>? salesTaxes;
+  List<TaxId>? purchaseTaxes;
+
+  String? companyId; // this might be needed for multi company configuration
+  String? categoryId;
+  String? posCategoryId; // just having it for the future as in odoo
+
+// this feild is important to decide the stock and re order, if it has variant consider the variant too.
+  bool?
+      hasVariant; // need this bool just to confirm the only available variant entry is not a variant , it is just so the pos system to search the item quickly
+
+  bool? availableInPos;
+  bool? toWeight;
+  bool? active;
+  String? brand;
+
+  DateTime? expiryDate;
+
+  Product({
+    required this.id,
+    required this.name,
+    this.categoryId,
+    this.listPrice,
+    this.defaultCode,
+    this.standardPrice,
+  });
 }
 
 class AttributeLineIds {
