@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:retailpi/features/home/presentation/pages/sample_data.dart';
+import 'package:retailpi/features/home/presentation/widgets/group_badge.dart';
 import 'package:retailpi/features/home/presentation/widgets/home_recent_tabs.dart';
 import 'package:retailpi/features/home/presentation/widgets/notes_section.dart';
 import 'package:retailpi/features/home/presentation/widgets/shorcut_view.dart';
@@ -34,6 +35,23 @@ class HomePage extends StatelessWidget {
           ),
           HomeShortcuts(),
           Flexible(fit: FlexFit.loose, child: RecentTabs()),
+          SizedBox(
+            height: 40,
+            child: GroupBadgeList(
+              groups: [
+                {'id': '1', 'name': 'Group A'},
+                {'id': '2', 'name': 'Group B'},
+                {'id': '3', 'name': 'Group C'},
+                {'id': '4', 'name': 'Group D'},
+                {'id': '4', 'name': 'Group D'},
+                {'id': '4', 'name': 'Group D'},
+                {'id': '4', 'name': 'Group D'},
+                {'id': '4', 'name': 'Group D'},
+                {'id': '4', 'name': 'Group D'},
+                {'id': '4', 'name': 'Group D'},
+              ],
+            ),
+          ),
           SizedBox(
             height: 8,
           ),
