@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:retailpi/features/home/presentation/pages/sample_data.dart';
+import 'package:retailpi/features/home/presentation/widgets/home_recent_tabs.dart';
+import 'package:retailpi/features/home/presentation/widgets/notes_section.dart';
+import 'package:retailpi/features/home/presentation/widgets/shorcut_view.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -7,14 +11,16 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: Center(child: const Text('Hi Alex'),),
-        leading: IconButton(onPressed: () {} , icon: Icon(Icons.menu)),
-        actions: [IconButton(onPressed: () {}, icon: Icon(Icons.supervised_user_circle))],
+        title: Center(
+          child: const Text('Hi Alex'),
+        ),
+        leading: IconButton(onPressed: () {}, icon: Icon(Icons.menu)),
+        actions: [
+          IconButton(onPressed: () {}, icon: Icon(Icons.supervised_user_circle))
+        ],
       ),
-      body:  ListView(
-        children: <Widget> [
-
-
+      body: Column(
+        children: <Widget>[
           ConstrainedBox(
             constraints: const BoxConstraints(maxHeight: 200),
             child: CarouselView(
@@ -25,23 +31,15 @@ class HomePage extends StatelessWidget {
                 return Text('hello');
               }),
             ),
-
-
-
           ),
-
-          ConstrainedBox(
-            constraints: const BoxConstraints(maxHeight: 50),
-            child: CarouselView(
-              itemExtent: 80
-              ,
-              children: List<Widget>.generate(20, (int index) {
-                return Badge(child: Text('hello'),);
-              }),
-            ),
-
-          )
-
-          ],),);
+          HomeShortcuts(),
+          Flexible(fit: FlexFit.loose, child: RecentTabs()),
+          SizedBox(
+            height: 8,
+          ),
+          Expanded(child: NotesSection())
+        ],
+      ),
+    );
   }
 }
