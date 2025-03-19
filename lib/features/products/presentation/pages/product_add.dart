@@ -10,6 +10,11 @@ class ProductAddPage extends StatefulWidget {
 class _ProductAddPageState extends State<ProductAddPage> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      appBar: AppBar(title: Text('add Product')),
+      body: Center(
+        child: Text('add product'),
+      ),
+    );
   }
 }

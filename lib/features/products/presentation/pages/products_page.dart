@@ -2,12 +2,13 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:retailpi/features/products/domain/entities/product.dart';
 import 'package:retailpi/features/products/presentation/pages/product_upload.dart';
 import 'package:retailpi/features/products/presentation/providers/products_provider.dart';
 import 'package:retailpi/features/products/presentation/widgets/product_list_item.dart';
 
-class ProductScreen extends ConsumerWidget {
+class ProductsPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // Listen to the product list state
@@ -18,20 +19,34 @@ class ProductScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Product List'),
+        leading: IconButton(
+          icon: Icon(Icons.menu),
+          onPressed: () {
+            Scaffold.of(context).openDrawer();
+          },
+        ),
+        title: Text(
+          'Product List',
+        ),
         actions: [
           PopupMenuButton(
             onSelected: (selectedValue) {
               FocusScope.of(context).requestFocus(
                   FocusNode()); //[todo] : this is temporary fix for text field focus when user moved back to list page.
+              if (selectedValue == 0) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => UploadProductsPage()),
+                );
+              }
 
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => UploadProductsPage()),
-              );
+              if (selectedValue == 2) {
+                context.go('/products/add');
+              }
             },
             icon: Icon(Icons.more_vert),
             itemBuilder: (_) => [
+              PopupMenuItem(child: Text('Add Prodcut'), value: 2),
               PopupMenuItem(child: Text('Upload Products'), value: 0),
             ],
           ),
@@ -42,27 +57,39 @@ class ProductScreen extends ConsumerWidget {
           // Search bar
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              autofocus: false,
-              decoration: const InputDecoration(
-                labelText: 'Search',
-                hintText: 'Enter product name or code',
-                prefixIcon: Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(12.0)),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    autofocus: false,
+                    decoration: const InputDecoration(
+                      labelText: 'Search',
+                      hintText: 'Enter product name or code',
+                      prefixIcon: Icon(Icons.search),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                      ),
+                    ),
+                    // Trigger filtering when search query changes
+                    onChanged: (query) => {
+                      // if (query.isNotEmpty)
+                      //   {
+                      ref
+                          .read(productStateNotifierProvider.notifier)
+                          .searchProducts(query, limit: 50, offset: 0)
+                      // }
+                    },
+                  ),
                 ),
-              ),
-              // Trigger filtering when search query changes
-              onChanged: (query) => {
-                // if (query.isNotEmpty)
-                //   {
-                ref
-                    .read(productStateNotifierProvider.notifier)
-                    .searchProducts(query, limit: 50, offset: 0)
-                // }
-              },
+                IconButton(onPressed: () {}, icon: Icon(Icons.barcode_reader))
+              ],
             ),
           ),
+          ListTile(
+            title: Text("product A"),
+            onTap: () => {context.go('/products/123')},
+          ),
+
           // List of products
           Expanded(
             child: ListView.builder(
@@ -304,4 +331,3 @@ void _showAddDialog(BuildContext context, WidgetRef ref) {
 //     );
 //   }
 // }
-

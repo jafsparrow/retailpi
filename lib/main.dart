@@ -6,6 +6,7 @@ import 'package:retailpi/features/products/presentation/pages/product_add.dart';
 import 'package:retailpi/features/products/presentation/pages/product_details_page.dart';
 
 import 'package:go_router/go_router.dart';
+import 'package:retailpi/features/products/presentation/product_routes.dart';
 import 'package:retailpi/features/products/presentation/widgets/product_form.dart';
 import 'package:retailpi/features/sales/presentation/pages/pos_page.dart';
 import 'package:retailpi/features/sales/presentation/pages/quotation_mob_page.dart';
@@ -24,37 +25,38 @@ void main() {
 class MyApp extends StatelessWidget {
   MyApp({super.key});
   final GoRouter _router = GoRouter(
-    initialLocation: '/home',
+    initialLocation: '/tags',
     routes: [
+      productRoutes,
       GoRoute(path: '/home', builder: (context, state) => HomePage()),
       GoRoute(
         path: '/dashboard',
         builder: (context, state) => PosPage(), // PosScreen(),
       ),
-      GoRoute(
-        path: '/product-detail',
-        builder: (context, state) {
-          final product = state.extra as Product;
+      // GoRoute(
+      //   path: '/product-detail',
+      //   builder: (context, state) {
+      //     final product = state.extra as Product;
 
-          return ProductDetailsPage(product: product);
-        },
-      ),
-      GoRoute(
-        path: '/product-edit',
-        builder: (context, state) {
-          final product = state.extra as Product;
+      //     return ProductDetailsPage(product: product);
+      //   },
+      // ),
+      // GoRoute(
+      //   path: '/product-edit',
+      //   builder: (context, state) {
+      //     final product = state.extra as Product;
 
-          return AddEditProductForm(product: product);
-        },
-      ),
+      //     return AddEditProductForm(product: product);
+      //   },
+      // ),
       GoRoute(
         path: '/sales-invoices',
         builder: (context, state) => SalesQuotationMobileScreen(),
       ),
-      GoRoute(
-        path: '/product-add',
-        builder: (context, state) => const ProductAddPage(),
-      ),
+      // GoRoute(
+      //   path: '/product-add',
+      //   builder: (context, state) => const ProductAddPage(),
+      // ),
       // GoRoute(
       //   path: '/customers',
       //   builder: (context, state) => CustomerPage(),
@@ -68,6 +70,11 @@ class MyApp extends StatelessWidget {
       //   builder: (context, state) => POSPage(),
       // ),
     ],
+    errorPageBuilder: (context, state) => MaterialPage(
+      child: Scaffold(
+        body: Center(child: Text("404 - Page Not Found")),
+      ),
+    ),
   );
   // This widget is the root of your application.
 

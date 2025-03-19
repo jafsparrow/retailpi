@@ -1,94 +1,95 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:retailpi/core/widgets/padded_container.dart';
 import 'package:retailpi/features/products/domain/entities/product.dart';
+import 'package:retailpi/features/products/presentation/widgets/product_detail_screen/general_info.dart';
 
 class ProductDetailsPage extends StatelessWidget {
-  final Product product;
-  const ProductDetailsPage({Key? key, required this.product}) : super(key: key);
+  final String productId;
+  const ProductDetailsPage({Key? key, required this.productId})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 3,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(product.name),
-          // bottom: const TabBar(
-          //   tabs: [
-          //     Tab(text: 'Basic Info'),
-          //     Tab(text: 'Tags'),
-          //     Tab(text: 'Details'),
-          //   ],
-          // ),
-          actions: [
-            IconButton(
-              onPressed: () {
-                context.push('/product-edit', extra: product);
-              },
-              icon: Icon(Icons.edit),
-            ),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('product detail'),
+      ),
+      body: PaddedContainer(
+        child: Column(
+          children: [
+            _buildProductCard(context),
+            Expanded(child: _buildProductPageTabs(context))
           ],
         ),
-        body: Column(
+      ),
+    );
+  }
+
+  Widget _buildProductPageTabs(BuildContext context) {
+    return DefaultTabController(
+        length: 4, // Number of tabs
+        child: Column(
           children: [
-            // Product Image and Name Section
-            Container(
-              color: Colors.grey.shade200,
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
-                children: [
-                  // Product Photo
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(8.0),
-                    child: Image.network(
-                      'product.imageUrls![0]',
-                      width: 80,
-                      height: 80,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) =>
-                          Icon(Icons.image_not_supported, size: 80),
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  // Product Name
-                  Expanded(
-                    child: Text(
-                      product.name,
-                      // style: Theme.of(context).textTheme.headline6,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const Divider(height: 1),
-            const TabBar(
+            TabBar(
               tabs: [
-                Tab(text: 'Basic Info'),
-                Tab(
-                  text: 'Settings',
-                ),
-                Tab(text: 'QR'),
+                Tab(icon: Icon(Icons.info), text: "General Info"),
+                Tab(icon: Icon(Icons.shopping_cart), text: "Sale"),
+                Tab(icon: Icon(Icons.inventory), text: "Inventory"),
+                Tab(icon: Icon(Icons.qr_code), text: "Barcode"),
               ],
             ),
-            // Tab Content
             Expanded(
               child: TabBarView(
                 children: [
-                  // Basic Info Tab
-                  ProductBasinInfo(
-                    product: product,
-                  ),
-                  // Tags Tab
-                  _buildTagsTab(),
-                  // Details Tab
-                  _buildDetailsTab(),
+                  // General Info Tab
+                  ProductGeneralInfo(
+                      description:
+                          'A new way to introduce the drainage to your home',
+                      costPrice: 2.9,
+                      appliedTaxes: 2.1,
+                      unitOfMeasure: 'NOs'),
+
+                  // Sale Tab
+                  Center(child: Text("Sale Content")),
+
+                  // Inventory Tab
+                  Center(child: Text("Inventory Content")),
+
+                  // Barcode Tab
+                  Center(child: Text("Barcode Content")),
                 ],
               ),
             ),
           ],
-        ),
+        ));
+  }
+
+  Widget _buildProductCard(BuildContext context) {
+    return Card.filled(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  " 4 upvc pipe",
+                  style: Theme.of(context).textTheme.headlineMedium,
+                ),
+                Text('PP110UP-ALFT'),
+                Text('3.700 OMR')
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 100,
+            width: 100,
+            child: Placeholder(),
+          ),
+        ],
       ),
     );
   }
