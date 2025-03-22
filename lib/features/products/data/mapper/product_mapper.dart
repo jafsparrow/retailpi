@@ -13,12 +13,12 @@ class ProductMapper {
   // }
 
   // Convert Realm model to domain model
-  static domain.Product toDomainModel(ProductTemplateRealm realmProduct) {
-    return domain.Product(
-        id: realmProduct.id.toString(),
-        name: realmProduct.name,
-        listPrice: realmProduct.listPrice,
-        standardPrice: realmProduct.standaredPrice,
-        defaultCode: realmProduct.defaultCode);
-  }
+  // static domain.Product toDomainModel(ProductTemplateRealm realmProduct) {
+  //   return domain.Product(
+  //       id: realmProduct.id.toString(),
+  //       name: realmProduct.name,
+  //       listPrice: realmProduct.listPrice,
+  //       standardPrice: realmProduct.standaredPrice,
+  //       defaultCode: realmProduct.defaultCode);
+  // }
 }

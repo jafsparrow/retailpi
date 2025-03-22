@@ -10,8 +10,7 @@ import 'package:retailpi/features/products/presentation/providers/product_top_se
 import 'package:retailpi/features/products/presentation/providers/products_notifier.dart';
 
 final realmProductDataSourceProvider = Provider<RealmProductDataSource>((ref) {
-  final realm = ref.watch(realmProvider);
-  return RealmProductDataSource(realm);
+  return RealmProductDataSource();
 });
 
 // Provider for ProductRepositoryImpl

@@ -6,23 +6,21 @@ import '../providers/category_provider.dart';
 class CategoryList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final categories = ref.watch(categoryNotifierProvider);
-
     return ListView.builder(
-      itemCount: categories.length,
+      itemCount: 3,
       itemBuilder: (context, index) {
         return ListTile(
-          title: Text(categories[index].name),
-          subtitle: Text(categories[index].categoryPath),
+          title: Text('categories[index].name'),
+          subtitle: Text('categories[index].categoryPath'),
           onTap: () => {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => CategoryForm(
-                  category: categories[index],
-                ),
-              ),
-            )
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(
+            //     builder: (context) => CategoryForm(
+            //       category: categories[index],
+            //     ),
+            //   ),
+            // )
           },
         );
       },

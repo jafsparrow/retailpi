@@ -11,8 +11,7 @@ import 'package:retailpi/features/sales/presentation/state/notifiers/sales_quota
 
 final realmSalesQuotationDataSourceProvider =
     Provider<RealmSalesQuotationDataSource>((ref) {
-  final realm = ref.watch(realmProvider);
-  return RealmSalesQuotationDataSource(realm);
+  return RealmSalesQuotationDataSource();
 });
 
 // Provider for ProductRepositoryImpl

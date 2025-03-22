@@ -1,0 +1,166 @@
+-- Enable UUID extension
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+-- Currency table
+CREATE TABLE res_currency (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    name VARCHAR(3) NOT NULL,  -- ISO 4217 code (e.g., USD, EUR)
+    symbol VARCHAR(5) NOT NULL,
+    rounding INTEGER NOT NULL DEFAULT 1,  -- Smallest unit (e.g., 1 for cents)
+    decimal_places INTEGER NOT NULL DEFAULT 2,
+    active BOOLEAN DEFAULT TRUE,
+    create_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    write_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT unique_currency_name UNIQUE (name)
+);
+
+-- Company table with default currency
+CREATE TABLE res_company (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    name VARCHAR(255) NOT NULL,
+    currency_id UUID NOT NULL REFERENCES res_currency(id),
+    create_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    write_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    active BOOLEAN DEFAULT TRUE
+);
+
+-- Partner table with preferred currency
+CREATE TABLE res_partner (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    company_id UUID NOT NULL REFERENCES res_company(id),
+    currency_id UUID REFERENCES res_currency(id),  -- Optional customer-specific currency
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255),
+    phone VARCHAR(255),
+    is_company BOOLEAN DEFAULT FALSE,
+    create_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    write_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    active BOOLEAN DEFAULT TRUE,
+    CONSTRAINT unique_partner_email UNIQUE (company_id, email)
+);
+
+-- Product Category table
+CREATE TABLE product_category (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    company_id UUID NOT NULL REFERENCES res_company(id),
+    name VARCHAR(255) NOT NULL,
+    parent_id UUID REFERENCES product_category(id),
+    create_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    write_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    active BOOLEAN DEFAULT TRUE
+);
+
+-- Product table with integer amounts
+CREATE TABLE product_product (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    company_id UUID NOT NULL REFERENCES res_company(id),
+    category_id UUID NOT NULL REFERENCES product_category(id),
+    name VARCHAR(255) NOT NULL,
+    list_price BIGINT NOT NULL DEFAULT 0,  -- Stored as smallest unit (e.g., cents)
+    standard_price BIGINT NOT NULL DEFAULT 0,
+    type VARCHAR(50) CHECK (type IN ('product', 'service', 'consu')),
+    create_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    write_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    active BOOLEAN DEFAULT TRUE
+);
+
+-- Invoice table with currency
+CREATE TABLE account_invoice (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    company_id UUID NOT NULL REFERENCES res_company(id),
+    partner_id UUID NOT NULL REFERENCES res_partner(id),
+    currency_id UUID NOT NULL REFERENCES res_currency(id),
+    invoice_date DATE NOT NULL DEFAULT CURRENT_DATE,
+    due_date DATE NOT NULL,
+    state VARCHAR(20) CHECK (state IN ('draft', 'open', 'paid', 'cancelled')),
+    amount_total BIGINT NOT NULL DEFAULT 0,  -- Stored as smallest unit
+    amount_residual BIGINT NOT NULL DEFAULT 0,
+    create_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    write_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Invoice Line table
+CREATE TABLE account_invoice_line (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    invoice_id UUID NOT NULL REFERENCES account_invoice(id) ON DELETE CASCADE,
+    product_id UUID REFERENCES product_product(id),
+    name TEXT NOT NULL,
+    quantity BIGINT NOT NULL DEFAULT 100,  -- 100 = 1.00 with 2 decimals
+    price_unit BIGINT NOT NULL DEFAULT 0,  -- Stored as smallest unit
+    price_subtotal BIGINT NOT NULL DEFAULT 0,
+    create_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    write_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Payment table
+CREATE TABLE account_payment (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    company_id UUID NOT NULL REFERENCES res_company(id),
+    invoice_id UUID REFERENCES account_invoice(id),
+    partner_id UUID NOT NULL REFERENCES res_partner(id),
+    currency_id UUID NOT NULL REFERENCES res_currency(id),
+    amount BIGINT NOT NULL DEFAULT 0,  -- Stored as smallest unit
+    payment_date DATE NOT NULL DEFAULT CURRENT_DATE,
+    state VARCHAR(20) CHECK (state IN ('draft', 'posted', 'cancelled')),
+    create_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    write_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Function to update write_date
+CREATE OR REPLACE FUNCTION update_write_date()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.write_date = CURRENT_TIMESTAMP;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Function to update invoice amounts
+CREATE OR REPLACE FUNCTION update_invoice_amounts()
+RETURNS TRIGGER AS $$
+BEGIN
+    UPDATE account_invoice
+    SET amount_total = (
+        SELECT COALESCE(SUM(price_subtotal), 0)
+        FROM account_invoice_line
+        WHERE invoice_id = NEW.invoice_id
+    ),
+    amount_residual = (
+        SELECT COALESCE(amount_total - (
+            SELECT COALESCE(SUM(amount), 0)
+            FROM account_payment
+            WHERE invoice_id = NEW.invoice_id
+            AND state = 'posted'
+        ), amount_total)
+    )
+    WHERE id = NEW.invoice_id;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Triggers for write_date (unchanged)
+CREATE TRIGGER update_res_company_write_date BEFORE UPDATE ON res_company FOR EACH ROW EXECUTE FUNCTION update_write_date();
+CREATE TRIGGER update_res_partner_write_date BEFORE UPDATE ON res_partner FOR EACH ROW EXECUTE FUNCTION update_write_date();
+CREATE TRIGGER update_product_category_write_date BEFORE UPDATE ON product_category FOR EACH ROW EXECUTE FUNCTION update_write_date();
+CREATE TRIGGER update_product_product_write_date BEFORE UPDATE ON product_product FOR EACH ROW EXECUTE FUNCTION update_write_date();
+CREATE TRIGGER update_account_invoice_write_date BEFORE UPDATE ON account_invoice FOR EACH ROW EXECUTE FUNCTION update_write_date();
+CREATE TRIGGER update_account_invoice_line_write_date BEFORE UPDATE ON account_invoice_line FOR EACH ROW EXECUTE FUNCTION update_write_date();
+CREATE TRIGGER update_account_payment_write_date BEFORE UPDATE ON account_payment FOR EACH ROW EXECUTE FUNCTION update_write_date();
+
+-- Triggers for invoice amounts
+CREATE TRIGGER update_invoice_amounts_trigger AFTER INSERT OR UPDATE OR DELETE ON account_invoice_line FOR EACH ROW EXECUTE FUNCTION update_invoice_amounts();
+CREATE TRIGGER update_payment_amounts_trigger AFTER INSERT OR UPDATE ON account_payment FOR EACH ROW EXECUTE FUNCTION update_invoice_amounts();
+
+-- Indexes
+CREATE INDEX idx_res_partner_company ON res_partner(company_id);
+CREATE INDEX idx_product_product_company ON product_product(company_id);
+CREATE INDEX idx_account_invoice_company ON account_invoice(company_id);
+CREATE INDEX idx_account_invoice_partner ON account_invoice(partner_id);
+CREATE INDEX idx_account_invoice_line_invoice ON account_invoice_line(invoice_id);
+CREATE INDEX idx_account_payment_invoice ON account_payment(invoice_id);
+
+-- Example currency data
+INSERT INTO res_currency (name, symbol, rounding, decimal_places) VALUES
+    ('USD', '$', 1, 2),
+    ('EUR', '€', 1, 2),
+    ('JPY', '¥', 1, 0);  -- JPY has no decimals

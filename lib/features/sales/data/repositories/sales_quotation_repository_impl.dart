@@ -11,8 +11,9 @@ class QuotationRepositoryImpl implements SalesQuotationRepository {
 
   @override
   Future<void> createQuotation(SalesQuotation quotation) async {
-    final mappedToRealmQuotation = SalesQuotationMapper.toRealm(quotation);
-    realmSalesQuotationDataSource.createQuotation(mappedToRealmQuotation);
+    throw UnimplementedError();
+    // final mappedToRealmQuotation = SalesQuotationMapper.toRealm(quotation);
+    // realmSalesQuotationDataSource.createQuotation(mappedToRealmQuotation);
   }
 
   // @override
@@ -28,20 +29,22 @@ class QuotationRepositoryImpl implements SalesQuotationRepository {
 
   @override
   Future<List<SalesQuotation>> getQuotations() async {
-    final realmQutations = realmSalesQuotationDataSource.getQuotations();
-    final mappedToRealmQuotations = realmQutations.map((item) {
-      return SalesQuotationMapper.toDomain(item);
-    }).toList();
+    throw UnimplementedError();
+    // final realmQutations = realmSalesQuotationDataSource.getQuotations();
+    // final mappedToRealmQuotations = realmQutations.map((item) {
+    //   return SalesQuotationMapper.toDomain(item);
+    // }).toList();
 
-    return mappedToRealmQuotations;
+    // return mappedToRealmQuotations;
   }
 
   @override
   Future<SalesQuotation?> getQuotationById(String id) async {
-    final realmQuotation = realmSalesQuotationDataSource.getQuotationById(id);
-    if (realmQuotation != null) {
-      final mappedQuotation = SalesQuotationMapper.toDomain(realmQuotation);
-      return mappedQuotation;
-    }
+    throw UnimplementedError();
+    // final realmQuotation = realmSalesQuotationDataSource.getQuotationById(id);
+    // if (realmQuotation != null) {
+    //   final mappedQuotation = SalesQuotationMapper.toDomain(realmQuotation);
+    //   return mappedQuotation;
+    // }
   }
 }

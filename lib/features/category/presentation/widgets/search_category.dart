@@ -16,14 +16,14 @@ class SearchCategory extends ConsumerWidget {
           suffixIcon: IconButton(
             icon: Icon(Icons.search),
             onPressed: () {
-              ref
-                  .read(categoryNotifierProvider.notifier)
-                  .searchCategory(_searchController.text);
+              // ref
+              //     .read(categoryNotifierProvider.notifier)
+              //     .searchCategory(_searchController.text);
             },
           ),
         ),
         onChanged: (query) {
-          ref.read(categoryNotifierProvider.notifier).searchCategory(query);
+          // ref.read(categoryNotifierProvider.notifier).searchCategory(query);
         },
       ),
     );

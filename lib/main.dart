@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:logging/logging.dart';
+import 'package:retailpi/core/powesync/powersync.dart';
 import 'package:retailpi/features/home/presentation/pages/home_page.dart';
 import 'package:retailpi/features/products/domain/entities/product.dart';
 import 'package:retailpi/features/products/presentation/pages/product_add.dart';
@@ -12,8 +14,28 @@ import 'package:retailpi/features/sales/presentation/pages/pos_page.dart';
 import 'package:retailpi/features/sales/presentation/pages/quotation_mob_page.dart';
 import 'package:retailpi/theme/light_mode.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  Logger.root.level = Level.INFO;
+  Logger.root.onRecord.listen((record) {
+    print(
+        '[${record.loggerName}] ${record.level.name}: ${record.time}: ${record.message}');
+
+    if (record.error != null) {
+      print(record.error);
+    }
+    if (record.stackTrace != null) {
+      print(record.stackTrace);
+    }
+  });
+
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await openDatabase();
+
+  //Some example code showing printf() style debugging
+  final testResults = await db.getAll('SELECT * from product_product');
+  log.info('testResults = $testResults');
 
   runApp(
     ProviderScope(
@@ -25,7 +47,7 @@ void main() {
 class MyApp extends StatelessWidget {
   MyApp({super.key});
   final GoRouter _router = GoRouter(
-    initialLocation: '/tags',
+    initialLocation: '/pos',
     routes: [
       productRoutes,
       GoRoute(path: '/home', builder: (context, state) => HomePage()),
@@ -65,10 +87,10 @@ class MyApp extends StatelessWidget {
       //   path: '/vendors',
       //   builder: (context, state) => VendorPage(),
       // ),
-      // GoRoute(
-      //   path: '/pos',
-      //   builder: (context, state) => POSPage(),
-      // ),
+      GoRoute(
+        path: '/pos',
+        builder: (context, state) => PosPage(),
+      ),
     ],
     errorPageBuilder: (context, state) => MaterialPage(
       child: Scaffold(

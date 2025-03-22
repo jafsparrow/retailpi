@@ -94,6 +94,11 @@ class ProductList extends ConsumerWidget {
           itemCount: products.length,
           itemBuilder: (context, index) {
             return ListTile(
+              leading: SizedBox(
+                height: 20,
+                width: 20,
+                child: Placeholder(),
+              ),
               contentPadding:
                   const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
               title: GestureDetector(

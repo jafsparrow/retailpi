@@ -1,7 +1,6 @@
-import 'package:realm/realm.dart';
-import 'package:retailpi/core/realm_models/product_related.dart' as realms;
+import 'dart:math';
+
 import 'package:retailpi/features/category/data/repositories/category_repository.dart';
-import 'package:retailpi/features/products/data/mapper/product_mapper.dart';
 import 'package:retailpi/features/products/data/sources/realm_product_data_source.dart';
 import 'package:retailpi/features/products/domain/entities/product.dart';
 import 'package:retailpi/features/products/domain/entities/product_variant.dart';
@@ -26,14 +25,32 @@ class ProductRepositoryImpl implements ProductRepository {
     throw UnimplementedError();
   }
 
+  generateRandomProducts() {
+    final random = Random();
+    final products = List.generate(
+      10,
+      (index) => Product(
+        id: random.nextInt(100000).toString(),
+        name: 'Product ${random.nextInt(100)}',
+        defaultCode: 'Code${random.nextInt(1000)}',
+        standardPrice: random.nextDouble() * 100,
+        listPrice: random.nextDouble() * 150,
+        categoryId: 'Category${random.nextInt(10)}',
+      ),
+    );
+
+    return products;
+  }
+
   @override
   Future<List<Product>> fetchAllProducts() async {
-    final realMTemplest = realmProductDataSource.featchAllProductTemplate();
+    return generateRandomProducts();
+    // final realMTemplest = realmProductDataSource.featchAllProductTemplate();
 
-    final mappedList = realMTemplest
-        .map((product) => ProductMapper.toDomainModel(product))
-        .toList();
-    return mappedList;
+    // final mappedList = realMTemplest
+    //     .map((product) => ProductMapper.toDomainModel(product))
+    //     .toList();
+    // return mappedList;
   }
 
   @override
@@ -45,9 +62,9 @@ class ProductRepositoryImpl implements ProductRepository {
   Future<void> uploadProducts(String filePath) async {
     // read the file from the given location
 
-    // read the category of the given category id;
-    realms.CategoryRealm? categoryRealm =
-        categoryRepository.getCategoryById(ObjectId.fromHexString('hexString'));
+    // // read the category of the given category id;
+    // realms.CategoryRealm? categoryRealm =
+    //     categoryRepository.getCategoryById(ObjectId.fromHexString('hexString'));
 
     // _realm.write(() {
     //   for (var item in data) {
@@ -76,31 +93,32 @@ class ProductRepositoryImpl implements ProductRepository {
     // realms.Category? categoryRealm =
     //     categoryRepository.getCategoryById(ObjectId.fromHexString('hexString'));
 
-    final realmProducts = products.map((product) => realms.ProductTemplateRealm(
-          ObjectId(),
-          product.name!,
-          product.defaultCode!,
-          product.standardPrice!,
-          product.listPrice!,
-          'companyId',
-          DateTime.now(),
-          true,
-        ));
+    // final realmProducts = products.map((product) => realms.ProductTemplateRealm(
+    //       ObjectId(),
+    //       product.name!,
+    //       product.defaultCode!,
+    //       product.standardPrice!,
+    //       product.listPrice!,
+    //       'companyId',
+    //       DateTime.now(),
+    //       true,
+    //     ));
 
-    if (realmProducts.isNotEmpty) {
-      await realmProductDataSource.addProducts(realmProducts.toList());
-    }
+    // if (realmProducts.isNotEmpty) {
+    //   await realmProductDataSource.addProducts(realmProducts.toList());
+    // }
   }
 
   @override
   Future<List<Product>> searchProducts(String query,
       {int limit = 20, int offset = 0}) async {
-    final productTemplateRealms = realmProductDataSource.searchProducts(query,
-        limit: limit, offset: offset);
+    return generateRandomProducts();
+    // final productTemplateRealms = realmProductDataSource.searchProducts(query,
+    //     limit: limit, offset: offset);
 
-    final mappedToDomainProduct = productTemplateRealms
-        .map((product) => ProductMapper.toDomainModel(product));
-    return mappedToDomainProduct.toList();
+    // final mappedToDomainProduct = productTemplateRealms
+    //     .map((product) => ProductMapper.toDomainModel(product));
+    // return mappedToDomainProduct.toList();
   }
 
   @override

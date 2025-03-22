@@ -1,13 +1,10 @@
-import 'package:realm/realm.dart';
 import 'package:retailpi/core/realm_models/product_related.dart';
 
 class RealmSalesQuotationDataSource {
-  final Realm _realm;
+  RealmSalesQuotationDataSource();
 
-  RealmSalesQuotationDataSource(this._realm);
-
-  List<SalesDocumentRealm> getQuotations() {
-    return _realm.all<SalesDocumentRealm>().toList();
+  List<String> getQuotations() {
+    throw UnimplementedError();
   }
 
   // uploadStatements(dynamic data, CategoryRealm categoryrealm) {
@@ -27,24 +24,24 @@ class RealmSalesQuotationDataSource {
   //   });
   // }
 
-  Future<void> createQuotations(
-      List<SalesDocumentRealm> productTemplatess) async {
-    _realm.write(() {
-      _realm.deleteAll<ProductTemplateRealm>();
-      for (var product in productTemplatess) {
-        _realm.add(product);
-      }
-    });
+  Future<void> createQuotations() {
+    throw UnimplementedError();
+
+    //   List<SalesDocumentRealm> productTemplatess) async {
+    // _realm.write(() {
+    //   _realm.deleteAll<ProductTemplateRealm>();
+    //   for (var product in productTemplatess) {
+    //     _realm.add(product);
+    //   }
+    // });
   }
 
-  Future<void> createQuotation(SalesDocumentRealm quotation) async {
-    _realm.write(() {
-      _realm.add<SalesDocumentRealm>(quotation);
-    });
+  Future<void> createQuotation(String quotation) async {
+    throw UnimplementedError();
   }
 
-  SalesDocumentRealm? getQuotationById(String id) {
-    return _realm.find<SalesDocumentRealm>(ObjectId.fromHexString(id));
+  getQuotationById(String id) {
+    throw UnimplementedError();
   }
   // List<SalesDocumentRealm> searchQuotation(String query,
   //     {int limit = 20, int offset = 0}) {
