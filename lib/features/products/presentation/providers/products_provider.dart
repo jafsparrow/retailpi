@@ -1,23 +1,24 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:retailpi/core/providers/realm_provider.dart';
 import 'package:retailpi/features/category/presentation/providers/category_provider.dart';
 import 'package:retailpi/features/products/data/respositories/product_repository_impl.dart';
-import 'package:retailpi/features/products/data/sources/realm_product_data_source.dart';
+import 'package:retailpi/features/products/data/sources/powersync_product_data_source.dart';
 import 'package:retailpi/features/products/domain/entities/product.dart';
 import 'package:retailpi/features/products/domain/repositories/product_repository.dart';
 import 'package:retailpi/features/products/domain/usecases/get_top_products_search_usercase.dart';
 import 'package:retailpi/features/products/presentation/providers/product_top_search_notifier.dart';
 import 'package:retailpi/features/products/presentation/providers/products_notifier.dart';
 
-final realmProductDataSourceProvider = Provider<RealmProductDataSource>((ref) {
-  return RealmProductDataSource();
+final powerSyncProductDataSourceProvider =
+    Provider<PowersyncProductDataSource>((ref) {
+  return PowersyncProductDataSource();
 });
 
 // Provider for ProductRepositoryImpl
 final productRepositoryProvider = Provider<ProductRepository>((ref) {
-  final dataSource = ref.read(realmProductDataSourceProvider);
   final categoryRepository = ref.read(categoryRepositoryProvider);
-  return ProductRepositoryImpl(dataSource, categoryRepository);
+  final powerSyncProductRepository =
+      ref.read<PowersyncProductDataSource>(powerSyncProductDataSourceProvider);
+  return ProductRepositoryImpl(categoryRepository, powerSyncProductRepository);
 });
 
 // ViewModel Example

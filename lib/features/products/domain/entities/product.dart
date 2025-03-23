@@ -9,8 +9,8 @@ class Product {
   String? purchaseUom;
   String? defaultCode;
 
-  num? listPrice;
-  num? standardPrice;
+  int listPrice;
+  int standardPrice;
 
   String? type; //not sure at this point why do i need it.
   List<String>? imageUrls;
@@ -49,9 +49,9 @@ class Product {
     required this.id,
     required this.name,
     this.categoryId,
-    this.listPrice,
+    required this.listPrice,
     this.defaultCode,
-    this.standardPrice,
+    required this.standardPrice,
   });
 }
 

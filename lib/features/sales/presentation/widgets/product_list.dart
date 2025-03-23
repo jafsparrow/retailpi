@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:retailpi/core/utils/currency_util.dart';
 import 'package:retailpi/features/cart/domain/entities/cart_line.dart';
 import 'package:retailpi/features/cart/presentation/state/notifiers/cart_item_alternative.dart';
 import 'package:retailpi/features/cart/presentation/state/providers/product_list_mode_provider.dart';
@@ -107,24 +108,31 @@ class ProductList extends ConsumerWidget {
                 },
                 child: Text(
                   products[index].name,
+                  overflow: TextOverflow.ellipsis,
                   style: TextStyle(overflow: TextOverflow.fade),
                 ),
               ),
               subtitle: GestureDetector(
                 child: Row(
                   children: [
-                    Text(products[index].defaultCode ?? 'No Code'),
+                    Text(
+                      'No Code',
+                      overflow: TextOverflow.ellipsis,
+                    ),
                     const SizedBox(
                       width: 15,
                     ),
                     Text(
-                      products[index].standardPrice.toString(),
+                      formattedToCurrencyAndSymbol(
+                          products[index].standardPrice!),
+                      overflow: TextOverflow.ellipsis,
                       style: TextStyle(overflow: TextOverflow.clip),
                     ),
                     const Spacer(),
                     const VerticalDivider(),
                     Text(
-                      products[index].listPrice.toString(),
+                      formattedToCurrencyAndSymbol(products[index].listPrice!),
+                      overflow: TextOverflow.ellipsis,
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ],
@@ -143,9 +151,13 @@ class ProductList extends ConsumerWidget {
                             Text(products[index].name),
                             Text(
                               products[index].listPrice.toString(),
+                              overflow: TextOverflow.ellipsis,
                             ),
                             Divider(),
-                            Text(products[index].standardPrice.toString()),
+                            Text(
+                              products[index].standardPrice.toString(),
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ],
                         ),
                       );

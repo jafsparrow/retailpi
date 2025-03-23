@@ -41,8 +41,8 @@ class UploadProductsFromExcelUseCase {
               id: 'someidchange later',
               name: name,
               categoryId: 'catid',
-              listPrice: double.parse(price!),
-              standardPrice: double.parse(cost!),
+              listPrice: int.parse(price!),
+              standardPrice: int.parse(cost!),
               defaultCode: code));
         }
       }

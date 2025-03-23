@@ -1,16 +1,18 @@
 import 'dart:math';
 
 import 'package:retailpi/features/category/data/repositories/category_repository.dart';
+import 'package:retailpi/features/products/data/sources/powersync_product_data_source.dart';
 import 'package:retailpi/features/products/data/sources/realm_product_data_source.dart';
 import 'package:retailpi/features/products/domain/entities/product.dart';
 import 'package:retailpi/features/products/domain/entities/product_variant.dart';
 import 'package:retailpi/features/products/domain/repositories/product_repository.dart';
 
 class ProductRepositoryImpl implements ProductRepository {
-  final RealmProductDataSource realmProductDataSource;
   CategoryRepository categoryRepository;
+  PowersyncProductDataSource powersyncProductDataSource;
 
-  ProductRepositoryImpl(this.realmProductDataSource, this.categoryRepository);
+  ProductRepositoryImpl(
+      this.categoryRepository, this.powersyncProductDataSource);
 
   @override
   Future<List<ProductVariant>> fetchAllProductWithVariants() {
@@ -33,8 +35,8 @@ class ProductRepositoryImpl implements ProductRepository {
         id: random.nextInt(100000).toString(),
         name: 'Product ${random.nextInt(100)}',
         defaultCode: 'Code${random.nextInt(1000)}',
-        standardPrice: random.nextDouble() * 100,
-        listPrice: random.nextDouble() * 150,
+        standardPrice: 100,
+        listPrice: 150,
         categoryId: 'Category${random.nextInt(10)}',
       ),
     );
@@ -44,6 +46,7 @@ class ProductRepositoryImpl implements ProductRepository {
 
   @override
   Future<List<Product>> fetchAllProducts() async {
+    return powersyncProductDataSource.getProducts();
     return generateRandomProducts();
     // final realMTemplest = realmProductDataSource.featchAllProductTemplate();
 
