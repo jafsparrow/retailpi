@@ -24,6 +24,10 @@ const Schema schema = Schema([
     Column('create_date', timestampType),
     Column('write_date', timestampType),
   ]),
+  Table('res_curreency_rate', [
+    Column('currency_id', uuidType),
+    Column('rate', integerType),
+  ]),
   Table('res_company', [
     // Column('id', uuidType),
     Column('name', textType),
@@ -31,6 +35,27 @@ const Schema schema = Schema([
     Column('create_date', timestampType),
     Column('write_date', timestampType),
     Column('active', booleanType),
+  ]),
+  Table('res_user', [
+    Column('name', textType),
+    Column('email', textType),
+    Column('phone', textType),
+  ]),
+  Table('res_role', [
+    Column('name', textType),
+    Column('description', textType),
+  ]),
+  Table('res_user_role', [
+    Column('user_id', uuidType),
+    Column('role_id', uuidType),
+  ]),
+  Table('res_permission', [
+    Column('name', textType),
+    Column('model', textType),
+  ]),
+  Table('res_role_permission', [
+    Column('role_id', uuidType),
+    Column('permission_id', uuidType),
   ]),
   Table('res_partner', [
     // Column('id', uuidType),
@@ -53,6 +78,23 @@ const Schema schema = Schema([
     Column('write_date', timestampType),
     Column('active', booleanType),
   ]),
+  Table('product_template', [
+    Column('category_id', uuidType),
+    Column('default_code', textType),
+    Column('barcode', textType),
+    Column('sale_uom_id', uuidType),
+    Column('purchase_uom_id', uuidType),
+    Column('create_date', timestampType),
+    Column('write_date', timestampType),
+    Column('to_weigh', booleanType),
+    Column('brand_name', textType),
+    Column('print_override', booleanType),
+    Column('printer_name', textType),
+    Column('internal_note', textType),
+    Column('sales_note', textType),
+    Column('sale_ok', booleanType),
+    Column('number_of_variants', integerType),
+  ]),
   Table('product_product', [
     // Column('id', uuidType),
     Column('company_id', uuidType),
@@ -64,6 +106,10 @@ const Schema schema = Schema([
     Column('create_date', timestampType),
     Column('write_date', timestampType),
     Column('active', booleanType),
+    Column('image', textType),
+    Column('barcode', textType),
+    Column('default_code', textType),
+    Column('base_scan_points', integerType),
   ]),
   Table('account_invoice', [
     // Column('id', uuidType),
