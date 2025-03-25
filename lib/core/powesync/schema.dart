@@ -111,65 +111,217 @@ const Schema schema = Schema([
     Column('default_code', textType),
     Column('base_scan_points', integerType),
   ]),
+  Table('product_pricelist', [
+    Column('id', uuidType),
+    Column('name', textType),
+    Column(
+      'currency',
+      textType,
+    ),
+  ]),
+  Table('product_pricelist', [
+    Column('id', uuidType),
+    Column('name', textType),
+    Column(
+      'currency',
+      textType,
+    ),
+  ]),
+  Table('product_pricelist_item', [
+    Column('id', uuidType),
+    Column('pricelist_id', uuidType),
+    Column('product_id', uuidType),
+    Column('compute_price', textType),
+    Column(
+      'min_quantity',
+      integerType,
+    ),
+    Column(
+      'max_quantity',
+      integerType,
+    ),
+    Column('fixed_price', integerType),
+    Column('percentage_discount', integerType),
+    Column('formula_expression', textType),
+    Column('min_margin', integerType),
+    Column('max_margin', integerType),
+  ]),
+  Table('product_qr_code', [
+    Column('id', uuidType),
+    Column('product_id', uuidType),
+    Column(
+      'qr_code',
+      textType,
+    ),
+    Column(
+      'generated_at',
+      timestampType,
+    ),
+    Column('expires_at', timestampType),
+    Column('scanned_by_id', uuidType),
+    Column('scanned_at', timestampType),
+    Column(
+      'is_scanned',
+      booleanType,
+    ),
+  ]),
+  Table('product_qr_scan_log', [
+    Column('id', uuidType),
+    Column('partner_id', uuidType),
+    Column('product_id', uuidType),
+    Column('qr_code', textType),
+    Column(
+      'scanned_at',
+      timestampType,
+    ),
+    Column(
+      'points_awarded',
+      integerType,
+    ),
+  ]),
+  Table('product_points', [
+    Column('id', uuidType),
+    Column('product_id', uuidType),
+    Column(
+      'points',
+      integerType,
+    ),
+  ]),
+  Table('product_reward', [
+    Column('id', uuidType),
+    Column('name', textType),
+    Column('required_points', integerType),
+    Column(
+      'is_active',
+      booleanType,
+    ),
+  ]),
+  Table('product_points_redemption', [
+    Column('id', uuidType),
+    Column('partner_id', uuidType),
+    Column('reward_id', uuidType),
+    Column(
+      'redeemed_at',
+      timestampType,
+    ),
+    Column('points_used', integerType),
+  ]),
+  Table('quotation', [
+    Column('id', uuidType),
+    Column('company_id', uuidType),
+    Column('partner_id', uuidType),
+    Column('currency_id', uuidType),
+    Column(
+      'invoice_date',
+      textType,
+    ),
+    Column('due_date', textType),
+    Column(
+      'status',
+      textType,
+    ),
+    Column(
+      'amount_total',
+      integerType,
+    ),
+    Column('pricelist_id', uuidType),
+    Column(
+      'create_date',
+      timestampType,
+    ),
+    Column(
+      'write_date',
+      timestampType,
+    ),
+  ]),
+  Table('quotation_item', [
+    Column('id', uuidType),
+    Column('company_id', uuidType),
+    Column('product_id', uuidType),
+    Column('quantity', integerType),
+    Column('unit_price', integerType),
+    Column('discount', integerType),
+    Column('price_subtotal', integerType),
+  ]),
   Table('account_invoice', [
-    // Column('id', uuidType),
+    Column('id', uuidType),
+    Column('company_id', uuidType),
+    Column('partner_id', uuidType),
+    Column('currency_id', uuidType),
     Column(
-      'company_id',
-      uuidType,
+      'invoice_date',
+      textType,
     ),
-    Column(
-      'partner_id',
-      uuidType,
-    ),
-    Column(
-      'currency_id',
-      uuidType,
-    ),
-    Column('invoice_date', textType), // Stored as ISO 8601 string
     Column('due_date', textType),
     Column('state', textType),
-    Column('amount_total', integerType),
-    Column('amount_residual', integerType),
-    Column('create_date', timestampType),
-    Column('write_date', timestampType),
+    Column(
+      'amount_total',
+      integerType,
+    ),
+    Column(
+      'amount_residual',
+      integerType,
+    ),
+    Column(
+      'create_date',
+      timestampType,
+    ),
+    Column(
+      'write_date',
+      timestampType,
+    ),
   ]),
   Table('account_invoice_line', [
-    // Column(
-    //   'id',
-    //   uuidType,
-    // ),
-    Column(
-      'invoice_id',
-      uuidType,
-    ),
-    Column(
-      'product_id',
-      uuidType,
-    ),
+    Column('id', uuidType),
+    Column('invoice_id', uuidType),
+    Column('product_id', uuidType),
     Column('name', textType),
-    Column('quantity', integerType),
-    Column('price_unit', integerType),
-    Column('price_subtotal', integerType),
-    Column('create_date', timestampType),
-    Column('write_date', timestampType),
+    Column(
+      'quantity',
+      integerType,
+    ),
+    Column(
+      'unit_price',
+      integerType,
+    ),
+    Column('discount', integerType),
+    Column(
+      'price_subtotal',
+      integerType,
+    ),
+    Column(
+      'create_date',
+      timestampType,
+    ),
+    Column(
+      'write_date',
+      timestampType,
+    ),
   ]),
   Table('account_payment', [
-    // Column(
-    //   'id',
-    //   uuidType,
-    // ),
-    Column(
-      'company_id',
-      uuidType,
-    ),
+    Column('id', uuidType),
+    Column('company_id', uuidType),
     Column('invoice_id', uuidType),
     Column('partner_id', uuidType),
     Column('currency_id', uuidType),
-    Column('amount', integerType),
-    Column('payment_date', textType),
+    Column(
+      'amount',
+      integerType,
+    ),
+    Column(
+      'payment_date',
+      textType,
+    ),
+    Column('payment_method', textType),
     Column('state', textType),
-    Column('create_date', timestampType),
-    Column('write_date', timestampType),
+    Column(
+      'create_date',
+      timestampType,
+    ),
+    Column(
+      'write_date',
+      timestampType,
+    ),
   ]),
 ]);
 
