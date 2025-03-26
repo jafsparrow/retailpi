@@ -35,7 +35,7 @@ CREATE TABLE "res_user" (
   "password" VARCHAR(255),
   "name" VARCHAR(255) NOT NULL,
   "email" VARCHAR(255),
-  "language_code" VARCHAR(10) DEFAULT 'en'
+  "language_code" VARCHAR(10) DEFAULT 'en',
   "active" BOOLEAN DEFAULT true,
   "create_date" TIMESTAMP DEFAULT (CURRENT_TIMESTAMP),
   "write_date" TIMESTAMP DEFAULT (CURRENT_TIMESTAMP)
@@ -106,9 +106,18 @@ CREATE TABLE "product_category" (
   "write_date" TIMESTAMP DEFAULT (CURRENT_TIMESTAMP),
   "active" BOOLEAN DEFAULT true
 );
+CREATE TYPE unit_type AS ENUM ('Quantity', 'Length', 'Weight', 'Other');
 
 CREATE TABLE "res_uom" (
-  "id" UUID PRIMARY KEY DEFAULT (uuid_generate_v4()) -- Fixed typo 'in' to 'int'
+  "id" UUID PRIMARY KEY DEFAULT (uuid_generate_v4()),
+  "unit_name" VARCHAR(50) NOT NULL UNIQUE,
+  "unit_symbol" VARCHAR(10) NOT NULL UNIQUE,        -- Short symbol (e.g., "m", "dz")
+  "unit_type" unit_type not null, "base_unit_id" UUID NULL,                          -- Reference to base unit for conversion (e.g., cm -> m)
+  "conversion_factor" DECIMAL(10, 4) NULL,          -- Factor to convert to base unit (e.g., 1 cm = 0.01 m)
+  "is_active" BOOLEAN DEFAULT TRUE,                 -- Enable/disable units as needed
+  "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT "fk_base_unit" FOREIGN KEY ("base_unit_id") REFERENCES "res_uom" ("id") ON DELETE SET NULL
+  
 );
 
 CREATE TABLE "product_template" (
@@ -119,10 +128,10 @@ CREATE TABLE "product_template" (
   "barcode" VARCHAR(255),
   "sale_uom_id" UUID,
   "purchase_uom_id" UUID,
+  "weight_uom_id" UUID,
   "create_date" TIMESTAMP DEFAULT (CURRENT_TIMESTAMP),
   "write_date" TIMESTAMP DEFAULT (CURRENT_TIMESTAMP),
   "is_weighable" BOOLEAN DEFAULT FALSE,
-  "weight_uom_id" UUID,
   "brand_name" VARCHAR(255),
   "print_override" BOOLEAN,
   "printer_name" VARCHAR(255),
@@ -172,6 +181,8 @@ CREATE TABLE "product_product" (
   "category_id" UUID NOT NULL,
   "template_id" UUID,
   "name" VARCHAR(255) NOT NULL,
+  "uom_id" UUID,
+  "weight_uom_id" UUID,
   "default_code" VARCHAR(255),
   "barcode" VARCHAR(255) UNIQUE NOT NULL, -- Made NOT NULL and UNIQUE
   "list_price" BIGINT NOT NULL DEFAULT 0 CHECK (list_price >= 0),
@@ -285,8 +296,9 @@ CREATE TABLE "quotation_item" (
   "quantity" INT NOT NULL CHECK (quantity > 0),
   "unit_price" INT NOT NULL DEFAULT 0,
   "discount" INT,
-  "price_subtotal" INT NOT NULL DEFAULT 0 CHECK (price_subtotal >= 0)
-  "weight_uom_id" UUID
+  "price_subtotal" INT NOT NULL DEFAULT 0 CHECK (price_subtotal >= 0),
+  "uom_id" UUID,
+  "weight_uom_id" UUID,
   "weight" DECIMAL(12,6)
 );
 
@@ -316,8 +328,9 @@ CREATE TABLE "account_invoice_line" (
   "discount" INT,
   "price_subtotal" BIGINT NOT NULL DEFAULT 0 CHECK (price_subtotal >= 0),
   "create_date" TIMESTAMP DEFAULT (CURRENT_TIMESTAMP),
-  "write_date" TIMESTAMP DEFAULT (CURRENT_TIMESTAMP)
-  "weight_uom_id" UUID
+  "write_date" TIMESTAMP DEFAULT (CURRENT_TIMESTAMP),
+  "uom_id" UUID,
+  "weight_uom_id" UUID,
   "weight" DECIMAL(12,6)
 
 
@@ -449,6 +462,8 @@ CREATE INDEX "idx_quotation_partner" ON "quotation" ("partner_id", "status");
 -- Foreign Keys with Updated Cascade Strategy
 ALTER TABLE "res_partner" ADD FOREIGN KEY ("parent_id") REFERENCES "res_partner" ("id") ON DELETE SET NULL;
 ALTER TABLE "res_partner" ADD FOREIGN KEY ("pricelist_id") REFERENCES "product_pricelist" ("id") ON DELETE SET NULL;
+
+
 ALTER TABLE "product_template" ADD FOREIGN KEY ("sale_uom_id") REFERENCES "res_uom" ("id") ON DELETE SET NULL;
 ALTER TABLE "product_attribute_value" ADD FOREIGN KEY ("attribute_id") REFERENCES "product_attribute" ("id") ON DELETE CASCADE;
 ALTER TABLE "product_variant_combination" ADD FOREIGN KEY ("attribute_value_id") REFERENCES "product_attribute_value" ("id") ON DELETE CASCADE;
@@ -485,6 +500,7 @@ ALTER TABLE "product_category" ADD FOREIGN KEY ("company_id") REFERENCES "res_co
 ALTER TABLE "product_category" ADD FOREIGN KEY ("parent_id") REFERENCES "product_category" ("id") ON DELETE SET NULL;
 ALTER TABLE "product_product" ADD FOREIGN KEY ("company_id") REFERENCES "res_company" ("id") ON DELETE RESTRICT;
 ALTER TABLE "product_product" ADD FOREIGN KEY ("category_id") REFERENCES "product_category" ("id") ON DELETE RESTRICT;
+ALTER TABLE "product_product" ADD FOREIGN KEY ("uom_id") REFERENCES "res_uom" ("id") ON DELETE SET NULL;
 ALTER TABLE "account_invoice" ADD FOREIGN KEY ("company_id") REFERENCES "res_company" ("id") ON DELETE RESTRICT;
 ALTER TABLE "account_invoice" ADD FOREIGN KEY ("partner_id") REFERENCES "res_partner" ("id") ON DELETE RESTRICT;
 ALTER TABLE "account_invoice" ADD FOREIGN KEY ("currency_id") REFERENCES "res_currency" ("id") ON DELETE RESTRICT;
@@ -526,7 +542,9 @@ ALTER TABLE "product_product" ADD FOREIGN KEY ("weight_uom_id") REFERENCES "res_
 ALTER TABLE "scale_config" ADD FOREIGN KEY ("company_id") REFERENCES "res_company" ("id") ON DELETE CASCADE;
 ALTER TABLE "scale_config" ADD FOREIGN KEY ("user_id") REFERENCES "res_user" ("id") ON DELETE SET NULL;
 ALTER TABLE "account_invoice_line" ADD FOREIGN KEY ("weight_uom_id") REFERENCES "res_uom" ("id") ON DELETE SET NULL;
+ALTER TABLE "account_invoice_line" ADD FOREIGN KEY ("uom_id") REFERENCES "res_uom" ("id") ON DELETE SET NULL;
 ALTER TABLE "quotation_item" ADD FOREIGN KEY ("weight_uom_id") REFERENCES "res_uom" ("id") ON DELETE SET NULL;
+ALTER TABLE "quotation_item" ADD FOREIGN KEY ("uom_id") REFERENCES "res_uom" ("id") ON DELETE SET NULL;
 
 -- multi-language support
 ALTER TABLE "product_translation" ADD FOREIGN KEY ("product_id") REFERENCES "product_product" ("id") ON DELETE CASCADE;
