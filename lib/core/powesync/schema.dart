@@ -14,7 +14,6 @@ const ColumnType timestampType =
     ColumnType.text; //'TEXT'; // ISO 8601 strings for timestamps
 const Schema schema = Schema([
   Table('res_currency', [
-    Column('id', uuidType),
     Column('name', textType),
     Column('symbol', textType),
     Column('rounding', integerType),
@@ -24,14 +23,12 @@ const Schema schema = Schema([
     Column('write_date', timestampType),
   ]),
   Table('res_currency_rate', [
-    Column('id', uuidType),
     Column('currency_id', uuidType),
     Column('rate', decimalType),
     Column('date', timestampType),
     Column('company_id', uuidType),
   ]),
   Table('res_company', [
-    Column('id', uuidType),
     Column('name', textType),
     Column('currency_id', uuidType),
     Column('create_date', timestampType),
@@ -39,7 +36,6 @@ const Schema schema = Schema([
     Column('active', booleanType),
   ]),
   Table('res_user', [
-    Column('id', uuidType),
     Column('company_id', uuidType),
     Column('login', textType),
     Column('password', textType),
@@ -51,7 +47,6 @@ const Schema schema = Schema([
     Column('write_date', timestampType),
   ]),
   Table('res_role', [
-    Column('id', uuidType),
     Column('company_id', uuidType),
     Column('name', textType),
     Column('description', textType),
@@ -60,14 +55,12 @@ const Schema schema = Schema([
     Column('write_date', timestampType),
   ]),
   Table('res_user_role_link', [
-    Column('id', uuidType),
     Column('user_id', uuidType),
     Column('role_id', uuidType),
     Column('create_date', timestampType),
     Column('write_date', timestampType),
   ]),
   Table('res_permission', [
-    Column('id', uuidType),
     Column('company_id', uuidType),
     Column('name', textType),
     Column('model', textType),
@@ -75,14 +68,12 @@ const Schema schema = Schema([
     Column('write_date', timestampType),
   ]),
   Table('res_role_permission_link', [
-    Column('id', uuidType),
     Column('role_id', uuidType),
     Column('permission_id', uuidType),
     Column('create_date', timestampType),
     Column('write_date', timestampType),
   ]),
   Table('res_partner', [
-    Column('id', uuidType),
     Column('company_id', uuidType),
     Column('currency_id', uuidType),
     Column('parent_id', uuidType),
@@ -100,7 +91,6 @@ const Schema schema = Schema([
     Column('pricelist_id', uuidType),
   ]),
   Table('product_category', [
-    Column('id', uuidType),
     Column('company_id', uuidType),
     Column('name', textType),
     Column('parent_id', uuidType),
@@ -109,7 +99,6 @@ const Schema schema = Schema([
     Column('active', booleanType),
   ]),
   Table('res_uom', [
-    Column('id', uuidType),
     Column('unit_name', textType),
     Column('unit_symbol', textType),
     Column('unit_type', textType),
@@ -119,7 +108,6 @@ const Schema schema = Schema([
     Column('created_at', timestampType),
   ]),
   Table('product_template', [
-    Column('id', uuidType),
     Column('company_id', uuidType),
     Column('category_id', uuidType),
     Column('default_code', textType),
@@ -139,7 +127,6 @@ const Schema schema = Schema([
     Column('number_of_variants', integerType),
   ]),
   Table('product_product', [
-    Column('id', uuidType),
     Column('company_id', uuidType),
     Column('category_id', uuidType),
     Column('template_id', uuidType),
@@ -161,12 +148,10 @@ const Schema schema = Schema([
     Column('base_scan_points', integerType),
   ]),
   Table('product_pricelist', [
-    Column('id', uuidType),
     Column('name', textType),
     Column('currency', textType),
   ]),
   Table('product_pricelist_item', [
-    Column('id', uuidType),
     Column('pricelist_id', uuidType),
     Column('product_id', uuidType),
     Column('compute_price', textType),
@@ -179,7 +164,6 @@ const Schema schema = Schema([
     Column('max_margin', integerType),
   ]),
   Table('quotation', [
-    Column('id', uuidType),
     Column('company_id', uuidType),
     Column('partner_id', uuidType),
     Column('currency_id', uuidType),
@@ -193,7 +177,6 @@ const Schema schema = Schema([
     Column('write_date', timestampType),
   ]),
   Table('quotation_item', [
-    Column('id', uuidType),
     Column('quotation_id', uuidType),
     Column('company_id', uuidType),
     Column('product_id', uuidType),
@@ -206,7 +189,6 @@ const Schema schema = Schema([
     Column('weight', decimalType),
   ]),
   Table('account_invoice', [
-    Column('id', uuidType),
     Column('company_id', uuidType),
     Column('partner_id', uuidType),
     Column('currency_id', uuidType),
@@ -221,7 +203,6 @@ const Schema schema = Schema([
     Column('write_date', timestampType),
   ]),
   Table('account_payment', [
-    Column('id', uuidType),
     Column('company_id', uuidType),
     Column('invoice_id', uuidType),
     Column('partner_id', uuidType),

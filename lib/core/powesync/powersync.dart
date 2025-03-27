@@ -30,7 +30,7 @@ class TestBackendConnector extends PowerSyncBackendConnector {
     return Future.value(PowerSyncCredentials(
         endpoint: AppConfig.powersyncUrl,
         token:
-            'eyJhbGciOiJSUzI1NiIsImtpZCI6InBvd2Vyc3luYy1kZXYtMzIyM2Q0ZTMifQ.eyJzdWIiOiI0ZjdjOWMxMi0yODQwLTQyMmItYTAyZC0wNTlhNjM1NTkwODMiLCJpYXQiOjE3NDI3MTEzNTYsImlzcyI6Imh0dHBzOi8vcG93ZXJzeW5jLWFwaS5qb3VybmV5YXBwcy5jb20iLCJhdWQiOiJodHRwczovLzY3ZGQ5OTc1MTkwNzkyNjVhYzVmYzU5Ni5wb3dlcnN5bmMuam91cm5leWFwcHMuY29tIiwiZXhwIjoxNzQyNzU0NTU2fQ.MYIUTe4LStki7vVV2jvnEYY_48-ZS2Kl2FW--l8IGWv8segXpQtmpu_1XfV3d289qzT0ljghV-Aq1P_Bw7XQIJnJGSewNa_J1b6WIbs0c8n8z3WP10H1D5zz0q6EjsMjCkIq_BFHa_imH2sf9EJAQ9Grbk_NTCtltP7QfL1NWj2LOqfTtoA6HalT9dGcC0m_b3_RMWERJHhTCirk-v5FQOmAcii5wgy4F1nOOITkQ4EYCYxXDB3pc5SNbbAqYa-Irg_wcA0ECzIMaehRFmiRh_T-O4HlwkrLZzqQ7x5GM9blFSytRZICRXjGbQT9iqAmd67jPFLwb0tp94QU9CNyhw',
+            'eyJhbGciOiJSUzI1NiIsImtpZCI6InBvd2Vyc3luYy1kZXYtMzIyM2Q0ZTMifQ.eyJzdWIiOiIxNzMzNzNmZS01NmQzLTQ0ZWYtYjQ2Zi03M2E5OWU4YjhiMzIiLCJpYXQiOjE3NDMwMjA3NjIsImlzcyI6Imh0dHBzOi8vcG93ZXJzeW5jLWFwaS5qb3VybmV5YXBwcy5jb20iLCJhdWQiOiJodHRwczovLzY3ZGQ5OTc1MTkwNzkyNjVhYzVmYzU5Ni5wb3dlcnN5bmMuam91cm5leWFwcHMuY29tIiwiZXhwIjoxNzQzMDYzOTYyfQ.tm4lRPpsu-QhlXJ3JICn9-eZ6LQJHbfzI2GZoCPz4tIOZRUX--wg7TbNUZm2_hS0LIS6-lEcV-xjJ2d6H5050i6b4mShQQXsEZ4y11q8Hq7VHA_9vCG7SSDJ9JBlwDjsgCmI4LUY1PRTXpXGrdNjLj3kf70_9y0KuqJ5yoDB1vruh8_al9JXuKodMOVolys9lrn1mlgViFp3rB-AGSardnw2EH-A51IVivNi05TbuQvtkZ6iWi3kwXZAZs9POzmTqJNenMGhisJlwfRn401-wLXmgyt_nimTkB_gUk_2HK2glaMVs8HHnE__MST5eoVcD2d2M2_kyA_bRM9G47YqIg',
         userId: '173373fe-56d3-44ef-b46f-73a99e8b8b32',
         expiresAt: DateTime.now().add(Duration(days: 1))));
   }
@@ -163,7 +163,7 @@ String? getUserId() {
 }
 
 Future<String> getDatabasePath() async {
-  const dbFilename = 'powersync-demo.db';
+  const dbFilename = 'powersync-demo1.db';
   // getApplicationSupportDirectory is not supported on Web
   if (kIsWeb) {
     return dbFilename;

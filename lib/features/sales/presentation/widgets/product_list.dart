@@ -138,25 +138,44 @@ class ProductList extends ConsumerWidget {
                   ],
                 ),
                 onTap: () {
-                  showBottomSheet(
+                  showModalBottomSheet(
                     context: context,
+                    isScrollControlled: true,
+                    showDragHandle: true,
+                    backgroundColor:
+                        Theme.of(context).colorScheme.onPrimaryContainer,
                     builder: (context) {
-                      return Container(
-                        color: Theme.of(context).colorScheme.onPrimaryContainer,
-                        height: 140,
-                        width: double.infinity,
+                      return FractionallySizedBox(
+                        heightFactor: 0.25, // Takes 1/4 of the screen height
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(products[index].name),
                             Text(
-                              products[index].listPrice.toString(),
-                              overflow: TextOverflow.ellipsis,
+                              products[index].name,
+                              style: Theme.of(context).textTheme.titleLarge,
                             ),
-                            Divider(),
-                            Text(
-                              products[index].standardPrice.toString(),
-                              overflow: TextOverflow.ellipsis,
+                            const Divider(),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Text('Selling'),
+                                SizedBox(width: 15),
+                                Text(
+                                  products[index].listPrice.toString(),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Text('Cost'),
+                                SizedBox(width: 10),
+                                Text(
+                                  products[index].listPrice.toString(),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
                             ),
                           ],
                         ),

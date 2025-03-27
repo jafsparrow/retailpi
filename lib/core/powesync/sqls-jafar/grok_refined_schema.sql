@@ -184,7 +184,7 @@ CREATE TABLE "product_product" (
   "uom_id" UUID,
   "weight_uom_id" UUID,
   "default_code" VARCHAR(255),
-  "barcode" VARCHAR(255) UNIQUE NOT NULL, -- Made NOT NULL and UNIQUE
+  "barcode" VARCHAR(255) UNIQUE ,
   "list_price" BIGINT NOT NULL DEFAULT 0 CHECK (list_price >= 0),
   "standard_price" BIGINT NOT NULL DEFAULT 0 CHECK (standard_price >= 0),
   "type" VARCHAR(50),
@@ -195,7 +195,7 @@ CREATE TABLE "product_product" (
   "sku" VARCHAR(255),
   "image" VARCHAR(255),
   "stock" INT DEFAULT 0,
-  "base_scan_points" INT NOT NULL
+  "base_scan_points" INT NOT NULL DEFAULT 0
 );
 
 CREATE TABLE "product_translation" (
@@ -465,6 +465,8 @@ ALTER TABLE "res_partner" ADD FOREIGN KEY ("pricelist_id") REFERENCES "product_p
 
 
 ALTER TABLE "product_template" ADD FOREIGN KEY ("sale_uom_id") REFERENCES "res_uom" ("id") ON DELETE SET NULL;
+ALTER TABLE "product_template" ADD FOREIGN KEY ("company_id") REFERENCES "res_company" ("id") ON DELETE SET NULL;
+ALTER TABLE "product_template" ADD FOREIGN KEY ("category_id") REFERENCES "product_category" ("id") ON DELETE SET NULL;
 ALTER TABLE "product_attribute_value" ADD FOREIGN KEY ("attribute_id") REFERENCES "product_attribute" ("id") ON DELETE CASCADE;
 ALTER TABLE "product_variant_combination" ADD FOREIGN KEY ("attribute_value_id") REFERENCES "product_attribute_value" ("id") ON DELETE CASCADE;
 ALTER TABLE "product_variant_combination" ADD FOREIGN KEY ("variant_id") REFERENCES "product_product" ("id") ON DELETE CASCADE;
